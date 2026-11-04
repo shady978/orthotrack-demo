@@ -10,9 +10,10 @@
      reset()           back to the seed (for the demo)
 
    Storage (localStorage, write-through on every change):
-     orthotrack.en.cases.v2    array of v2 cases
+     orthotrack.en.cases.v2    { seedVersion: 2, cases: [ ...v2 cases ] }
      orthotrack.en.current.v1  current case id
-   If the cases key is absent (or unreadable) the store is seeded once from the demo data in the knowledge block.
+   If the cases key is absent, unreadable, or has another seedVersion (an old browser: a bare array, or an older
+   seed) the store is seeded from the demo data in the knowledge block. Bump SEED_VERSION when the seed changes.
    Seed dates are computed from DEMO_TODAY, a fixed day, never from the live clock (decision in DECISIONS_LOG).
 
    Read-through: window.OrthoCases (the old exports the screens read: seed, detail, chart, records, byId) is
@@ -25,6 +26,7 @@
 
   var CASES_KEY = 'orthotrack.en.cases.v2';
   var CURRENT_KEY = 'orthotrack.en.current.v1';
+  var SEED_VERSION = 2;            // 2: Ehab's clinical data moved into his case, Dana's readings removed (task 0.4)
   var DEMO_TODAY = '2026-11-04';   // fixed demo day for seed dates
   var DEMO_YEAR = 2026;            // dob = 1 Jan of (DEMO_YEAR - age)
   var DAY = 86400000;
@@ -105,7 +107,7 @@
       findings: [],                      // [{ text, tone }] (from the old chart.dx)
       treatment: { months: 0, estMonths: null, bonded: null, sessions: null, missedAt: [], phase: null },
       visits: [],                        // [{ date, kind, note, tasks }], newest first
-      records: { photos: null, xray: { status: null }, exam: null, history: null, done: null, total: null, missing: [] },
+      records: { photos: null, xray: { status: null }, exam: null, history: null, done: null, total: null, missing: [], files: [] },
       midTreatment: false,
       screenDraft: { records: null, diagnosis: null },  // raw snapshots from Records and Diagnosis until task 0.5
     };
@@ -127,6 +129,41 @@
   }
 
   /* ---------- seed: the old demo data → v2 ---------- */
+  // Ehab (ORT-2026-0148): clinical facts that were typed into Case Summary and Records Collection (task 0.4).
+  // The screens keep their own copy until task 0.5 reads them from here. Values are the Summary's `values`.
+  var EHAB_ID = 'ORT-2026-0148';
+  var DANA_ID = 'ORT-2026-0144';
+  var EHAB_MEASUREMENTS = {
+    'ap-0': 79.3, 'ap-1': 82.8, 'ap-2': -3.5, 'ap-3': -6.7, 'ap-4': -3.3, 'ap-5': -4.7,
+    'vert-0': 8.6, 'vert-1': 27.0, 'vert-2': 28.4, 'vert-3': 56.6,
+    'dent-0': 119.9, 'dent-1': 99.4, 'dent-2': 126.4, 'dent-3': 7.6, 'dent-4': 113.7,
+    'soft-0': 77.4, 'soft-1': 1.0
+  };
+
+  function applyClinicalSeed(c) {
+    if (c.id === EHAB_ID) {
+      c.patient.dob = '2011-04-18';
+      c.patient.phone = '+20 100 442 8817';
+      c.medical = ['Nickel allergy', 'Mouth breathing'].map(medicalEntry);
+      // captured at records time: no later reading yet, so baseline and current are the same value
+      Object.keys(EHAB_MEASUREMENTS).forEach(function (k) {
+        c.measurements[k] = { baseline: EHAB_MEASUREMENTS[k], current: EHAB_MEASUREMENTS[k] };
+      });
+      c.records.exam = { 'occ-incisor-incisorRel': 'Class III' };
+      c.records.files = [
+        { name: 'Most important cephalometric readings.pdf', type: 'PDF', source: 'Asnan Scan', date: '2026-07-31', size: '820 KB' },
+        { name: 'Ehab Mohammed Hosny — CBCT.pdf', type: 'PDF', source: 'Asnan Scan', date: '2026-07-31', size: '1.4 MB' }
+      ];
+    }
+    if (c.id === DANA_ID) {
+      // Dana has no records, no measurements and no medical alerts (audit). Her two legacy readings
+      // (overjet, crossbite) are not among the 17 measurements, so they are removed with the rest.
+      c.measurements = {};
+      c.medical = [];
+    }
+    return c;
+  }
+
   function fromSeed(s) {
     var full = 'ORT-' + s.id;
     var d = legacy.detail[full] || {};
@@ -173,9 +210,9 @@
       ? [{ date: addDays(DEMO_TODAY, -(last.d || 0)), kind: null, note: null, tasks: (last.items || []).slice() }]
       : [];
     c.records = rec
-      ? { photos: null, xray: { status: null }, exam: null, history: null, done: rec.done, total: rec.total, missing: rec.missing.slice() }
+      ? { photos: null, xray: { status: null }, exam: null, history: null, done: rec.done, total: rec.total, missing: rec.missing.slice(), files: [] }
       : blankCase().records;
-    return normalize(c);
+    return normalize(applyClinicalSeed(c));
   }
 
   function seedAll() { return legacy.seed.map(fromSeed); }
@@ -190,15 +227,20 @@
     if (cache) return cache;
     var raw = storageGet(CASES_KEY);
     var arr = null;
-    if (raw) { try { arr = JSON.parse(raw); } catch (e) { arr = null; } }
-    if (!Array.isArray(arr)) {
+    if (raw) {
+      try {
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.seedVersion === SEED_VERSION && Array.isArray(parsed.cases)) arr = parsed.cases;
+      } catch (e) { arr = null; }
+    }
+    if (!arr) {
       arr = seedAll();
-      storageSet(CASES_KEY, JSON.stringify(arr));
+      storageSet(CASES_KEY, JSON.stringify({ seedVersion: SEED_VERSION, cases: arr }));
     }
     cache = arr.map(normalize);
     return cache;
   }
-  function save() { storageSet(CASES_KEY, JSON.stringify(cache)); }
+  function save() { storageSet(CASES_KEY, JSON.stringify({ seedVersion: SEED_VERSION, cases: cache })); }
   function indexOf(id) {
     var key = canonId(id);
     var list = all();
