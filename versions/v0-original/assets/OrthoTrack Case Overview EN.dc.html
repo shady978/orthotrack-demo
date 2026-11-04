@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<meta charset="utf-8">
+<title>OrthoTrack — Case overview</title>
+<link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+<link rel="stylesheet" href="assets/vendor/css/google-inter-300-700-400-600.css">
+<script src="ortho-knowledge-en.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{direction:ltr;background:#f6f8fb;color:#0f172a;font-family:Inter,'Thmanyah Sans',system-ui,sans-serif;font-weight:500;line-height:1.7;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#2563eb;text-decoration:none}
+a:hover{color:#1d4ed8;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+@keyframes otIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;background:#f6f8fb">
+
+  <sc-if value="{{ showAside }}" hint-placeholder-val="{{ true }}">
+  <aside style="width:244px;flex:none;position:sticky;top:0;height:100vh;align-self:flex-start;background:#ffffff;border-inline-end:1px solid #e8edf3;display:flex;flex-direction:column;padding:18px 12px;gap:5px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 18px;min-height:44px">
+      <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#2563eb"></div>
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.04em;color:#0f172a;white-space:nowrap">OrthoTrack</span>
+    </div>
+    <a href="#" onClick="{{ onBreadcrumbDash }}" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;color:#64748b;text-decoration:none" style-hover="background:#f6f8fb;color:#0f172a">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
+     <span style="font-size:14.5px;font-weight:500;white-space:nowrap">Case dashboard</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;background:#eff6ff;color:#1d4ed8">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.6" y="3.6" width="10.8" height="10.8" rx="2.4" transform="rotate(45 9 9)"></rect></svg></span>
+     <span style="font-size:14.5px;font-weight:700;white-space:nowrap">Diagnosis queue</span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:12px 8px 2px;border-top:1px solid #e8edf3;margin-top:5px">
+      <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">MS</div>
+      <div style="display:grid;gap:0;min-width:0">
+       <span style="font-size:13.5px;font-weight:500;white-space:nowrap">Dr Mohamed Shady</span>
+       <span style="font-size:11.5px;font-weight:400;color:#94a3b8;white-space:nowrap">Orthodontist</span>
+      </div>
+    </div>
+  </aside>
+  </sc-if>
+
+  <div style="flex:1;min-width:660px;display:flex;flex-direction:column">
+
+    <div style="height:56px;flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px">
+      <nav style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;color:#64748b;min-width:0">
+        <a href="#" onClick="{{ onBreadcrumbDash }}" style="color:#64748b">Case dashboard</a>
+       <span style="color:#cbd5e1">‹</span>
+       <span dir="rtl" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',Inter,sans-serif;line-height:1.7;font-weight:500;color:#0f172a">{{ headerName }}</span>
+       <span style="color:#cbd5e1">‹</span>
+       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">{{ headerId }}</span>
+      </nav>
+     <span style="font-size:12px;font-weight:400;color:#94a3b8;flex:none">{{ updatedNote }}</span>
+    </div>
+
+    <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:16px 24px 0">
+      <div style="display:flex;align-items:center;gap:13px;min-width:0">
+        <div style="width:42px;height:42px;flex:none;border-radius:50%;overflow:hidden;border:1px solid #e8edf3;background:#f1f5f9">
+          <img src="{{ headerPhoto }}" alt="{{ headerName }}" style="width:100%;height:100%;object-fit:cover;object-position:center 25%">
+        </div>
+        <div style="display:grid;gap:2px;min-width:0">
+          <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+           <span dir="rtl" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',Inter,sans-serif;line-height:1.7;font-size:17px;font-weight:700;line-height:1.4">{{ headerName }}</span>
+           <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:{{ stageBg }};border:1px solid {{ stageBd }};color:{{ stageFg }};font-family:Inter,sans-serif;font-size:11.5px;font-weight:600"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ stageDot }}"></span><span dir="ltr" style="unicode-bidi:isolate">{{ stageLabel }}</span></span>
+           <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:{{ prioBg }};border:1px solid {{ prioBd }};color:{{ prioFg }};font-size:12px;font-weight:500">priority {{ priority }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;font-weight:400;color:#64748b">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">{{ headerId }}</span>
+           <span style="color:#e8edf3">·</span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">{{ headerMeta }}</span>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ showStageTabs }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;gap:4px;margin-top:14px;overflow-x:auto">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="6">
+          <button type="button" onClick="{{ tb.onClick }}" title="{{ tb.title }}" style="flex:none;min-height:42px;padding:0 14px;border:none;border-bottom:2px solid {{ tb.bd }};background:transparent;color:{{ tb.fg }};font-size:14px;font-weight:{{ tb.fw }};cursor:{{ tb.cursor }};white-space:nowrap">{{ tb.label }}</button>
+        </sc-for>
+      </div>
+      </sc-if>
+      <sc-if value="{{ hasNotice }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:14px;display:flex;align-items:center;gap:11px;padding:12px 16px;border-radius:14px;background:#fffbeb;border:1px solid #fde68a">
+         <span style="width:28px;height:28px;flex:none;border-radius:9px;background:#ffffff;color:#d97706;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">!</span>
+         <span style="flex:1;min-width:0;font-size:13px;font-weight:500;color:#b45309">{{ notice }}</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <main style="flex:1;min-width:0;padding:20px 24px 40px;display:grid;gap:14px;align-content:start;max-width:1180px">
+
+      <sc-if value="{{ showStageTabs }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;animation:otIn .22s ease-out">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+         <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Case stage</span>
+         <span style="font-size:12.5px;font-weight:400;color:#64748b">Position of the case in the pathway</span>
+         <span style="margin-inline-start:auto;font-size:11.5px;font-weight:500;color:#64748b">{{ stageProgressNote }}</span>
+        </div>
+        <div style="padding:20px 18px;display:flex;align-items:flex-start;gap:0;overflow-x:auto">
+          <sc-for list="{{ timeline }}" as="s" hint-placeholder-count="9">
+            <div style="flex:1;min-width:88px;display:grid;gap:9px;justify-items:center;text-align:center">
+              <div style="width:100%;display:flex;align-items:center;gap:0">
+               <span style="flex:1;height:3px;border-radius:2px;background:{{ s.lineBefore }}"></span>
+               <span style="width:26px;height:26px;flex:none;border-radius:50%;background:{{ s.dotBg }};border:2px solid {{ s.dotBd }};color:{{ s.dotFg }};font-family:Inter,sans-serif;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center">{{ s.mark }}</span>
+               <span style="flex:1;height:3px;border-radius:2px;background:{{ s.lineAfter }}"></span>
+              </div>
+              <div style="display:grid;gap:1px">
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;color:{{ s.enFg }};white-space:nowrap">{{ s.en }}</span>
+               <span style="font-size:11.5px;font-weight:{{ s.arFw }};color:{{ s.arFg }};white-space:nowrap">{{ s.ar }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:14px;align-items:start">
+
+        <div style="background:#ffffff;border:1px solid {{ nextCardBd }};border-radius:16px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:{{ nextHeadBg }};border-bottom:1px solid {{ nextCardBd }}">
+           <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#ffffff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:{{ nextAccent }}"></span></span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Next action</span>
+           <span style="font-size:12.5px;font-weight:400;color:#64748b">Required now</span>
+          </div>
+          <div style="padding:20px 18px;display:grid;gap:16px">
+            <div style="display:grid;gap:5px">
+             <span style="font-size:19px;font-weight:700;line-height:1.45">{{ nextTitle }}</span>
+             <span style="font-size:13px;font-weight:400;color:#64748b;line-height:1.7">{{ nextNote }}</span>
+            </div>
+
+            <sc-if value="{{ hasBlockers }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;gap:8px">
+                <div style="display:flex;align-items:center;gap:9px">
+                 <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Blocking</span>
+                 <span style="flex:1;height:1px;background:#eef2f7"></span>
+                 <span style="font-size:11px;font-weight:500;color:#b45309">{{ blockerCount }}</span>
+                </div>
+                <sc-for list="{{ blockers }}" as="b" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border-radius:12px;background:{{ b.bg }};border:1px solid {{ b.bd }}">
+                   <span style="width:22px;height:22px;flex:none;border-radius:7px;background:#ffffff;color:{{ b.fg }};font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">!</span>
+                    <div style="display:grid;gap:2px;min-width:0">
+                     <span style="font-size:13px;font-weight:700;color:#0f172a">{{ b.title }}</span>
+                     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:500;color:{{ b.fg }}">{{ b.detail }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" onClick="{{ nextCta }}" style="min-height:46px;padding:0 22px;border-radius:12px;background:#2563eb;color:#ffffff;border:none;font-size:14.5px;font-weight:700;cursor:pointer;transition:transform .15s" style-hover="background:#1d4ed8;transform:translateY(-1px)">{{ nextCtaLabel }}</button>
+              <button type="button" onClick="{{ onOpenSummary }}" style="min-height:46px;padding:0 20px;border-radius:12px;background:#f6f8fb;color:#0f172a;border:none;font-size:14.5px;font-weight:500;cursor:pointer" style-hover="background:#eef2f7">Case summary</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+           <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#f5f3ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#7c3aed"></span></span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Records</span>
+           <span style="font-size:12.5px;font-weight:400;color:#64748b">Records completeness</span>
+           <span dir="ltr" style="unicode-bidi:isolate;margin-inline-start:auto;font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:{{ recTotalFg }}">{{ recTotalPct }}</span>
+          </div>
+          <div style="padding:16px 18px;display:grid;gap:14px">
+            <sc-for list="{{ recordGroups }}" as="r" hint-placeholder-count="3">
+              <div style="display:grid;gap:7px">
+                <div style="display:flex;align-items:baseline;gap:9px">
+                 <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:#0f172a">{{ r.en }}</span>
+                 <span style="font-size:11.5px;font-weight:400;color:#94a3b8">{{ r.ar }}</span>
+                 <span dir="ltr" style="unicode-bidi:isolate;margin-inline-start:auto;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;color:{{ r.fg }};font-variant-numeric:tabular-nums">{{ r.count }}</span>
+                </div>
+               <span style="display:block;height:8px;border-radius:999px;background:#f1f5f9;overflow:hidden">
+                 <span style="display:block;width:{{ r.pct }};height:100%;border-radius:999px;background:{{ r.color }}"></span>
+                </span>
+              </div>
+            </sc-for>
+            <button type="button" onClick="{{ onOpenRecords }}" style="min-height:42px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13.5px;font-weight:700;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb;border-color:#cbd5e1">Open the clinical records</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+           <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#fffbeb;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#d97706"></span></span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Medical constraints</span>
+           <span style="font-size:12.5px;font-weight:400;color:#64748b">Constraints from the medical history</span>
+          </div>
+          <sc-if value="{{ hasConstraints }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <sc-for list="{{ constraints }}" as="c" hint-placeholder-count="2">
+                <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 18px;border-bottom:1px solid #f1f5f9">
+                 <span style="width:22px;height:22px;flex:none;margin-top:2px;border-radius:7px;background:{{ c.bg }};border:1px solid {{ c.bd }};color:{{ c.fg }};font-family:Inter,sans-serif;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">{{ c.mark }}</span>
+                  <div style="display:grid;gap:2px;min-width:0">
+                   <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;color:#0f172a">{{ c.en }}</span>
+                   <span style="font-size:12.5px;font-weight:500;color:{{ c.fg }};line-height:1.65">{{ c.impact }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noConstraints }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:28px 18px;text-align:center;font-size:12.5px;font-weight:400;color:#cbd5e1">{{ constraintsEmpty }}</div>
+          </sc-if>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+           <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#ecfdf5;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#059669"></span></span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Chief complaint</span>
+           <span style="font-size:12.5px;font-weight:400;color:#64748b">Complaint in the patient's words</span>
+          </div>
+          <div style="padding:18px;display:grid;gap:14px">
+            <p style="margin:0;font-size:15.5px;font-weight:500;line-height:1.85;color:{{ complaintFg }}">«{{ complaint }}»</p>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px solid #f1f5f9">
+             <span style="font-size:12px;font-weight:400;color:#94a3b8">Provisional classification</span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;background:#f6f8fb;border:1px solid #e8edf3;border-radius:999px;padding:2px 10px">{{ classification }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+        <sc-for list="{{ quickLinks }}" as="q" hint-placeholder-count="4">
+          <button type="button" onClick="{{ q.onClick }}" title="{{ q.title }}" style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:16px;display:grid;gap:7px;justify-items:start;text-align:start;cursor:{{ q.cursor }};transition:transform .15s,border-color .15s" style-hover="border-color:#cbd5e1;transform:translateY(-2px)">
+           <span style="width:34px;height:34px;border-radius:11px;background:{{ q.iconBg }};display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:{{ q.iconFg }}"></span></span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:{{ q.enFg }}">{{ q.en }}</span>
+           <span style="font-size:12.5px;font-weight:500;color:{{ q.arFg }}">{{ q.ar }}</span>
+           <span style="font-size:11.5px;font-weight:400;color:#94a3b8">{{ q.note }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900},
+  &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
+  &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: object) =&gt; void&quot;},
+  &quot;overrideName&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overrideId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overrideMeta&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overridePhoto&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overrideStage&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overridePriority&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overrideRecord&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;object&quot;},
+  &quot;overrideNotice&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;}
+}">
+class Component extends DCLogic {
+  get K() { return window.OrthoKnowledge || {}; }
+
+  /* the nine stages a case actually passes through, in order */
+  flowKeys = ['consultation', 'records', 'diagnosis', 'planning', 'approved', 'active', 'finishing', 'retention', 'completed'];
+
+  state = { hash: null };
+
+  componentDidMount() {
+    if (!window.OrthoKnowledge) {
+      this._k = setInterval(() => { if (window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); } }, 60);
+    }
+    /* standalone entry from the dashboard: #name=…&id=…&meta=… */
+    const raw = (window.location.hash || '').replace(/^#/, '');
+    if (raw.indexOf('=') > 0) {
+      const q = {};
+      raw.split('&').forEach(p => { const kv = p.split('='); if (kv[0]) q[kv[0]] = decodeURIComponent((kv[1] || '').replace(/\+/g, ' ')); });
+      if (q.name) this.setState({ hash: q });
+    }
+  }
+  componentWillUnmount() { clearInterval(this._k); }
+
+  ext(key) { return this.props['override' + key.charAt(0).toUpperCase() + key.slice(1)] || (this.state.hash || {})[key] || ''; }
+
+  isOther() {
+    const n = this.ext('name');
+    return !!n && n !== 'Ehab Mohammed Hosny' && n !== 'إيهاب محمد حسني';
+  }
+
+  stageRows() {
+    const all = this.K.stages || [];
+    return this.flowKeys.map(k => all.filter(s => s[0] === k)[0]).filter(Boolean);
+  }
+
+  currentIdx() {
+    const rows = this.stageRows();
+    const label = this.ext('stage') || 'Records collection';
+    let idx = -1;
+    rows.forEach((s, i) => { if (s[2] === label || s[1] === label) idx = i; });
+    return idx < 0 ? 0 : idx;
+  }
+
+  toneOf(t) {
+    return {
+      fg: t === 2 ? '#b91c1c' : t === 1 ? '#b45309' : '#1d4ed8',
+      bg: t === 2 ? '#fef2f2' : t === 1 ? '#fffbeb' : '#eff6ff',
+      bd: t === 2 ? '#fecaca' : t === 1 ? '#fde68a' : '#bfdbfe',
+      mark: t === 2 ? '!' : t === 1 ? '!' : 'i'
+    };
+  }
+
+  /* constraint names carried from the history step — impact text comes from the knowledge base */
+  constraintNames() {
+    const r = this.props.overrideRecord;
+    if (r) return r.conditions || [];
+    return this.isOther() ? [] : ['Nickel allergy', 'Mouth breathing'];
+  }
+
+  nav(screen) { if (this.props.onNavigate) this.props.onNavigate(screen); }
+
+  renderVals() {
+    const showStageTabs = !this.props.embedded;
+    const other = this.isOther();
+    const rec = this.props.overrideRecord || null;
+    const rows = this.stageRows();
+    const cur = this.currentIdx();
+    const curStage = rows[cur] || ['records', 'Records collection', 'Records collection', 'blue'];
+
+    const stageTint = {
+      slate: ['#f1f5f9', '#cbd5e1', '#475569', '#94a3b8'],
+      blue: ['#eff6ff', '#bfdbfe', '#1d4ed8', '#2563eb'],
+      emerald: ['#ecfdf5', '#a7f3d0', '#047857', '#059669'],
+      violet: ['#f5f3ff', '#ddd6fe', '#6d28d9', '#7c3aed'],
+      red: ['#fef2f2', '#fecaca', '#b91c1c', '#dc2626']
+    }[curStage[3]] || ['#f1f5f9', '#cbd5e1', '#475569', '#94a3b8'];
+
+    /* one canonical next action per stage */
+    const actions = {
+      consultation: ['Start records collection', 'The case is registered with no records — upload photos and radiographs to begin the measurements.', 'Start records collection', 'records'],
+      records: ['Complete the clinical records', 'Cephalometric measurements are the basis of the problem list — the case cannot move to diagnosis before they are complete.', 'Complete the records', 'records'],
+      diagnosis: ['Approve the problem list', 'The problems are derived from the measurements — review and approve them to begin setting objectives.', 'Open case summary', 'summary'],
+      planning: ['Build the treatment plan', 'Objectives approved — the planning screen is under construction.', 'Open case summary', 'summary'],
+      approved: ['Start treatment', 'The plan is approved — record the bonding visit.', 'Open case summary', 'summary'],
+      active: ['Follow up visits', 'Treatment is active — follow the visits and progress measurements.', 'Open case summary', 'summary'],
+      finishing: ['Finishing review', 'Review the objectives before debonding.', 'Open case summary', 'summary'],
+      retention: ['Retention follow-up', 'Follow the retainer and review appointments.', 'Open case summary', 'summary'],
+      completed: ['Case complete', 'No action required — the record is archived and read-only.', 'Open case summary', 'summary']
+    };
+    const act = actions[curStage[0]] || actions.records;
+
+    const blockers = other ? [
+      { title: 'No records uploaded yet', detail: 'Photos · Radiographs · Measurements', tone: 1 }
+    ] : [
+      { title: 'Two missing cephalometric values block the diagnosis', detail: 'U1-SN · IMPA', tone: 2 },
+      { title: 'A long time with no movement', detail: '26 days idle', tone: 1 }
+    ];
+
+    const recDefs = other
+      ? [['Photos', 'Clinical photos', 0, 14, '#2563eb'], ['Radiographs', 'Radiographs', 0, 2, '#7c3aed'], ['Measurements', 'Cephalometric measurements', 0, 17, '#059669']]
+      : [['Photos', 'Clinical photos', 14, 14, '#2563eb'], ['Radiographs', 'Radiographs', 2, 2, '#7c3aed'], ['Measurements', 'Cephalometric measurements', 15, 17, '#059669']];
+    const recDone = recDefs.reduce((a, r) => a + r[2], 0);
+    const recAll = recDefs.reduce((a, r) => a + r[3], 0);
+    const recPct = Math.round(recDone / recAll * 100);
+
+    const conds = this.K.conditions || [];
+    const constraints = this.constraintNames().map(en => {
+      const row = conds.filter(c => c[0] === en)[0];
+      const t = this.toneOf(row ? row[4] : 0);
+      return { en, impact: row ? row[3] : '', mark: t.mark, bg: t.bg, bd: t.bd, fg: t.fg };
+    });
+
+    const tabDefs = [
+      ['Overview', null, true],
+      ['Clinical records', 'records', false],
+      ['Case summary', 'summary', false],
+      ['Diagnosis', null, false],
+      ['Objectives', null, false],
+      ['Treatment plan', null, false],
+      ['Visits', null, false]
+    ];
+
+    const linkDefs = [
+      ['Records', 'Clinical records', 'Photos, radiographs and measurements', 'records', '#eff6ff', '#2563eb'],
+      ['Summary', 'Case summary', 'The summary and the problem list', 'summary', '#ecfdf5', '#059669'],
+      ['Diagnosis', 'Diagnosis', 'Problem list and dimensions', 'diagnosis', '#f5f3ff', '#7c3aed'],
+      ['Plan', 'Treatment plan', 'under construction', null, '#fffbeb', '#d97706']
+    ];
+
+    return {
+      showAside: !this.props.embedded,
+      onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); this.nav('dashboard'); },
+
+      headerName: this.ext('name') || 'Ehab Mohammed Hosny',
+      headerId: this.ext('id') || 'ORT-2026-0148',
+      headerMeta: this.ext('meta') || '14y · Male · Spacing',
+      headerPhoto: this.ext('photo') || 'assets/p04.jpeg',
+      updatedNote: other && !this.ext('stage') ? 'New case — created today' : 'Last updated 2026-07-31',
+
+      stageLabel: curStage[2],
+      notice: this.props.overrideNotice || '',
+      hasNotice: !!this.props.overrideNotice,
+      stageBg: stageTint[0], stageBd: stageTint[1], stageFg: stageTint[2], stageDot: stageTint[3],
+      priority: this.props.overridePriority || 'Normal',
+      prioBg: (this.props.overridePriority === 'Urgent') ? '#fef2f2' : (this.props.overridePriority === 'Monitor') ? '#fffbeb' : '#f6f8fb',
+      prioBd: (this.props.overridePriority === 'Urgent') ? '#fecaca' : (this.props.overridePriority === 'Monitor') ? '#fde68a' : '#e8edf3',
+      prioFg: (this.props.overridePriority === 'Urgent') ? '#b91c1c' : (this.props.overridePriority === 'Monitor') ? '#b45309' : '#64748b',
+
+      stageProgressNote: 'Stage ' + (cur + 1) + ' of ' + rows.length,
+      timeline: rows.map((s, i) => {
+        const done = i < cur, isCur = i === cur;
+        return {
+          en: s[2], ar: s[1],
+          mark: done ? '✓' : String(i + 1),
+          dotBg: isCur ? '#2563eb' : done ? '#ecfdf5' : '#ffffff',
+          dotBd: isCur ? '#2563eb' : done ? '#a7f3d0' : '#e8edf3',
+          dotFg: isCur ? '#ffffff' : done ? '#047857' : '#94a3b8',
+          lineBefore: i === 0 ? 'transparent' : (i <= cur ? '#a7f3d0' : '#e8edf3'),
+          lineAfter: i === rows.length - 1 ? 'transparent' : (i < cur ? '#a7f3d0' : '#e8edf3'),
+          enFg: isCur ? '#0f172a' : done ? '#475569' : '#94a3b8',
+          arFg: isCur ? '#0f172a' : done ? '#64748b' : '#cbd5e1',
+          arFw: isCur ? 700 : 500
+        };
+      }),
+
+      nextTitle: act[0],
+      nextNote: act[1],
+      nextCtaLabel: act[2],
+      nextCta: () => this.nav(act[3]),
+      nextAccent: other ? '#d97706' : '#dc2626',
+      nextCardBd: other ? '#fde68a' : '#fecaca',
+      nextHeadBg: other ? '#fffbeb' : '#fef2f2',
+      hasBlockers: blockers.length > 0,
+      blockerCount: blockers.length + (blockers.length === 1 ? ' item' : ' items'),
+      blockers: blockers.map(b => {
+        const t = this.toneOf(b.tone);
+        return { title: b.title, detail: b.detail, bg: t.bg, bd: t.bd, fg: t.fg };
+      }),
+      onOpenSummary: () => this.nav('summary'),
+      onOpenRecords: () => this.nav('records'),
+
+      recTotalPct: recPct + '%',
+      recTotalFg: recPct === 100 ? '#047857' : recPct === 0 ? '#94a3b8' : '#b45309',
+      recordGroups: recDefs.map(r => ({
+        en: r[0], ar: r[1],
+        count: r[2] + ' / ' + r[3],
+        pct: Math.round(r[2] / r[3] * 100) + '%',
+        color: r[4],
+        fg: r[2] === r[3] ? '#047857' : r[2] === 0 ? '#94a3b8' : '#b45309'
+      })),
+
+      hasConstraints: constraints.length > 0,
+      noConstraints: constraints.length === 0,
+      constraints,
+      constraintsEmpty: (rec && rec.clean) ? 'Healthy — no medical or dental history' : other ? 'No medical history affecting treatment was recorded' : 'No constraints',
+
+      complaint: rec ? (rec.complaintText || 'Not recorded in the patient\'s words') : (other ? 'Not recorded yet' : 'I don\'t like how my teeth look, and my lower teeth stick out in front of the upper ones'),
+      complaintFg: (rec && !rec.complaintText) || (other && !rec) ? '#cbd5e1' : '#0f172a',
+      classification: rec ? (rec.type || rec.complaint || '—') : (this.props.overrideMeta || '14y · Male · Spacing').split(' · ').pop(),
+
+      showStageTabs: showStageTabs,
+      tabs: tabDefs.map(t => ({
+        label: t[0],
+        title: t[1] || (t[2] ? '' : 'under construction'),
+        bd: t[2] ? '#2563eb' : 'transparent',
+        fg: t[2] ? '#2563eb' : t[1] ? '#64748b' : '#cbd5e1',
+        fw: t[2] ? 700 : 500,
+        cursor: t[1] ? 'pointer' : 'default',
+        onClick: () => { if (t[1]) this.nav(t[1]); }
+      })),
+
+      quickLinks: linkDefs.map(l => ({
+        en: l[0], ar: l[1], note: l[2],
+        iconBg: l[4], iconFg: l[5],
+        enFg: l[3] ? '#0f172a' : '#94a3b8',
+        arFg: l[3] ? '#0f172a' : '#94a3b8',
+        cursor: l[3] ? 'pointer' : 'default',
+        title: l[3] ? '' : 'under construction',
+        onClick: () => { if (l[3]) this.nav(l[3]); }
+      }))
+    };
+  }
+}
+
+</script>
+</body>
+</html>

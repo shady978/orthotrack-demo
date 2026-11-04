@@ -1,0 +1,2927 @@
+<!DOCTYPE html>
+<html><head><script>window.__resources = {"./OrthoTrack%20Case%20Dashboard%20v2%20EN.dc.html": "assets/OrthoTrack%20Case%20Dashboard%20v2%20EN.dc.html", "https://cdn.jsdelivr.net/npm/@dawod/thmanyah-font-web@1.2.0/sans.css": "assets/vendor/css/thmanyah-sans.css", "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap": "assets/vendor/css/google-outfit-400-700.css", "./OrthoTrack%20Case%20Overview%20EN.dc.html": "assets/OrthoTrack%20Case%20Overview%20EN.dc.html", "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap": "assets/vendor/css/google-inter-300-700-400-600.css", "./OrthoTrack%20Case%20Create%20v2%20EN.dc.html": "assets/OrthoTrack%20Case%20Create%20v2%20EN.dc.html", "./OrthoTrack%20Records%20Collection%20v3%20EN.dc.html": "assets/OrthoTrack%20Records%20Collection%20v3%20EN.dc.html", "./OrthoTrack%20Diagnosis%20EN.dc.html": "assets/OrthoTrack%20Diagnosis%20EN.dc.html", "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap": "assets/vendor/css/google-inter-300-700.css", "./OrthoTrack%20Case%20File%20EN.dc.html": "assets/OrthoTrack%20Case%20File%20EN.dc.html", "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap": "assets/vendor/css/google-outfit-300-900.css", "./OrthoTrack%20Case%20Summary%20EN.dc.html": "assets/OrthoTrack%20Case%20Summary%20EN.dc.html", "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "assets/vendor/react.production.min.js", "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "assets/vendor/react-dom.production.min.js"};</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="assets/js/dc-runtime.js"></script>
+<script src="assets/js/case-photo-resolver.js"></script>
+<!-- OT-DATA-START — generated from ortho-knowledge-en.js + ortho-cases.js; regenerate, do not hand-edit -->
+<script>
+/* OrthoTrack — clinical knowledge base
+   Single source of truth. Screens read from window.OrthoKnowledge.
+   Never write a clinical fact, normal range, or impact note inside a .dc.html file. */
+(function () {
+  'use strict';
+
+  /* ---------- treatment capabilities a constraint can block ---------- */
+  var capabilities = {
+    extraction:     'Plans that rely on extraction',
+    surgery:        'Orthognathic surgery plans',
+    removable:      'Removable appliances',
+    aligners:       'Clear aligners',
+    tads:           'TADs',
+    accelerated:    'Accelerated protocols',
+    bondingEnamel:  'Direct enamel bonding',
+    standardForces: 'Standard forces',
+    functional:     'Functional appliances'
+  };
+
+  /* ---------- conditions ----------
+     [en, ar, group, impact, tone, fieldSet, blocks]
+     tone: 2 = hard constraint · 1 = caution · 0 = note · -1 = no impact            */
+  var conditions = [
+    ['Bisphosphonate therapy', 'Bisphosphonate therapy', 'Medication', 'Strongly slows bone remodelling — movement feasibility must be re-examined and extraction may not be possible.', 2, 'bisph', ['accelerated']],
+    ['Previous facial radiotherapy', 'Previous facial radiotherapy', 'Oncology', 'Severely limits movement with osteonecrosis risk — oncology consult required.', 2, 'radio', ['extraction', 'surgery', 'tads', 'accelerated']],
+    ['Corticosteroid therapy', 'Corticosteroid therapy', 'Medication', 'Increases bone remodelling so movement accelerates, with higher root resorption risk.', 2, 'steroid', ['accelerated']],
+    ['Diabetes mellitus', 'Diabetes mellitus', 'Endocrine', 'Increases gingival bleeding, reduces tooth movement efficiency and raises root resorption — documented control required before starting.', 2, 'diabetes', []],
+    ['Cleft lip or palate', 'Cleft lip or palate', 'Craniofacial', 'Needs a multidisciplinary team and staged planning tied to growth.', 2, 'cleft', []],
+    ['Juvenile idiopathic arthritis', 'Juvenile idiopathic arthritis', 'Bone & joint', 'Most often affects the TMJ — risk of mandibular growth deficiency and asymmetry.', 2, 'jia', ['functional']],
+    ['Periodontal disease', 'Periodontal disease', 'Dental', 'Tooth loss risk during treatment — confirmed periodontal stability required before starting.', 2, 'perio', ['standardForces']],
+    ['Active caries', 'Active caries', 'Dental', 'All restorations must be completed before appliance placement.', 2, 'caries', []],
+    ['Nickel allergy', 'Nickel allergy', 'Allergy', 'Avoid NiTi archwires and stainless brackets — titanium or ceramic alternatives.', 2, 'allergy', []],
+    ['Bleeding disorder', 'Bleeding disorder', 'Haematologic', 'Caution with extraction or any surgical procedure — coordinate with haematology.', 2, 'bleed', []],
+    ['Dental trauma', 'Dental trauma', 'Dental', 'Root resorption and pulpal necrosis risk — pulpal and radiographic assessment required before starting.', 2, 'trauma', ['accelerated']],
+    ['Eating disorder', 'Eating disorder', 'Behavioural', 'Repeated vomiting causes enamel erosion — caution when bonding and debonding brackets.', 2, 'eating', []],
+    ['Ehlers-Danlos syndrome', 'Ehlers-Danlos syndrome', 'Bone & joint', 'Collagen fragility accelerates movement and raises relapse risk — permanent retention.', 2, 'eds', ['accelerated']],
+    ['Chronic kidney disease', 'Chronic kidney disease', 'Renal', 'delayed eruption and gingival hyperplasia — coordinate with the nephrologist before starting.', 2, 'renal', []],
+    ['Immunosuppression', 'Immunosuppression', 'Haematologic', 'Infection and gingival risk — strict oral hygiene and closer follow-up.', 1, 'immuno', []],
+    ['Epilepsy', 'Epilepsy', 'Neurologic', 'Caution with removable appliances — aspiration risk during a seizure.', 1, 'epilepsy', []],
+    ['Asthma', 'Asthma', 'Respiratory', 'mouth breathing possible — review vertical pattern and tongue posture.', 1, 'asthma', []],
+    ['Obstructive sleep apnoea', 'Obstructive sleep apnoea', 'Respiratory', 'maxillary expansion or mandibular advancement may help — coordinate with sleep medicine.', 1, 'osa', []],
+    ['Congenital heart disease', 'Congenital heart disease', 'Cardiovascular', 'Antibiotic prophylaxis may be required before bleeding procedures.', 1, 'cardiac', []],
+    ['Rheumatic fever', 'Rheumatic fever', 'Cardiovascular', 'Assess endocarditis risk before any bleeding procedure.', 1, 'cardiac', []],
+    ['Hypertension', 'Hypertension', 'Cardiovascular', 'Some of its drugs cause gingival hyperplasia that obstructs hygiene around brackets.', 1, 'htn', []],
+    ['Anticoagulant therapy', 'Anticoagulant therapy', 'Medication', 'Caution with any extraction — coordinate with the treating physician.', 1, 'anticoag', []],
+    ['Thyroid disorder', 'Thyroid disorder', 'Endocrine', 'thyroid hormone Increases the rate of tooth movement — review control before estimating duration.', 1, 'thyroid', []],
+    ['Growth hormone therapy', 'Growth hormone therapy', 'Endocrine', 'Shifts the growth peak — re-assess CVM before any functional correction.', 1, 'gh', []],
+    ['Precocious puberty', 'Precocious puberty', 'Endocrine', 'growth peak earlier — the functional appliance window is shorter.', 1, 'puberty', []],
+    ['Delayed puberty', 'Delayed puberty', 'Endocrine', 'The growth window is extended — treatment start can be delayed.', 1, 'puberty', []],
+    ['NSAIDs — regular use', 'NSAIDs — regular use', 'Medication', 'Slows tooth movement by inhibiting prostaglandin — paracetamol preferred during treatment.', 1, 'nsaid', ['accelerated']],
+    ['Latex allergy', 'Latex allergy', 'Allergy', 'Latex-free elastic alternatives.', 1, 'allergy', []],
+    ['Adhesive or resin allergy', 'Adhesive or resin allergy', 'Allergy', 'Affects the choice of adhesive and bracket material.', 1, 'allergy', ['bondingEnamel']],
+    ['Penicillin allergy', 'Penicillin allergy', 'Allergy', 'Alternative antibiotic prophylaxis when needed.', 0, 'allergy', []],
+    ['Local anaesthetic reaction', 'Local anaesthetic reaction', 'Allergy', 'The causative material must be identified before any procedure.', 1, 'allergy', []],
+    ['Enlarged tonsils or adenoids', 'Enlarged tonsils or adenoids', 'Respiratory', 'mouth breathing — Review vertical pattern and refer to ENT.', 1, 'tonsils', []],
+    ['Mouth breathing', 'mouth breathing', 'Habit', 'Accompanies a hyperdivergent pattern and maxillary constriction — treat the causes first.', 1, 'habit', []],
+    ['Thumb sucking', 'Thumb sucking', 'Habit', 'anterior open bite and maxillary constriction — the habit must stop before closure.', 1, 'habit', []],
+    ['Tongue thrust', 'Tongue thrust', 'Habit', 'Obstructs open bite closure — concurrent myofunctional therapy.', 1, 'habit', []],
+    ['Bruxism', 'Bruxism', 'Habit', 'Wear and overload — a different retention plan after treatment.', 1, 'habit', []],
+    ['Atypical swallowing', 'Atypical swallowing', 'Habit', 'Linked to open bite — myofunctional assessment.', 1, 'habit', []],
+    ['Poor oral hygiene', 'oral hygiene Poor', 'Dental', 'The leading reason for stopping treatment early — a hygiene programme is required before placement.', 1, 'hygiene', []],
+    ['High caries risk', 'High caries risk', 'Dental', 'fluoride protocol and closer follow-up during treatment.', 1, 'caries', []],
+    ['Previous orthodontic treatment', 'Previous orthodontic treatment', 'Dental', 'Review the reason for stopping, relapse risk and root condition.', 1, 'prevOrtho', []],
+    ['Root resorption', 'root resorption Previous', 'Dental', 'Raises the risk of recurrent resorption — light forces and radiographic follow-up.', 1, 'resorb', ['accelerated', 'standardForces']],
+    ['Permanent extraction', 'Permanent extraction', 'Dental', 'Changes space calculation and the closure plan.', 1, 'extract', []],
+    ['Enamel defects', 'Enamel defects', 'Dental', 'Caution at debonding — risk of enamel fracture.', 1, 'enamel', []],
+    ['Retained deciduous tooth', 'Retained deciduous tooth', 'Dental', 'Confirm the permanent successor radiographically before extraction.', 1, 'toothNo', []],
+    ['Impacted tooth', 'Impacted tooth', 'Dental', 'Its three-dimensional position must be established before planning.', 1, 'toothNo', ['aligners']],
+    ['Supernumerary tooth', 'Supernumerary tooth', 'Dental', 'Review the need for extraction and its effect on space.', 1, 'toothNo', []],
+    ['TMJ disorder', 'TMJ disorder', 'TMJ', 'Documented joint assessment before any occlusal change.', 1, 'tmj', []],
+    ['Sickle cell disease', 'Sickle cell disease', 'Haematologic', 'Caution over hypoxia and infection — short visits and medical coordination.', 1, 'sickle', ['surgery']],
+    ['Thalassaemia', 'Thalassaemia', 'Haematologic', 'May come with maxillary protrusion and bony changes — review the radiographs.', 1, 'sickle', []],
+    ['Anaemia', 'Anaemia', 'Haematologic', '', -1, 'simple', []],
+    ['Hepatitis B or C', 'Hepatitis B or C', 'Haematologic', 'Raises periodontal disease risk and demands strict infection control.', 1, 'simple', []],
+    ['HIV', 'HIV', 'Haematologic', 'periodontal risk and infection — strict hygiene and closer follow-up.', 1, 'immuno', []],
+    ['Craniofacial syndrome', 'Craniofacial syndrome', 'Craniofacial', 'Combined planning with expectations set in advance.', 2, 'cleft', []],
+    ['Hemifacial microsomia', 'Hemifacial microsomia', 'Craniofacial', 'skeletal asymmetry — Possible surgical planning.', 2, 'cleft', ['aligners']],
+    ['Ectodermal dysplasia', 'Ectodermal dysplasia', 'Craniofacial', 'Missing teeth congenitally — joint prosthetic planning.', 2, 'cleft', []],
+    ['Previous orthognathic surgery', 'Previous orthognathic surgery', 'Craniofacial', 'Review the plates and skeletal stability before any movement.', 1, 'orthognathic', []],
+    ['Developmental delay', 'Developmental delay', 'Neurologic', 'Cooperation is limited — prefer fixed appliances and short visits.', 1, 'delay', ['removable', 'aligners']],
+    ['Osteoporosis', 'Osteoporosis', 'Bone & joint', 'Low bone density — light forces and closer follow-up.', 1, 'simple', ['standardForces']],
+    ['Vitamin D deficiency', 'Vitamin D deficiency', 'Bone & joint', 'Vitamin D drives tooth movement — correction preferred before starting.', 0, 'simple', []],
+    ['Allergic rhinitis', 'Allergic rhinitis', 'Respiratory', 'mouth breathing possibly chronic.', 0, 'simple', []],
+    ['Chronic sinusitis', 'Chronic sinusitis', 'Respiratory', '', -1, 'simple', []],
+    ['Gingivitis', 'Gingivitis', 'Dental', 'Treat before placement.', 0, 'simple', []],
+    ['Irregular attendance', 'Irregular attendance', 'Motivation', 'Risk of dropping out during treatment — document commitment in advance.', 1, 'simple', ['removable']],
+    ['Unrealistic expectations', 'Unrealistic expectations', 'Motivation', 'Treatment limits must be documented in writing before consent.', 1, 'simple', []],
+    ['Parent-driven', 'Motivation from the guardian', 'Motivation', 'Check the patient\'s own motivation — it directly affects compliance.', 1, 'simple', []],
+    ['Patient-driven', 'Motivation from the patient', 'Motivation', 'Higher compliance expected.', 0, 'simple', []],
+    ['Dentist referral', 'Referral from a dentist', 'Motivation', '', -1, 'simple', []],
+    ['Esthetics is priority', 'Aesthetic priority', 'Motivation', 'Document the aesthetic goals photographically before starting.', 0, 'simple', []],
+    ['Function is priority', 'Functional priority', 'Motivation', '', -1, 'simple', []],
+    ['Concerned about duration', 'Concern about treatment duration', 'Motivation', 'Discuss the expected duration and acceleration options.', 0, 'simple', []],
+    ['Concerned about cost', 'Concern about cost', 'Motivation', '', -1, 'simple', []],
+    ['Nail biting', 'Nail biting', 'Habit', '', -1, 'simple', []],
+    ['Lip biting', 'Lip biting', 'Habit', '', -1, 'simple', []],
+    ['Snoring', 'Snoring', 'Respiratory', 'A possible indicator of airway obstruction — complete the assessment.', 1, 'simple', []],
+    ['Difficulty chewing', 'Chewing difficulty', 'Function', 'A functional complaint documented as a treatment goal.', 0, 'simple', []],
+    ['Speech difficulty', 'Speech difficulty', 'Function', 'May be linked to open bite — refer for speech therapy.', 1, 'simple', []],
+    ['Regular check-ups', 'Regular check-ups', 'Dental', 'A positive indicator of compliance.', 0, 'simple', []]
+  ];
+
+  /* ---------- conditional sub-fields ----------
+     field:  [key, label, type, options|placeholder, notes]
+     notes:  option → [text, tone, blocks]                                */
+  var fieldSets = {
+    diabetes: [
+      ['type', 'Type', 's', ['—', 'Type 1', 'Type 2', 'Gestational', 'Prediabetes']],
+      ['control', 'Control status', 's', ['—', 'Controlled · HbA1c < 7%', 'Moderate · 7–9%', 'Uncontrolled · > 9%', 'Unknown'],
+        { 'Uncontrolled · > 9%': ['Inadequate control — appliance placement is deferred until it improves and a diabetologist report is required.', 2, ['extraction', 'accelerated', 'tads']],
+          'Moderate · 7–9%': ['Borderline control — strict hygiene and periodontal review every 6 weeks.', 1, []],
+          'Unknown': ['Request a recent HbA1c before deciding to start.', 1, []] }],
+      ['hba1c', 'HbA1c Latest', 't', '%'],
+      ['med', 'Medication', 's', ['—', 'Insulin', 'Metformin', 'Insulin + Metformin', 'Another medication', 'No medication'],
+        { 'Insulin': ['Insulin partly offsets the effect of diabetes on tooth movement.', 0, []],
+          'Metformin': ['Metformin partly offsets the effect of diabetes on tooth movement.', 0, []],
+          'No medication': ['No drug therapy — confirm how control is currently achieved.', 1, []] }],
+      ['since', 'Year of diagnosis', 't', 'YYYY']
+    ],
+    bisph: [
+      ['route', 'Route of administration', 's', ['—', 'Oral', 'Intravenous'],
+        { 'Intravenous': ['The intravenous route carries far higher risk — extraction and surgery need osteonecrosis risk assessment.', 2, ['extraction', 'surgery', 'tads']] }],
+      ['drug', 'Medication', 's', ['—', 'Alendronate', 'Risedronate', 'Ibandronate', 'Zoledronic acid', 'Pamidronate', 'Another medication'],
+        { 'Zoledronic acid': ['Potent intravenous bisphosphonate — reassess the feasibility of orthodontic treatment entirely.', 2, ['extraction', 'surgery', 'tads']],
+          'Pamidronate': ['Intravenous bisphosphonate — reassess the feasibility of orthodontic treatment entirely.', 2, ['extraction', 'surgery', 'tads']] }],
+      ['dur', 'Duration of use', 's', ['—', 'Less than two years', 'Two to four years', 'More than four years'],
+        { 'More than four years': ['Long use accumulates the inhibitory effect — movement may stop altogether.', 2, ['extraction', 'accelerated']] }],
+      ['status', 'Status', 's', ['—', 'Ongoing', 'Stopped']],
+      ['last', 'Date of last dose', 't', 'YYYY-MM']
+    ],
+    steroid: [
+      ['form', 'Form', 's', ['—', 'Systemic oral', 'Inhaled', 'Topical', 'Intravenous'],
+        { 'Systemic oral': ['Systemic use lowers bone density — light forces and radiographic root follow-up.', 2, ['standardForces', 'accelerated']],
+          'Inhaled': ['The inhaled form has limited systemic effect — review oral hygiene after use.', 0, []] }],
+      ['drug', 'Drug and dose', 't', 'e.g. Prednisolone 10mg'],
+      ['dur', 'Duration', 's', ['—', 'Less than 3 months', '3 Up to 12 months', 'More than a year'],
+        { 'More than a year': ['Chronic use — bone density assessment required before starting.', 2, ['standardForces']] }],
+      ['reason', 'Reason for use', 't', 'Primary diagnosis']
+    ],
+    asthma: [
+      ['sev', 'Severity', 's', ['—', 'Mild intermittent', 'Mild persistent', 'Moderate persistent', 'Severe'],
+        { 'Severe': ['Severe asthma — short visits, and confirm the inhaler is present at every visit.', 1, []] }],
+      ['med', 'Medication', 's', ['—', 'Bronchodilator as needed', 'Inhaled corticosteroid', 'Both together', 'Another medication'],
+        { 'Inhaled corticosteroid': ['Inhaled corticosteroids raise the risk of oral candidiasis — rinse after use.', 1, []],
+          'Both together': ['Inhaled corticosteroids raise the risk of oral candidiasis — rinse after use.', 1, []] }],
+      ['mouth', 'mouth breathing Concurrent', 's', ['—', 'Yes', 'No'],
+        { 'Yes': ['mouth breathing Chronic — review vertical pattern and maxillary constriction at diagnosis.', 1, []] }],
+      ['last', 'Last episode', 't', 'YYYY-MM']
+    ],
+    epilepsy: [
+      ['type', 'Seizure type', 's', ['—', 'Focal', 'Generalised', 'Unspecified']],
+      ['med', 'Medication', 's', ['—', 'Phenytoin', 'Valproate', 'Carbamazepine', 'Levetiracetam', 'Lamotrigine', 'Another medication'],
+        { 'Phenytoin': ['Phenytoin causes gingival hyperplasia that obstructs hygiene around brackets — coordinate a drug change or intensive periodontal review.', 2, ['aligners']] }],
+      ['control', 'Control', 's', ['—', 'Controlled · seizure-free > 1 year', 'Infrequent seizures', 'Uncontrolled'],
+        { 'Uncontrolled': ['Uncontrolled — avoid removable appliances entirely for aspiration risk.', 2, ['removable', 'aligners']],
+          'Infrequent seizures': ['Prefer fixed appliances over removable ones.', 1, ['removable']] }],
+      ['last', 'Last episode', 't', 'YYYY-MM']
+    ],
+    cardiac: [
+      ['dx', 'Cardiac diagnosis', 't', 'e.g. repaired VSD'],
+      ['proph', 'Antibiotic prophylaxis', 's', ['—', 'Required', 'Not required', 'Unknown'],
+        { 'Required': ['Mandatory prophylaxis before any bleeding procedure — record the protocol and dose in the file.', 2, []],
+          'Unknown': ['Request a cardiologist report before any bleeding procedure.', 1, ['extraction', 'surgery', 'tads']] }],
+      ['med', 'Current medications', 't', 'Drug name and dose'],
+      ['report', 'Cardiologist report', 's', ['—', 'Attached', 'Not attached'],
+        { 'Not attached': ['The report is a precondition for starting.', 1, []] }]
+    ],
+    htn: [
+      ['med', 'Medication', 's', ['—', 'Amlodipine', 'Nifedipine', 'ACE inhibitor', 'Beta blocker', 'Diuretic', 'Another medication'],
+        { 'Amlodipine': ['Calcium channel blockers cause gingival hyperplasia — periodontal review every 6 weeks.', 2, ['aligners']],
+          'Nifedipine': ['Calcium channel blockers cause gingival hyperplasia — periodontal review every 6 weeks.', 2, ['aligners']] }],
+      ['control', 'Control', 's', ['—', 'Controlled', 'Uncontrolled']]
+    ],
+    jia: [
+      ['tmj', 'TMJ involvement', 's', ['—', 'Yes — radiographically confirmed', 'No', 'Not assessed'],
+        { 'Yes — radiographically confirmed': ['Joint involvement means risk of mandibular growth deficiency and asymmetry — joint imaging and growth follow-up required.', 2, ['functional', 'accelerated']],
+          'Not assessed': ['TMJ The most commonly affected site — request a radiographic assessment before starting.', 2, ['functional']] }],
+      ['activity', 'Disease activity', 's', ['—', 'Active', 'Quiescent'],
+        { 'Active': ['The disease is active — deferring the start until quiescence is preferred.', 2, ['surgery', 'functional']] }],
+      ['med', 'Medication', 's', ['—', 'Methotrexate', 'TNF inhibitor', 'NSAIDs', 'Corticosteroid', 'Tocilizumab', 'Another medication'],
+        { 'NSAIDs': ['Chronic use slows tooth movement — allow a longer treatment duration.', 1, ['accelerated']],
+          'Corticosteroid': ['Lowers bone density — light forces and root follow-up.', 1, ['standardForces']] }],
+      ['joints', 'Joints involved', 't', 'e.g. both knees + right TMJ']
+    ],
+    bleed: [
+      ['type', 'Type', 's', ['—', 'Haemophilia A', 'Haemophilia B', 'von Willebrand', 'Thrombocytopenia', 'Another disorder']],
+      ['sev', 'Severity', 's', ['—', 'Mild', 'Moderate', 'Severe'],
+        { 'Severe': ['Clotting factors must be replaced before any extraction or surgery — arrange with haematology in advance.', 2, ['extraction', 'surgery', 'tads']] }],
+      ['factor', 'Factor level', 't', '%'],
+      ['med', 'Current therapy', 't', 'Therapy name']
+    ],
+    thyroid: [
+      ['type', 'Type', 's', ['—', 'Hypothyroidism', 'Hyperthyroidism', 'Nodules', 'Hashimoto', 'Previous resection']],
+      ['med', 'Medication', 's', ['—', 'Levothyroxine', 'Antithyroid drug', 'No medication'],
+        { 'Levothyroxine': ['thyroid hormone Increases the rate of tooth movement — monitor movement speed and root resorption.', 1, []] }],
+      ['control', 'Control', 's', ['—', 'Controlled', 'Uncontrolled']]
+    ],
+    allergy: [
+      ['sev', 'Reaction severity', 's', ['—', 'Local skin rash', 'Swelling', 'Breathing difficulty', 'Anaphylaxis'],
+        { 'Anaphylaxis': ['A life-threatening reaction — exposure is absolutely contraindicated and is flagged at the highest warning level in the file.', 2, []],
+          'Breathing difficulty': ['A severe reaction — avoid exposure entirely.', 2, []] }],
+      ['how', 'How it was established', 's', ['—', 'Medical diagnosis by testing', 'Previous experience', 'Unconfirmed suspicion'],
+        { 'Unconfirmed suspicion': ['Unconfirmed — allergy testing preferred before choosing the appliance material.', 1, []] }],
+      ['note', 'Reaction description', 't', 'What happened in detail']
+    ],
+    immuno: [
+      ['cause', 'Cause', 's', ['—', 'Organ transplant', 'Chemotherapy', 'Autoimmune disease', 'Biologic therapy', 'Another cause']],
+      ['med', 'Medication', 's', ['—', 'Cyclosporine', 'Tacrolimus', 'Azathioprine', 'Mycophenolate', 'Another medication'],
+        { 'Cyclosporine': ['Cyclosporine causes severe gingival hyperplasia — intensive periodontal review or coordinate a drug change.', 2, ['aligners']] }],
+      ['dur', 'Treatment duration', 't', 'e.g. 3 years']
+    ],
+    osa: [
+      ['dx', 'Method of diagnosis', 's', ['—', 'Sleep study', 'Clinical assessment', 'Suspicion']],
+      ['ahi', 'AHI', 't', 'events/hour'],
+      ['tx', 'Current therapy', 's', ['—', 'CPAP', 'Oral appliance', 'Previous surgery', 'No treatment'],
+        { 'Oral appliance': ['The oral appliance may conflict with orthodontic appliances — coordinate the sequence.', 1, ['removable']],
+          'No treatment': ['A treatment opportunity — maxillary expansion or mandibular advancement may help the airway.', 0, []] }]
+    ],
+    perio: [
+      ['stage', 'Stage', 's', ['—', 'Stage I', 'Stage II', 'Stage III', 'Stage IV'],
+        { 'Stage III': ['Advanced bone loss — starting is contraindicated before documented periodontal stability.', 2, ['standardForces', 'accelerated']],
+          'Stage IV': ['bone loss Severe — reassess the feasibility of orthodontic treatment entirely.', 2, ['extraction', 'tads', 'accelerated', 'standardForces']] }],
+      ['status', 'Stability', 's', ['—', 'Stable after treatment', 'Under treatment', 'Untreated'],
+        { 'Untreated': ['Appliance placement is contraindicated — periodontal treatment first.', 2, []] }],
+      ['bone', 'bone loss', 't', '% or mm'],
+      ['mob', 'tooth mobility', 's', ['—', 'None', 'Grade I', 'Grade II', 'Grade III'],
+        { 'Grade III': ['Severe mobility — tooth loss risk during treatment.', 2, ['standardForces']] }]
+    ],
+    caries: [
+      ['count', 'Teeth involved', 't', 'Count'],
+      ['status', 'Restorative status', 's', ['—', 'Complete', 'Under treatment', 'Not started'],
+        { 'Not started': ['Appliance placement is contraindicated before restorations are completed.', 2, []] }],
+      ['teeth', 'Tooth numbers', 't', 'FDI e.g. 16, 26, 36']
+    ],
+    trauma: [
+      ['date', 'Date of trauma', 't', 'YYYY-MM'],
+      ['teeth', 'Teeth affected', 't', 'FDI e.g. 11, 21'],
+      ['pulp', 'Pulpal status', 's', ['—', 'Vital', 'Pulpally treated', 'Necrotic', 'Not assessed'],
+        { 'Necrotic': ['A necrotic tooth — root canal treatment required before any movement.', 2, ['standardForces']],
+          'Not assessed': ['Request a pulpal and radiographic assessment before starting.', 2, []] }],
+      ['tx', 'Treatment carried out', 't', 'Brief description']
+    ],
+    eating: [
+      ['type', 'Type', 's', ['—', 'Anorexia nervosa', 'Bulimia nervosa', 'Another type'],
+        { 'Bulimia nervosa': ['Repeated vomiting causes severe enamel erosion — avoid bracket adhesive on eroded enamel.', 2, ['bondingEnamel']] }],
+      ['status', 'Status', 's', ['—', 'Active', 'Under follow-up', 'Previous and treated'],
+        { 'Active': ['The disorder is active — deferring the start and coordinating with the psychiatrist is preferred.', 2, []] }],
+      ['erosion', 'Visible enamel erosion', 's', ['—', 'Yes', 'No'],
+        { 'Yes': ['Visible erosion — direct bonding is not safe; consider bands or alternatives.', 2, ['bondingEnamel']] }]
+    ],
+    renal: [
+      ['stage', 'Stage', 's', ['—', 'Stage 1–2', 'Stage 3', 'Stage 4', 'Stage 5 · Dialysis', 'Kidney transplant'],
+        { 'Stage 5 · Dialysis': ['Renal dialysis — coordinate visit scheduling and the timing of any bleeding procedure with the nephrologist.', 2, ['extraction', 'surgery', 'tads']],
+          'Kidney transplant': ['A transplant patient on immunosuppression — review periodontal overgrowth and infection risk.', 2, ['aligners']] }],
+      ['med', 'Medications', 't', 'Drug name and dose'],
+      ['erupt', 'delayed eruption Noted', 's', ['—', 'Yes', 'No']]
+    ],
+    tmj: [
+      ['sx', 'Symptoms', 's', ['—', 'Clicking', 'Locking', 'Pain', 'Limited opening', 'Multiple symptoms'],
+        { 'Locking': ['Joint locking — stability is required before any occlusal change.', 2, ['functional']],
+          'Multiple symptoms': ['Multiple symptoms — full joint assessment before starting.', 2, ['functional']] }],
+      ['side', 'Side', 's', ['—', 'Right', 'Left', 'Both sides']],
+      ['open', 'Maximum mouth opening', 't', 'mm'],
+      ['dur', 'Since when', 't', 'e.g. 6 months']
+    ],
+    prevOrtho: [
+      ['appl', 'Appliance type', 's', ['—', 'Full fixed', 'Partial fixed', 'Removable', 'Clear aligners', 'Functional appliance']],
+      ['dur', 'Treatment duration', 't', 'e.g. 18 months'],
+      ['why', 'Reason for stopping', 's', ['—', 'Treatment completed', 'Patient dropped out', 'Patient moved away', 'Problem with the result'],
+        { 'Patient dropped out': ['A previous dropout — the strongest predictor of dropping out again; document commitment before starting.', 2, ['removable', 'aligners']],
+          'Problem with the result': ['Review the reason for the earlier failure before building the new plan.', 1, []] }],
+      ['relapse', 'Relapse noted', 's', ['—', 'Yes', 'No']],
+      ['doctor', 'Previous clinician', 't', 'Name or clinic']
+    ],
+    resorb: [
+      ['teeth', 'Teeth affected', 't', 'FDI'],
+      ['deg', 'Grade', 's', ['—', 'Mild', 'Moderate', 'Severe'],
+        { 'Severe': ['Previously severe resorption — very light forces and a radiograph every 3 months.', 2, ['standardForces', 'accelerated', 'tads']] }],
+      ['when', 'When it was detected', 't', 'YYYY']
+    ],
+    extract: [
+      ['teeth', 'Tooth numbers', 't', 'FDI e.g. 14, 24'],
+      ['when', 'Date of extraction', 't', 'YYYY'],
+      ['why', 'Cause', 's', ['—', 'caries', 'Trauma', 'For orthodontic reasons', 'Periodontal disease', 'Another cause']]
+    ],
+    toothNo: [
+      ['teeth', 'Tooth numbers', 't', 'FDI'],
+      ['loc', 'Position', 's', ['—', 'Palatal', 'Buccal', 'Within the arch', 'Unspecified']],
+      ['img', '3D imaging', 's', ['—', 'Available', 'Not available'],
+        { 'Not available': ['CBCT is required to localise it before planning.', 1, []] }]
+    ],
+    hygiene: [
+      ['level', 'Level', 's', ['—', 'Acceptable', 'Poor', 'Very poor'],
+        { 'Very poor': ['Appliance placement is contraindicated before a documented hygiene programme of at least one month.', 2, ['aligners']] }],
+      ['plaque', 'plaque index', 't', '%'],
+      ['program', 'Hygiene programme', 's', ['—', 'Started', 'Not started']]
+    ],
+    habit: [
+      ['freq', 'Frequency', 's', ['—', 'Rare', 'Daily', 'Ongoing'],
+        { 'Ongoing': ['A persistent habit — it must stop before or alongside the start of treatment, otherwise the result relapses.', 2, []] }],
+      ['dur', 'Since when', 't', 'e.g. 5 years'],
+      ['tx', 'Previous attempts to stop', 's', ['—', 'None', 'Failed attempts', 'Under treatment']]
+    ],
+    enamel: [
+      ['type', 'Type', 's', ['—', 'Fluorosis', 'Hypoplasia', 'Amelogenesis imperfecta', 'MIH', 'Another type'],
+        { 'Amelogenesis imperfecta': ['Enamel unable to tolerate conventional bonding — special adhesives and protection at debonding.', 2, ['bondingEnamel']] }],
+      ['teeth', 'Teeth affected', 't', 'FDI'],
+      ['sev', 'Severity', 's', ['—', 'Mild', 'Moderate', 'Severe'],
+        { 'Severe': ['Severe defects — review the safety of direct bonding.', 2, ['bondingEnamel']] }]
+    ],
+    nsaid: [
+      ['drug', 'Medication', 's', ['—', 'Ibuprofen', 'Diclofenac', 'Aspirin', 'Naproxen', 'Celecoxib', 'Another medication'],
+        { 'Diclofenac': ['One of the strongest inhibitors of tooth movement — switching to paracetamol is preferred.', 2, ['accelerated']],
+          'Aspirin': ['One of the strongest inhibitors of tooth movement — switching to paracetamol is preferred.', 2, ['accelerated']] }],
+      ['freq', 'Frequency', 's', ['—', 'As needed', 'Weekly', 'Daily'],
+        { 'Daily': ['Daily use — movement is slowed appreciably; discuss an alternative with the treating physician.', 2, ['accelerated']] }],
+      ['why', 'Reason for use', 't', 'Diagnosis']
+    ],
+    gh: [
+      ['drug', 'Medication', 't', 'Drug name'],
+      ['start', 'Start date', 't', 'YYYY-MM'],
+      ['cvm', 'Recent CVM assessment', 's', ['—', 'Available', 'Not available'],
+        { 'Not available': ['Treatment shifts the timing of the peak — request a CVM assessment before any functional correction.', 2, ['functional']] }]
+    ],
+    puberty: [
+      ['signs', 'Signs present', 't', 'Brief description'],
+      ['age', 'Age at onset', 't', 'years'],
+      ['cvm', 'CVM stage', 's', ['—', 'CS1', 'CS2', 'CS3', 'CS4', 'CS5', 'CS6'],
+        { 'CS5': ['growth peak complete — functional correction is no longer viable.', 1, ['functional']],
+          'CS6': ['Growth complete — Functional correction is not viable; surgical option if needed.', 2, ['functional']] }]
+    ],
+    cleft: [
+      ['type', 'Type', 't', 'Full diagnosis'],
+      ['surg', 'Previous surgeries', 't', 'Type and date'],
+      ['team', 'Multidisciplinary team', 's', ['—', 'In place', 'Not in place'],
+        { 'Not in place': ['A team must be assembled before building the plan — orthodontics alone is not enough.', 2, []] }]
+    ],
+    orthognathic: [
+      ['proc', 'Type of surgery', 't', 'e.g. BSSO'],
+      ['when', 'Date', 't', 'YYYY'],
+      ['plates', 'Plates', 's', ['—', 'Retained', 'Removed'],
+        { 'Retained': ['Plates retained — they limit TAD sites; review the radiographs before planning.', 1, ['tads']] }],
+      ['stable', 'skeletal stability', 's', ['—', 'Stable', 'Partial relapse', 'Not assessed'],
+        { 'Partial relapse': ['Post-surgical relapse — re-assess the skeletal pattern before any movement.', 2, []] }]
+    ],
+    delay: [
+      ['dx', 'Diagnosis', 't', 'if present'],
+      ['coop', 'Expected level of cooperation', 's', ['—', 'Good', 'Moderate', 'Limited'],
+        { 'Limited': ['Limited cooperation — fixed appliances only and short, frequent visits.', 2, ['removable', 'aligners']] }],
+      ['carer', 'Permanent escort', 's', ['—', 'Yes', 'No']]
+    ],
+    sickle: [
+      ['type', 'Type', 't', 'Full diagnosis'],
+      ['crisis', 'Last crisis', 't', 'YYYY-MM'],
+      ['transf', 'Regular blood transfusion', 's', ['—', 'Yes', 'No']]
+    ],
+    eds: [
+      ['type', 'Type', 's', ['—', 'Hypermobile', 'Classical', 'Vascular', 'Another type'],
+        { 'Vascular': ['The vascular type carries higher risk — medical coordination is mandatory before any procedure.', 2, ['extraction', 'surgery', 'tads']] }],
+      ['tmj', 'hypermobility TMJ', 's', ['—', 'Yes', 'No'],
+        { 'Yes': ['hypermobility joint involvement — avoid functional appliances.', 2, ['functional']] }]
+    ],
+    radio: [
+      ['site', 'Irradiated site', 't', 'Region'],
+      ['dose', 'Dose', 't', 'Gy'],
+      ['when', 'Date', 't', 'YYYY']
+    ],
+    anticoag: [
+      ['drug', 'Medication', 's', ['—', 'Warfarin', 'Aspirin', 'Clopidogrel', 'DOAC', 'Another medication'],
+        { 'Warfarin': ['An INR reading is required before any bleeding procedure.', 2, ['extraction', 'surgery', 'tads']] }],
+      ['inr', 'INR Latest', 't', 'Value'],
+      ['why', 'Reason for use', 't', 'Diagnosis']
+    ],
+    tonsils: [
+      ['grade', 'Grade', 's', ['—', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4'],
+        { 'Grade 3': ['Palpable enlargement — refer to ENT before assessing vertical pattern.', 1, []],
+          'Grade 4': ['Severe enlargement obstructing the airway — urgent ENT referral.', 2, []] }],
+      ['ent', 'ENT assessment', 's', ['—', 'Done', 'Not done']],
+      ['mouth', 'mouth breathing', 's', ['—', 'Yes', 'No']]
+    ],
+    simple: []
+  };
+
+  /* ---------- cephalometric & clinical measurements ----------
+     [en, ar, help, defaultValue, normLow, normHigh, scaleMin, scaleMax, unit] */
+  var measurementGroups = [
+    ['ap', 'Skeletal — sagittal', 'Skeletal — sagittal', '#2563eb', '#eff6ff'],
+    ['vert', 'Skeletal — vertical', 'Skeletal — vertical', '#7c3aed', '#f5f3ff'],
+    ['dent', 'Dental', 'Dental', '#059669', '#ecfdf5'],
+    ['soft', 'Soft tissue', 'Soft tissue', '#d97706', '#fffbeb']
+  ];
+
+  var measurements = {
+    ap: [
+      ['SNA', 'Anteroposterior position of the maxilla', 'The angle between Sella–Nasion and point A. A high value means maxillary protrusion, a low one retrusion.', 79.3, 78, 84, 70, 92, 'deg'],
+      ['SNB', 'Anteroposterior position of the mandible', 'The angle between Sella–Nasion and point B. A high value means mandibular protrusion.', 82.8, 75, 81, 68, 90, 'deg'],
+      ['ANB', 'skeletal discrepancy between the jaws', 'The difference between SNA and SNB after Eastman correction. A negative value indicates a Class III skeletal pattern.', -3.5, 1, 5, -10, 10, 'deg'],
+      ['Wits', 'Wits appraisal of the sagittal relationship', 'Projection of points A and B onto the occlusal plane — unaffected by cranial base inclination the way ANB is.', -6.7, -3, 1, -12, 8, 'mm'],
+      ['N-perp → A', 'Distance of point A from the nasion perpendicular', 'Distance of point A from the line dropped from Nasion. A negative value means a retruded maxilla.', -3.3, -1, 3, -10, 8, 'mm'],
+      ['N-perp → Pog', 'Distance of Pogonion from the nasion perpendicular', 'Distance of the bony chin from the nasion perpendicular — a direct indicator of chin prominence.', -4.7, -4, -2, -14, 6, 'mm']
+    ],
+    vert: [
+      ['SN / MxP', 'Maxillary plane inclination', 'The angle between the anterior cranial base and the maxillary plane — it defines maxillary rotation.', 8.6, 5, 11, 0, 20, 'deg'],
+      ['MMPA', 'The angle between the maxillary and mandibular planes', 'The angle between the maxillary and mandibular planes — the primary indicator of vertical pattern.', 27.0, 22, 32, 14, 42, 'deg'],
+      ['FMPA', 'lower facial angle', 'The angle between Frankfort horizontal and the mandibular plane — a high value means a hyperdivergent pattern.', 28.4, 22, 32, 14, 42, 'deg'],
+      ['LAFH %', 'Lower anterior facial height ratio', 'Ratio of the lower third to total facial height.', 56.6, 53, 57, 45, 65, 'pct']
+    ],
+    dent: [
+      ['Ui / MxP', 'Upper incisor inclination to the maxillary plane', 'Inclination of the long axis of the upper incisor. A high value means proclination.', 119.9, 103, 115, 90, 135, 'deg'],
+      ['Li / MnP', 'Lower incisor inclination to the mandibular plane', 'Inclination of the long axis of the lower incisor to the mandibular plane.', 99.4, 87, 99, 75, 115, 'deg'],
+      ['Li / facial', 'lower incisor to facial pattern', 'Lower incisor inclination measured against the facial pattern — it shows the dental compensation for the skeletal pattern.', 126.4, 115, 125, 100, 145, 'deg'],
+      ['Li → A-Pog', 'Distance of the lower incisor from A-Pog', 'Position of the lower incisor edge ahead of the A–Pogonion line — a key reference for the limits of tooth movement.', 7.6, -1, 3, -6, 12, 'mm'],
+      ['UI / LI', 'interincisal angle', 'The angle between the upper and lower incisor axes. A low value accompanies bimaxillary proclination.', 113.7, 125, 145, 100, 165, 'deg']
+    ],
+    soft: [
+      ['NLA', 'Nasolabial angle', 'The angle between the nasal base and the upper lip. A low value accompanies upper lip protrusion.', 77.4, 90, 110, 60, 130, 'deg'],
+      ['LL → E-plane', 'lower lip relative to the E-plane', 'Distance of the lower lip from the E-plane drawn between nose tip and chin.', 1.0, -4, 0, -10, 8, 'mm']
+    ]
+  };
+
+  /* ---------- interpretation engine ----------
+     Each measurement group derives ONE conclusion the doctor can read at a glance,
+     with the numbers that produced it, a severity band, and conflict flags where
+     two measurements disagree. Deviation is expressed in SD units, derived from
+     the reference range itself: mid = (low+high)/2, SD = (high-low)/2.          */
+
+  function sd(m, value) {
+    var lo = m[4], hi = m[5];
+    var mid = (lo + hi) / 2, s = (hi - lo) / 2 || 1;
+    return (value - mid) / s;
+  }
+
+  function band(abs) {
+    if (abs < 1) return { key: 'normal', ar: 'Within normal', tone: 0 };
+    if (abs < 2) return { key: 'mild', ar: 'Mild', tone: 1 };
+    if (abs < 3) return { key: 'moderate', ar: 'Moderate', tone: 1 };
+    return { key: 'severe', ar: 'Severe', tone: 2 };
+  }
+
+  /* values: { '<groupKey>-<index>': '<number as string>' } */
+  function interpret(groupKey, values) {
+    var rows = measurements[groupKey] || [];
+    var v = {}, present = {}, missing = [];
+    rows.forEach(function (m, i) {
+      var raw = (values || {})[groupKey + '-' + i];
+      var num = parseFloat(raw);
+      if (raw === undefined || raw === '' || isNaN(num)) { missing.push(m[0]); return; }
+      v[m[0]] = num;
+      present[m[0]] = { value: num, sd: sd(m, num), unit: m[8] };
+    });
+
+    var cite = function (names) {
+      return names.filter(function (x) { return present[x]; }).map(function (x) {
+        return { en: x, value: present[x].value, sd: present[x].sd, unit: present[x].unit };
+      });
+    };
+    var out = { group: groupKey, headline: null, detail: '', severity: band(0), cites: [],
+                conflicts: [], missing: missing, diagram: null, partial: missing.length > 0 };
+
+    /* ---- sagittal ---- */
+    if (groupKey === 'ap') {
+      var anb = present['ANB'], wits = present['Wits'];
+      var npA = present['N-perp → A'], npP = present['N-perp → Pog'];
+      var snb = present['SNB'], sna = present['SNA'];
+      if (!anb && !wits) {
+        out.headline = 'Sagittal relationship not yet determined';
+        out.detail = 'ANB or Wits is needed to establish the skeletal pattern.';
+        return out;
+      }
+      var lead = anb || wits;
+      var cls = lead.sd < -1 ? 'Class III' : lead.sd > 1 ? 'Class II' : 'Class I';
+      out.severity = band(Math.abs(lead.sd));
+      out.headline = cls + ' skeletal pattern' + (out.severity.key === 'normal' ? '' : ' — ' + out.severity.ar);
+
+      var who = [];
+      if (npA && npA.sd < -1) who.push('maxillary retrusion');
+      else if (npA && npA.sd > 1) who.push('maxillary protrusion');
+      else if (sna && sna.sd < -1) who.push('maxillary retrusion');
+      if (snb && snb.sd > 1) who.push('mandibular protrusion');
+      else if (snb && snb.sd < -1) who.push('mandibular retrusion');
+      if (npP && npP.sd < -1 && who.indexOf('mandibular retrusion') < 0 && who.indexOf('mandibular protrusion') < 0) who.push('chin retrusion');
+      out.detail = who.length ? who.join(' + ') + ' — Both jaws share in the discrepancy.' : 'The discrepancy without one jaw clearly responsible.';
+      if (who.length === 1) out.detail = who[0] + ' is the main source of the discrepancy.';
+
+      out.cites = cite(['ANB', 'Wits', 'SNA', 'SNB', 'N-perp → A', 'N-perp → Pog']);
+      if (anb && wits && ((anb.sd < -1 && wits.sd > 1) || (anb.sd > 1 && wits.sd < -1)))
+        out.conflicts.push('ANB and Wits disagree — check cranial base inclination; Wits is unaffected by it');
+      if (anb && Math.abs(anb.sd) < 1 && wits && Math.abs(wits.sd) >= 2)
+        out.conflicts.push('ANB normal while Wits is clearly abnormal — cranial base rotation likely masking the discrepancy');
+      out.diagram = { type: 'sagittal',
+        max: npA ? npA.sd : (sna ? sna.sd : 0),
+        mand: npP ? npP.sd : (snb ? snb.sd : 0) };
+      return out;
+    }
+
+    /* ---- vertical ---- */
+    if (groupKey === 'vert') {
+      var mm = present['MMPA'] || present['FMPA'];
+      var lafh = present['LAFH %'];
+      if (!mm) {
+        out.headline = 'Vertical pattern not yet determined';
+        out.detail = 'MMPA or FMPA is needed to establish the vertical pattern.';
+        return out;
+      }
+      var vk = mm.sd > 1 ? 'High-angle' : mm.sd < -1 ? 'Low-angle' : 'Average';
+      out.severity = band(Math.abs(mm.sd));
+      out.headline = vk + ' vertical pattern' + (out.severity.key === 'normal' ? '' : ' — ' + out.severity.ar);
+      out.detail = vk === 'Average'
+        ? 'vertical dimension balanced — no vertical limits on planning.'
+        : vk === 'High-angle'
+          ? 'A hyperdivergent pattern — caution over facial lengthening, and vertical control during treatment.'
+          : 'A hypodivergent pattern — deep bite is more likely, and vertical opening is needed.';
+      out.cites = cite(['MMPA', 'FMPA', 'SN / MxP', 'LAFH %']);
+      if (lafh && mm && Math.abs(mm.sd) < 1 && Math.abs(lafh.sd) >= 2)
+        out.conflicts.push('vertical angle normal while LAFH is abnormal — recheck, or an isolated lower-third discrepancy');
+      out.diagram = { type: 'vertical', angle: mm.sd, lafh: lafh ? lafh.sd : 0 };
+      return out;
+    }
+
+    /* ---- dental ---- */
+    if (groupKey === 'dent') {
+      var ui = present['Ui / MxP'], li = present['Li / MnP'];
+      var uili = present['UI / LI'], apog = present['Li → A-Pog'];
+      if (!ui && !li) {
+        out.headline = 'Incisor inclination not yet determined';
+        out.detail = 'Ui / MxP and Li / MnP are the basis for assessing dental compensation.';
+        return out;
+      }
+      var parts = [];
+      if (ui) parts.push('Upper incisor ' + (ui.sd > 1 ? 'proclined' : ui.sd < -1 ? 'retroclined' : 'normally inclined'));
+      if (li) parts.push('lower ' + (li.sd > 1 ? 'proclined' : li.sd < -1 ? 'retroclined' : 'normally inclined'));
+      var worst = Math.max(ui ? Math.abs(ui.sd) : 0, li ? Math.abs(li.sd) : 0);
+      out.severity = band(worst);
+      out.headline = parts.join(', ') + (out.severity.key === 'normal' ? '' : ' — ' + out.severity.ar);
+
+      var apPat = interpret('ap', values);
+      var cls3 = apPat.headline && apPat.headline.indexOf('Class III') >= 0;
+      var cls2 = apPat.headline && apPat.headline.indexOf('Class II') === 0;
+      if (cls3 && ui && li) {
+        if (ui.sd > 1 && li.sd < -1) out.detail = 'dental compensation Typical of Class III — the upper arch forward and the lower back mask the skeletal discrepancy.';
+        else if (ui.sd > 1 && li.sd > 1) out.detail = 'incisors proclined together — no dental compensation for the skeletal pattern; any surgical route needs decompensation first.';
+        else out.detail = 'dental compensation is incomplete for the skeletal pattern.';
+      } else if (cls2 && ui && li) {
+        out.detail = ui.sd < -1 ? 'upper incisor retroclined — dental compensation for Class II.' : 'An increased overjet that is partly dental in origin.';
+      } else {
+        out.detail = 'incisor inclination is read against the skeletal pattern to set the limits of movement.';
+      }
+      out.cites = cite(['Ui / MxP', 'Li / MnP', 'UI / LI', 'Li → A-Pog', 'Li / facial']);
+      if (apog && apog.sd >= 2)
+        out.conflicts.push('lower incisors substantially ahead of A-Pog — anterior movement limits exhausted');
+      if (uili && ui && li && uili.sd < -2 && ui.sd > 1 && li.sd > 1)
+        out.conflicts.push('markedly reduced interincisal angle with bimaxillary proclination — relapse risk');
+      out.diagram = { type: 'dental', upper: ui ? ui.sd : 0, lower: li ? li.sd : 0 };
+      return out;
+    }
+
+    /* ---- soft tissue ---- */
+    if (groupKey === 'soft') {
+      var nla = present['NLA'], ll = present['LL → E-plane'];
+      if (!nla && !ll) {
+        out.headline = 'Soft tissue not yet assessed';
+        out.detail = 'NLA and lower lip position define the aesthetic goal.';
+        return out;
+      }
+      var sp = [];
+      if (nla) sp.push(nla.sd < -1 ? 'Acute nasolabial angle' : nla.sd > 1 ? 'Obtuse nasolabial angle' : 'Normal nasolabial angle');
+      if (ll) sp.push(ll.sd > 1 ? 'lower lip ahead of E-plane' : ll.sd < -1 ? 'lower lip behind E-plane' : 'lower lip within E-plane');
+      var w2 = Math.max(nla ? Math.abs(nla.sd) : 0, ll ? Math.abs(ll.sd) : 0);
+      out.severity = band(w2);
+      out.headline = sp.join(', ') + (out.severity.key === 'normal' ? '' : ' — ' + out.severity.ar);
+      out.detail = (nla && nla.sd < -1)
+        ? 'profile convex in the lower third — any incisor retraction will open the angle further.'
+        : 'soft tissue limit how far movement is aesthetically acceptable.';
+      out.cites = cite(['NLA', 'LL → E-plane']);
+      out.diagram = { type: 'soft', nla: nla ? nla.sd : 0, lip: ll ? ll.sd : 0 };
+      return out;
+    }
+
+    return out;
+  }
+
+  /* ---------- case summary (MOrth convention) ----------
+     ONE canonical sentence: incisor relationship on a skeletal base, with the
+     vertical proportions and soft tissue, then "complicated by" the findings.
+     Plus the 3D-3T grid: skeletal / dental / soft tissue × sagittal / transverse
+     / vertical. Empty cells are a visible gap, and the count of affected cells
+     IS the complexity score.                                                   */
+
+  var gridRows = [
+    ['skeletal', 'Skeletal', 'Skeletal'],
+    ['dental', 'Dental', 'Dental'],
+    ['soft', 'Soft tissue', 'Soft tissue']
+  ];
+  var gridCols = [
+    ['sagittal', 'Sagittal', 'Sagittal'],
+    ['vertical', 'Vertical', 'Vertical'],
+    ['transverse', 'Transverse', 'Transverse']
+  ];
+
+  /* which measurements / exam fields feed each cell */
+  var gridSources = {
+    'skeletal-sagittal':  { group: 'ap',   idx: [2, 3, 4, 5] },
+    'skeletal-vertical':  { group: 'vert', idx: [0, 1, 2, 3] },
+    'skeletal-transverse':{ exam: ['facialAsymmetry'] },
+    'dental-sagittal':    { group: 'dent', idx: [0, 1, 3, 4], exam: ['occ-0', 'occ-1', 'occ-2', 'occ-3', 'occ-4', 'occ-5'] },
+    'dental-vertical':    { exam: ['occ-7'] },
+    'dental-transverse':  { exam: ['crossbite', 'archWidth'] },
+    'soft-sagittal':      { group: 'soft', idx: [0, 1] },
+    'soft-vertical':      { exam: ['incisorDisplay', 'lipCompetence'] },
+    'soft-transverse':    { exam: ['facialAsymmetry'] }
+  };
+
+  function caseSummary(values, exam) {
+    var v = values || {}, ex = exam || {};
+    var ap = interpret('ap', v), vert = interpret('vert', v);
+    var dent = interpret('dent', v), soft = interpret('soft', v);
+
+    /* --- the sentence --- */
+    var incisor = ex.incisorRelationship || ex['occ-incisor-incisorRel'] || null;
+    if (incisor === '—') incisor = null;
+    var skelClass = null, skelSev = null;
+    if (ap.headline && ap.headline.indexOf('Class') === 0) {
+      skelClass = ap.headline.split(' ')[0] + ' ' + ap.headline.split(' ')[1];
+      skelSev = ap.severity.key === 'normal' ? null : ap.severity.ar.toLowerCase();
+    }
+    var vertProp = null;
+    if (vert.headline && vert.headline.indexOf('vertical pattern') > 0) {
+      var vw = vert.headline.split(' ')[0];
+      vertProp = vw === 'Average' ? 'average vertical proportions'
+        : vw === 'High-angle' ? 'increased vertical proportions'
+        : 'reduced vertical proportions';
+    }
+    var st = [];
+    if (soft.cites && soft.cites.length) {
+      soft.cites.forEach(function (c) {
+        if (c.en === 'NLA' && Math.abs(c.sd) >= 1) st.push((c.sd < 0 ? 'a reduced' : 'an increased') + ' nasolabial angle');
+        if (c.en === 'LL → E-plane' && Math.abs(c.sd) >= 1) st.push('the lower lip ' + (c.sd > 0 ? 'ahead of' : 'behind') + ' the E-plane');
+      });
+    }
+
+    var parts = [];
+    parts.push(incisor ? incisor + ' incisor relationship' : '___ incisor relationship');
+    parts.push('on a ' + (skelClass ? (skelSev ? skelSev + ' ' : '') + skelClass : '___') + ' skeletal base');
+    if (vertProp) parts.push('with ' + vertProp);
+    if (st.length) parts.push((vertProp ? 'and ' : 'with ') + st.join(' and '));
+    var sentence = parts.join(' ');
+
+    /* --- complications --- */
+    var comps = [];
+    if (dent.headline && dent.severity.key !== 'normal' && dent.headline.indexOf('not yet') < 0)
+      comps.push(dent.headline.split(' — ')[0].toLowerCase());
+    (ex.complications || []).forEach(function (c) { comps.push(c); });
+    [ap, vert, dent, soft].forEach(function (ip) {
+      (ip.conflicts || []).forEach(function (c) {
+        var t = c.replace(/[.\s]+$/, '');
+        if (comps.indexOf(t) < 0) comps.push(t);
+      });
+    });
+    comps = comps.map(function (c) { return c.replace(/[.\s]+$/, ''); });
+
+    /* --- the 3D-3T grid --- */
+    var cells = [], filled = 0, affected = 0, severeCells = 0;
+    var ipMap = { ap: ap, vert: vert, dent: dent, soft: soft };
+    gridRows.forEach(function (r) {
+      gridCols.forEach(function (c) {
+        var key = r[0] + '-' + c[0];
+        var src = gridSources[key] || {};
+        var has = false, worst = 0;
+        if (src.group && src.idx) {
+          src.idx.forEach(function (i) {
+            var raw = v[src.group + '-' + i];
+            var num = parseFloat(raw);
+            if (raw === undefined || raw === '' || isNaN(num)) return;
+            has = true;
+            var m = measurements[src.group][i];
+            worst = Math.max(worst, Math.abs(sd(m, num)));
+          });
+        }
+        (src.exam || []).forEach(function (f) {
+          var val = ex[f];
+          if (val !== undefined && val !== '' && val !== '—') { has = true; if (val !== 'Normal' && val !== 'Class I' && val !== 'None') worst = Math.max(worst, 1.5); }
+        });
+        var b = has ? band(worst) : null;
+        if (has) filled++;
+        if (b && b.tone >= 1) affected++;
+        if (b && b.tone === 2) severeCells++;
+        cells.push({ key: key, row: r[0], col: c[0], rowEn: r[1], colEn: c[1],
+          has: has, tone: b ? b.tone : -1, label: b ? b.ar : null, sd: has ? worst : null });
+      });
+    });
+
+    /* complexity weighs severity and spread across tissue categories, not just
+       the count of affected cells — a case severe in all three tissues is hard
+       even when only three cells are lit. */
+    var rowsHit = {};
+    cells.forEach(function (c) { if (c.tone >= 1) rowsHit[c.row] = true; });
+    var rowsAffected = Object.keys(rowsHit).length;
+    var score = affected + severeCells * 1.5 + (rowsAffected >= 3 ? 2 : rowsAffected >= 2 ? 1 : 0);
+    var difficulty = filled === 0 ? { ar: 'Not yet assessable', tone: -1 }
+      : score >= 8 ? { ar: 'Complex', tone: 2 }
+      : score >= 4.5 ? { ar: 'Moderate', tone: 1 }
+      : { ar: 'Straightforward', tone: 0 };
+
+    var complete = !!(incisor && skelClass && vertProp);
+
+    return {
+      sentence: sentence,
+      complete: complete,
+      gaps: [!incisor && 'incisor relationship', !skelClass && 'skeletal base', !vertProp && 'vertical proportions'].filter(Boolean),
+      complications: comps,
+      cells: cells, gridRows: gridRows, gridCols: gridCols,
+      filled: filled, affected: affected, severeCells: severeCells,
+      difficulty: difficulty,
+      groups: { ap: ap, vert: vert, dent: dent, soft: soft }
+    };
+  }
+
+  /* ---------- problem list ----------
+     Derived from the same measurements the grid reads. Each out-of-range value
+     yields one canonical problem statement with its tissue/plane coordinate,
+     so every problem lands in a grid cell. The system proposes; the doctor
+     accepts or rejects — nothing enters the list silently.                     */
+
+  /* measurement → problem statement, keyed by direction of deviation */
+  var problemMap = {
+    'SNA':            { low: ['Maxillary retrusion', 'skeletal', 'sagittal', 'The maxilla sits behind its expected antero-posterior position, reducing midface support and contributing to a concave profile.'],      high: ['Maxillary protrusion', 'skeletal', 'sagittal', 'The maxilla sits ahead of its expected position, increasing midface prominence and the skeletal discrepancy.'] },
+    'SNB':            { low: ['Mandibular retrusion', 'skeletal', 'sagittal', 'The mandible sits behind its expected position — the usual skeletal source of an increased overjet.'],     high: ['Mandibular protrusion', 'skeletal', 'sagittal', 'The mandible sits ahead of its expected position, driving the Class III relationship and a concave profile.'] },
+    'ANB':            { low: ['Class III skeletal base', 'skeletal', 'sagittal', 'The mandible is positioned forward relative to the maxilla. Growth will tend to worsen it, so timing and the choice between growth modification, camouflage and surgery all hinge on this finding.'],  high: ['Class II skeletal base', 'skeletal', 'sagittal', 'The maxilla is positioned forward relative to the mandible. Favourable for growth modification while the growth peak is open.'] },
+    'Wits':           { low: ['Class III tendency on Wits appraisal', 'skeletal', 'sagittal', 'Measured on the occlusal plane, so it confirms the sagittal discrepancy independently of cranial base inclination.'], high: ['Class II tendency on Wits appraisal', 'skeletal', 'sagittal', 'Measured on the occlusal plane, independent of cranial base inclination.'] },
+    'N-perp → A':     { low: ['Maxilla behind nasion perpendicular', 'skeletal', 'sagittal', 'Locates the discrepancy in the maxilla rather than the mandible — relevant when deciding which jaw to address.'], high: ['Maxilla ahead of nasion perpendicular', 'skeletal', 'sagittal', 'Locates the discrepancy in the maxilla rather than the mandible.'] },
+    'N-perp → Pog':   { low: ['Chin behind nasion perpendicular', 'skeletal', 'sagittal', 'Bony chin is retruded; affects the soft tissue profile and any genioplasty decision.'],    high: ['Chin ahead of nasion perpendicular', 'skeletal', 'sagittal', 'Bony chin is prominent, reinforcing the Class III appearance of the profile.'] },
+    'SN / MxP':       { low: ['Maxillary plane rotated up', 'skeletal', 'vertical', 'Anterior rotation of the maxillary plane; affects incisor display and the smile line.'],  high: ['Maxillary plane rotated down', 'skeletal', 'vertical', 'Posterior rotation of the maxillary plane; affects incisor display and the smile line.'] },
+    'MMPA':           { low: ['Reduced vertical proportions', 'skeletal', 'vertical', 'Hypodivergent pattern, usually with a deep bite. Vertical opening is part of the correction.'], high: ['Increased vertical proportions', 'skeletal', 'vertical', 'Hyperdivergent pattern. Vertical control is needed throughout treatment, and molar extrusion will open the bite further.'] },
+    'FMPA':           { low: ['Reduced Frankfort-mandibular plane angle', 'skeletal', 'vertical', 'Confirms the hypodivergent pattern against the Frankfort reference.'], high: ['Increased Frankfort-mandibular plane angle', 'skeletal', 'vertical', 'Confirms the hyperdivergent pattern against the Frankfort reference.'] },
+    'LAFH %':         { low: ['Reduced lower anterior face height', 'skeletal', 'vertical', 'The lower third of the face is proportionally short, typically with a deep bite.'], high: ['Increased lower anterior face height', 'skeletal', 'vertical', 'The lower third of the face is proportionally long — an aesthetic as well as a functional consideration.'] },
+    'Ui / MxP':       { low: ['Retroclined upper incisors', 'dental', 'sagittal', 'Upper incisors tipped back — the classic Class II division 2 compensation.'],  high: ['Proclined upper incisors', 'dental', 'sagittal', 'Upper incisors tipped forward. In a Class III case this is compensatory and must be reversed before any surgical plan.'] },
+    'Li / MnP':       { low: ['Retroclined lower incisors', 'dental', 'sagittal', 'Lower incisors tipped back — compensation typically seen in Class III cases.'],  high: ['Proclined lower incisors', 'dental', 'sagittal', 'Lower incisors tipped forward. Limits further advancement and raises the risk of gingival recession and relapse.'] },
+    'Li / facial':    { low: ['Lower incisors retroclined to facial pattern', 'dental', 'sagittal', 'Read against the facial pattern; shows the direction of dental compensation.'], high: ['Lower incisors proclined to facial pattern', 'dental', 'sagittal', 'Read against the facial pattern rather than the mandibular plane; shows how far the dentition has compensated.'] },
+    'Li → A-Pog':     { low: ['Lower incisors behind A-Pog line', 'dental', 'sagittal', 'The lower incisors sit behind the standard reference, leaving room for controlled advancement.'], high: ['Lower incisors ahead of A-Pog line', 'dental', 'sagittal', 'The lower incisors already sit forward of the standard reference, so the envelope for further anterior movement is largely spent.'] },
+    'UI / LI':        { low: ['Reduced interincisal angle', 'dental', 'sagittal', 'Both incisors are proclined relative to each other. Associated with instability after treatment unless the inclination is corrected.'],  high: ['Increased interincisal angle', 'dental', 'sagittal', 'Both incisors are upright or retroclined — typically accompanies a deep bite.'] },
+    'NLA':            { low: ['Reduced nasolabial angle', 'soft', 'sagittal', 'The upper lip is prominent relative to the nose. Retracting the upper incisors will open this angle further, so the aesthetic limit is set here.'],      high: ['Increased nasolabial angle', 'soft', 'sagittal', 'The upper lip is retrusive relative to the nose — further incisor retraction would worsen the profile.'] },
+    'LL → E-plane':   { low: ['Lower lip retrusive to E-plane', 'soft', 'sagittal', 'The lower lip sits behind the aesthetic line; limits how far the lower incisors can be retracted.'], high: ['Lower lip protrusive to E-plane', 'soft', 'sagittal', 'The lower lip sits ahead of the aesthetic line, usually following the proclined lower incisors beneath it.'] }
+  };
+
+  /* exam field → problem statement when the answer is not the normal option */
+  var examProblems = {
+    'occ-0': { label: 'Incisor relationship', row: 'dental', col: 'sagittal', normal: 'Class I' },
+    'occ-1': { label: 'Molar relationship — right', row: 'dental', col: 'sagittal', normal: 'Class I' },
+    'occ-2': { label: 'Molar relationship — left', row: 'dental', col: 'sagittal', normal: 'Class I' },
+    'occ-3': { label: 'Canine relationship — right', row: 'dental', col: 'sagittal', normal: 'Class I' },
+    'occ-4': { label: 'Canine relationship — left', row: 'dental', col: 'sagittal', normal: 'Class I' }
+  };
+
+  function problemList(values, exam) {
+    var v = values || {}, ex = exam || {};
+    var out = [];
+
+    Object.keys(measurements).forEach(function (gk) {
+      measurements[gk].forEach(function (m, i) {
+        var raw = v[gk + '-' + i];
+        var num = parseFloat(raw);
+        if (raw === undefined || raw === '' || isNaN(num)) return;
+        var d = sd(m, num);
+        if (Math.abs(d) < 1) return;
+        var pm = problemMap[m[0]];
+        if (!pm) return;
+        var spec = d < 0 ? pm.low : pm.high;
+        if (!spec) return;
+        var b = band(Math.abs(d));
+        out.push({
+          id: gk + '-' + i,
+          text: spec[0], row: spec[1], col: spec[2], desc: spec[3] || '',
+          severity: b.ar, tone: b.tone,
+          cite: m[0], value: num, unit: m[8], sd: d,
+          norm: ((m[4] + m[5]) / 2) + ' ± ' + ((m[5] - m[4]) / 2),
+          source: 'measurement'
+        });
+      });
+    });
+
+    Object.keys(examProblems).forEach(function (f) {
+      var val = ex[f];
+      if (!val || val === '—' || val === examProblems[f].normal) return;
+      var e = examProblems[f];
+      out.push({
+        id: 'exam-' + f, text: e.label + ' — ' + val, row: e.row, col: e.col,
+        severity: 'Moderate', tone: 1, cite: null, value: null, sd: null,
+        source: 'clinical exam'
+      });
+    });
+
+    /* severe first, then by tissue category so the list reads like a case write-up */
+    var rowOrder = { skeletal: 0, dental: 1, soft: 2 };
+    out.sort(function (a, b2) {
+      if (b2.tone !== a.tone) return b2.tone - a.tone;
+      return rowOrder[a.row] - rowOrder[b2.row];
+    });
+    return out;
+  }
+
+  /* ---------- clinical exam (doctor-entered, not from the lab report) ---------- */
+  var occlusalFields = [
+    ['Incisor relationship', 'Incisor relationship', 's', ['—', 'Class I', 'Class II div 1', 'Class II div 2', 'Class III']],
+    ['Molar — right', 'Right molar relationship', 's', ['—', 'Class I', 'Class II', 'Class III']],
+    ['Molar — left', 'Left molar relationship', 's', ['—', 'Class I', 'Class II', 'Class III']],
+    ['Canine — right', 'Right canine relationship', 's', ['—', 'Class I', 'Class II', 'Class III']],
+    ['Canine — left', 'Left canine relationship', 's', ['—', 'Class I', 'Class II', 'Class III']],
+    ['Overjet', 'Overjet', 't', 'mm'],
+    ['Overbite', 'Overbite', 't', 'mm'],
+    ['Crowding — upper', 'Crowding / spacing Upper arch', 't', '± mm'],
+    ['Crowding — lower', 'Crowding / spacing Lower arch', 't', '± mm']
+  ];
+
+  /* ---------- cervical vertebral maturation (CVM) ----------
+     Staged from C2–C4 on the LATERAL CEPHALOGRAM — no hand-wrist film needed.
+     Two observations only: presence of concavity on the lower border of each
+     vertebral body, and the body shape of C3 and C4.                          */
+  var cvmObservations = [
+    ['c2', 'Concavity of the lower border of C2', 'Lower border of C2', ['—', 'Flat', 'Concave']],
+    ['c3', 'Concavity of the lower border of C3', 'Lower border of C3', ['—', 'Flat', 'Concave']],
+    ['c4', 'Concavity of the lower border of C4', 'Lower border of C4', ['—', 'Flat', 'Concave']],
+    ['shape', 'body shape of C3 and C4', 'Body shape of C3 / C4', ['—', 'Trapezoid', 'Horizontal rectangle', 'Square', 'Vertical rectangle']]
+  ];
+
+  var cvmStages = {
+    CS1: { ar: 'More than 2 years pre-peak', growth: 'Peak not started', peak: 'at least two years away',
+           note: 'A good time for growth modification later — it can be deferred and monitored.', functional: 'Early — defer', tone: 0 },
+    CS2: { ar: '1 year pre-peak', growth: 'Peak approaching', peak: 'within about a year',
+           note: 'Begin preparation — the peak is about to start.', functional: 'Near — get ready', tone: 0 },
+    CS3: { ar: 'growth peak', growth: 'Peak now', peak: 'now',
+           note: 'The best timing for growth modification — do not miss this window.', functional: 'Optimal — start now', tone: 2 },
+    CS4: { ar: '1 year post-peak', growth: 'Peak just ended', peak: 'ended about a year ago',
+           note: 'Limited residual growth remains — effectiveness is lower than at CS3.', functional: 'Late — partial effectiveness', tone: 1 },
+    CS5: { ar: '2 years post-peak', growth: 'Growth nearly complete', peak: 'ended two years ago',
+           note: 'Growth modification is no longer viable — consider dental compensation or surgery.', functional: 'Not viable', tone: 1 },
+    CS6: { ar: 'Growth complete', growth: 'Growth complete', peak: 'ended more than two years ago',
+           note: 'Growth complete — surgical option is the only route for skeletal correction.', functional: 'Not viable — surgical', tone: 2 }
+  };
+
+  /* Returns { stage, complete, missing[] } from the four observations. */
+  function stageCVM(obs) {
+    var o = obs || {};
+    var need = ['c2', 'c3', 'c4', 'shape'];
+    var missing = need.filter(function (key) {
+      var v = o[key];
+      return !v || v === '—';
+    });
+    if (missing.length) return { stage: null, complete: false, missing: missing };
+
+    var conc = function (key) { return o[key] === 'Concave'; };
+    var shape = o.shape;
+    var stage;
+
+    if (!conc('c2') && !conc('c3') && !conc('c4')) stage = 'CS1';
+    else if (conc('c2') && !conc('c3') && !conc('c4')) stage = 'CS2';
+    else if (conc('c2') && conc('c3') && !conc('c4')) stage = 'CS3';
+    else if (conc('c2') && conc('c3') && conc('c4')) {
+      if (shape === 'Vertical rectangle') stage = 'CS6';
+      else if (shape === 'Square') stage = 'CS5';
+      else stage = 'CS4';
+    } else stage = null;
+
+    // shape cross-checks the concavity pattern
+    if (stage === 'CS1' && shape !== 'Trapezoid') stage = 'CS2';
+    if (stage === 'CS3' && shape === 'Square') stage = 'CS4';
+
+    return { stage: stage, complete: true, missing: [] };
+  }
+
+  var growthFields = [
+    ['TMJ status', 'TMJ status', ['—', 'WNL', 'Clicking', 'Pain', 'Limited opening']],
+    ['CO–CR shift', 'CO–CR shift', ['—', 'None', '< 2 mm', '> 2 mm']],
+    ['Airway', 'airway', ['—', 'Patent', 'Partially obstructed', 'Mouth breather']]
+  ];
+
+  var radiographicFindings = ['Impacted tooth', 'Missing tooth', 'Supernumerary', 'Root resorption', 'Retained deciduous', 'Third molars developing', 'Pathology'];
+
+  /* ---------- photographic view standards ----------
+     Per IMI orthodontic photography guidelines: the horizontal reference is the
+     interpupillary line for frontal views and the Frankfort horizontal for profile
+     and oblique views. The vertical reference is the FACIAL median plane — dental
+     midlines are unreliable because they shift with the malocclusion.            */
+  var photoViews = {
+    frontal: {
+      ar: 'Frontal', ratio: '4:5',
+      hRef: 'Interpupillary line', hRefAr: 'interpupillary line',
+      vRef: 'Facial median plane', vRefAr: 'facial median plane',
+      checks: ['facial median plane centred in the frame', 'Both ears at the same height', 'Frame from the top of the head to the clavicles', 'Focus on the outer canthus of the eye']
+    },
+    profile: {
+      ar: 'Profile', ratio: '4:5',
+      hRef: 'Frankfort horizontal', hRefAr: 'Frankfort horizontal',
+      vRef: null, vRefAr: null,
+      checks: ['median plane vertical on the camera axis', 'Ear and nose tip inside the frame', 'No backward tilt of the chin', 'The right side, to match the lateral radiograph']
+    },
+    oblique: {
+      ar: 'Oblique', ratio: '4:5',
+      hRef: 'Frankfort horizontal', hRefAr: 'Frankfort horizontal',
+      vRef: null, vRefAr: null,
+      checks: ['Body rotated 45° from the vertical', 'Both ears visible', 'Frankfort horizontal parallel to the floor']
+    },
+    lips: {
+      ar: 'Lips at rest', ratio: '1:1',
+      hRef: 'Interpupillary line', hRefAr: 'interpupillary line',
+      vRef: 'Facial median plane', vRefAr: 'facial median plane',
+      checks: ['Lips at rest without forced closure', 'incisor display Visible and measurable']
+    },
+    ioFrontal: {
+      ar: 'Intraoral frontal', ratio: 'free',
+      hRef: 'Occlusal plane', hRefAr: 'occlusal plane',
+      vRef: 'Facial median plane', vRefAr: 'facial median plane',
+      checks: ['occlusal plane Horizontal', 'The vertical reference is facial, not dental', 'retractors Do not obscure the gingiva']
+    },
+    ioOcclusal: {
+      ar: 'Occlusal', ratio: '1:1',
+      hRef: null, hRefAr: null,
+      vRef: 'Arch midline', vRefAr: 'arch midline',
+      checks: ['Full arch from molar to opposing molar', 'palatal vault Visible', 'No mirror reflection']
+    },
+    ioBuccal: {
+      ar: 'Buccal', ratio: 'free',
+      hRef: 'Occlusal plane', hRefAr: 'occlusal plane',
+      vRef: null, vRefAr: null,
+      checks: ['occlusal plane Horizontal', 'canine and first molar both visible', 'Molar relationship Clear']
+    },
+    radiograph: {
+      ar: 'Radiograph', ratio: 'free',
+      hRef: 'True horizontal', hRefAr: 'true horizontal',
+      vRef: null, vRefAr: null,
+      checks: ['No rotation in positioning', 'Anatomical reference structures inside the frame']
+    }
+  };
+
+  /* ---------- radiograph types ----------
+     mag: linear measurements derive from this film, so the enlargement factor
+     must be recorded or every mm value in the analysis is unverifiable.        */
+  var radiographTypes = [
+    ['ceph', 'Lateral cephalogram', 'lateral cephalogram of the head', 'required', true,
+      ['Natural head position — no tilt or chin lift', 'No rotation — right and left structures superimposed', 'Full anatomy from Nasion to Menton', 'Soft tissue profile visible', 'Teeth in centric occlusion']],
+    ['opg', 'Panoramic (OPG)', 'Panoramic (OPG)', 'required', true,
+      ['Both arches complete with no cut-off', 'No superimposition from the shoulders', 'Occlusal plane with a natural curve', 'Sinuses and both joints visible']],
+    ['cbct', 'CBCT', 'Cone beam CT', 'recommended', false,
+      ['Field of view covers the required region', 'No motion artefact', 'Slice resolution adequate for assessment']],
+    ['pa', 'Periapical', 'Periapical', 'conditional', false,
+      ['peak Full root apex inside the frame', 'No elongation or foreshortening', 'Bone surrounding the root clearly visible']],
+    ['tmj', 'TMJ views', 'TMJ views', 'conditional', false,
+      ['Mouth open and closed in two images', 'Both sides in the same positioning', 'Fossa and condylar head visible']]
+  ];
+
+  /* ---------- radiograph viewing tools (window/level, not levelling) ---------- */
+  var radiographTools = {
+    brightnessRange: [40, 180], contrastRange: [50, 220],
+    presets: [
+      ['soft', 'Soft tissue', 118, 95],
+      ['bone', 'Bone', 92, 155],
+      ['tracing', 'Cranial tracing', 105, 185],
+      ['flat', 'No processing', 100, 100]
+    ]
+  };
+
+  /* ---------- occlusion & function assessment ----------
+     Sections open to show the views that answer them. The photo is a VISUAL
+     REFERENCE — the clinician reads it and types the value; millimetres are
+     properly measured on study models, not derived from an uncalibrated image.
+     Each section declares the views it needs, the overlay tools that help, and
+     how to read the value off the view.
+     [key, en, ar, views[], bilateral, fields[], help, tools[]]                 */
+
+  var occlusionSections = [
+    ['incisor', 'Incisor relationship', 'Incisor relationship',
+      ['Frontal occlusion', 'Frontal smile'], false,
+      [['incisorRel', 'Incisor relationship', 'c', ['—', 'Class I', 'Class II div 1', 'Class II div 2', 'Class III']]],
+      [['What you are looking at', 'The incisal edge of the lower central incisor, and its position relative to the labial third of the upper incisor surface.'],
+       ['How to classify', 'On the middle third or below it = Class I. Behind the labial third with the upper incisors proclined = Class II div 1, and retroclined = Class II div 2. Ahead of the labial third = Class III.'],
+       ['Watch out', 'Use the central incisor only. The smile confirms incisor display but is not used for classification.']],
+      ['occlusalLine', 'midline', 'zoom'], 'incisorClass'],
+
+    ['molarCanine', 'Molar & canine relationship', 'Molar and canine relationships',
+      ['Right buccal', 'Left buccal'], true,
+      [['molar', 'Molar', 'tier', ['—', 'Class I', 'Class II', 'Class III'], ['¼ unit', '½ unit', '¾ unit', 'Full unit']],
+       ['canine', 'Canine', 'tier', ['—', 'Class I', 'Class II', 'Class III'], ['¼ unit', '½ unit', '¾ unit', 'Full unit']]],
+      [['What you are looking at', 'The mesiobuccal cusp of the upper first molar, and the buccal groove of the lower first molar.'],
+       ['How to classify', 'Cusp inside the groove = Class I. Displaced forward = Class II, backward = Class III.'],
+       ['Amount', 'A quarter = a quarter premolar width · a half = half a premolar · a full unit = a full premolar width.'],
+       ['Canine', 'The upper canine cusp between the lower canine and first premolar = Class I.']],
+      ['points', 'zoom', 'fdi'], 'molarClass'],
+
+    ['overjetOverbite', 'Overjet & overbite', 'Overjet and overbite',
+      ['Frontal occlusion', 'Right buccal'], false,
+      [['overjet', 'Overjet', 't', 'mm'],
+       ['overbite', 'Overbite', 't', 'mm'],
+       ['overbiteType', 'Overbite character', 'c', ['—', 'Complete to tooth', 'Complete to tissue', 'Incomplete', 'Open bite']]],
+      [['Overjet', 'The horizontal distance from the labial surface of the upper central incisor to the point directly beneath it on the lower incisor.'],
+       ['Watch out', 'Do not measure a diagonal distance around the arch. Central incisor only — not the lateral, not the canine. A negative value = reverse overjet.'],
+       ['Overbite', 'The vertical amount of the lower incisor covered by the upper. Normally about one third of the lower incisor crown.'],
+       ['Reference', 'Normal: overjet 2.5 mm ± 1 · overbite 2.5 mm ± 1.']],
+      ['ruler', 'occlusalLine', 'zoom'], 'overjet'],
+
+    ['crowding', 'Crowding / spacing', 'Crowding and spacing',
+      ['Upper occlusal', 'Lower occlusal'], false,
+      [['crowdUpper', 'Upper arch', 't', '± mm'],
+       ['crowdLower', 'Lower arch', 't', '± mm']],
+      [['What you are calculating', 'The difference between the space available in the arch and the space required to align the teeth.'],
+       ['Sign', 'Negative = crowding · positive = spacing. One figure per arch.'],
+       ['Threshold', 'Anterior crowding above 3.5 mm is considered severe.'],
+       ['Accuracy', 'The standard measurement is taken on study models — the photograph is a visual estimate.']],
+      ['ruler', 'fdi', 'zoom'], 'crowding'],
+
+    ['crossbite', 'Crossbite', 'Crossbite',
+      ['Right buccal', 'Left buccal'], true,
+      [['crossbitePost', 'Posterior crossbite', 'c', ['—', 'None', 'Buccal', 'Palatal', 'Scissor bite']],
+       ['chart', 'Teeth involved', 'chart', ['crossbite']]],
+      [['Definition', 'The upper posterior teeth are either all palatal or all buccal relative to the lower ones.'],
+       ['Condition', 'At least two adjacent teeth, one of them a molar.'],
+       ['Anterior', 'An anterior crossbite is recorded with the negative overjet, not here.']],
+      ['midline', 'fdi', 'zoom'], 'crossbite'],
+
+    ['centreline', 'Centreline shift', 'Midline shift',
+      ['Frontal occlusion', 'Frontal repose'], false,
+      [['clUpper', 'Upper to facial midline', 't', 'mm — R/L'],
+       ['clLower', 'Lower to facial midline', 't', 'mm — R/L'],
+       ['clCoincident', 'Centrelines coincident', 'c', ['—', 'Yes', 'No']]],
+      [['Reference', 'The facial midline — not the dental midline, because the dental one shifts with the malocclusion.'],
+       ['Order', 'Apply the vertical line to the facial photograph first, then read the shift on the intraoral view.'],
+       ['Recording', 'Record the amount and direction: 2 mm to the right, for example.']],
+      ['midline', 'ruler', 'zoom'], 'centreline'],
+
+    ['spee', 'Curve of Spee', 'Curve of Spee',
+      ['Right buccal', 'Left buccal'], true,
+      [['spee', 'Curve of Spee', 'c', ['—', 'Flat', 'Normal', 'Increased', 'Reversed']]],
+      [['What you are looking at', 'The curve from the lower canine tip across the premolar and molar cusps.'],
+       ['Significance', 'An increased curve accompanies a deep bite and needs vertical levelling.'],
+       ['How to measure', 'Apply the horizontal line as a reference between the canine tip and the last molar cusp, then estimate the deepest point.']],
+      ['occlusalLine', 'points', 'zoom'], 'spee'],
+
+    ['rotations', 'Rotations & displacements', 'Rotations and displacements',
+      ['Upper occlusal', 'Lower occlusal'], false,
+      [['chart', 'Tooth chart', 'chart', ['rotated', 'displaced']]],
+      [['The right view', 'The occlusal view shows rotation around the long axis most accurately.'],
+       ['Recording', 'The tooth number in FDI notation, with the direction mesial or distal in the note.']],
+      ['fdi', 'zoom', 'angle'], 'rotation'],
+
+    ['dentition', 'Missing / impacted teeth', 'Missing and impacted',
+      ['Panoramic (OPG)', 'Lateral cephalogram'], false,
+      [['chart', 'Tooth chart', 'chart', ['missing', 'impacted', 'supernumerary']]],
+      [['Reference', 'The panoramic view is the reference for this section.'],
+       ['Before recording', 'Confirm the permanent successor is present before recording any retained deciduous tooth.'],
+       ['Impacted', 'Establish its three-dimensional position before planning — the OPG alone is not enough.']],
+      ['fdi', 'zoom', 'points'], 'dentition'],
+
+    ['lips', 'Lip competence', 'Lip competence',
+      ['Lips at rest', 'Profile repose'], false,
+      [['lipCompetence', 'Lip competence', 'c', ['—', 'Competent', 'Incompetent', 'Potentially competent']],
+       ['incisorDisplay', 'Incisor display at rest', 't', 'mm']],
+      [['Posture', 'Lips at rest without forced closure — ask the patient to relax.'],
+       ['Classification', 'They meet without effort = competent. They do not meet = incompetent. They meet with slight effort = potentially competent.'],
+       ['Incisor display', 'From the incisal edge to the upper lip border. Normally 2–4 mm.']],
+      ['ruler', 'occlusalLine', 'zoom'], 'lipCompetence']
+  ];
+
+  var functionSections = [
+    ['tmj', 'TMJ assessment', 'TMJ assessment',
+      ['Frontal repose'], false,
+      [['tmjStatus', 'TMJ status', 'c', ['—', 'WNL', 'Clicking', 'Crepitus', 'Pain', 'Locking']],
+       ['tmjSide', 'Side', 'c', ['—', 'Right', 'Left', 'Bilateral']],
+       ['maxOpening', 'Maximum opening', 't', 'mm']],
+      [['Examination', 'By palpation and listening during opening and closing, and by palpating the masticatory muscles.'],
+       ['Reference', 'Normal maximum opening is 40 mm or more; below 35 mm counts as limited opening.']],
+      [], 'tmj'],
+
+    ['cocr', 'CO–CR relationship', 'Centric relation',
+      ['Frontal occlusion'], false,
+      [['cocrShift', 'CO–CR shift', 'c', ['—', 'None', '< 2 mm', '> 2 mm']],
+       ['cocrDirection', 'Direction', 'c', ['—', 'Anterior', 'Lateral right', 'Lateral left']]],
+      [['Significance', 'A shift above 2 mm means the apparent malocclusion differs from the true one.'],
+       ['Impact', 'Re-assessment in centric relation is required before building the plan.']],
+      [], 'cocr'],
+
+    ['airway', 'Airway & breathing', 'Airway and breathing',
+      ['Profile repose', 'Lateral cephalogram'], false,
+      [['airway', 'Airway', 'c', ['—', 'Patent', 'Partially obstructed', 'Mouth breather']],
+       ['tonsils', 'Tonsils', 'c', ['—', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4']],
+       ['snoring', 'Snoring reported', 'c', ['—', 'No', 'Yes']]],
+      [['Significance', 'Mouth breathing accompanies a high vertical pattern and maxillary constriction.'],
+       ['Reference', 'The lateral radiograph shows the nasopharyngeal space and the adenoids.'],
+       ['Referral', 'Grade 3 or 4 tonsils warrant an ENT referral.']],
+      ['ruler', 'points'], 'airway'],
+
+    ['habits', 'Habits & function', 'Habits and function',
+      ['Frontal open'], false,
+      [['tongueThrust', 'Tongue thrust', 'c', ['—', 'No', 'Yes']],
+       ['bruxism', 'Bruxism', 'c', ['—', 'No', 'Yes']],
+       ['speech', 'Speech difficulty', 'c', ['—', 'No', 'Yes']]],
+      [['Impact', 'Tongue thrust obstructs open bite closure and needs concurrent myofunctional therapy.'],
+       ['Watch out', 'Record the habit even if it has stopped — its skeletal effect remains.']],
+      [], 'habits']
+  ];
+
+  var toothStates = {
+    missing:       ['Missing', 'Missing', '#94a3b8', '#f1f5f9', '#cbd5e1'],
+    impacted:      ['Impacted', 'Impacted', '#d97706', '#fffbeb', '#fde68a'],
+    supernumerary: ['Supernumerary', 'Supernumerary', '#7c3aed', '#f5f3ff', '#ddd6fe'],
+    rotated:       ['Rotated', 'Rotated', '#2563eb', '#eff6ff', '#bfdbfe'],
+    displaced:     ['Displaced', 'Displaced', '#dc2626', '#fef2f2', '#fecaca'],
+    crossbite:     ['Crossbite', 'Crossbite', '#dc2626', '#fef2f2', '#fecaca']
+  };
+
+  var fdiChart = {
+    upper: [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28],
+    lower: [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38]
+  };
+
+  var overlayTools = {
+    ruler:       ['Ruler', 'Graduated ruler', 'Drag it onto the measurement — its scale is relative, not absolute'],
+    occlusalLine:['Occlusal plane', 'Occlusal plane line', 'A rotatable horizontal reference line'],
+    midline:     ['Midline', 'Midline', 'A vertical line on the facial midline'],
+    angle:       ['Angle', 'Angle tool', 'Three points give the angle between them'],
+    points:      ['Points', 'Numbered points', 'Mark the anatomical points in order'],
+    zoom:        ['Magnifier', 'Magnifier', 'Local magnification at the cursor'],
+    fdi:         ['FDI labels', 'Tooth numbers', 'FDI numbering over the image']
+  };
+
+  /* ---------- case lifecycle ---------- */
+  var stages = [
+    ['consultation', 'Consultation', 'Consultation', 'slate'],
+    ['records', 'Records collection', 'Records collection', 'blue'],
+    ['diagnosis', 'Diagnosis', 'Diagnosis', 'blue'],
+    ['planning', 'Treatment planning', 'Treatment planning', 'blue'],
+    ['approved', 'Approved', 'Approved', 'emerald'],
+    ['active', 'Active treatment', 'Active treatment', 'emerald'],
+    ['finishing', 'Finishing', 'Finishing', 'emerald'],
+    ['debond', 'Debond', 'Debond', 'emerald'],
+    ['retention', 'Retention', 'Retention', 'violet'],
+    ['completed', 'Complete', 'Completed', 'violet'],
+    ['discontinued', 'Stopped', 'Discontinued', 'red']
+  ];
+
+  var complaints = ['Crowding', 'Spacing', 'Upper teeth protrusion', 'Crossbite', 'Open bite', 'Deep bite', 'Impacted tooth', 'Jaw asymmetry', 'TMJ pain', 'Relapse after previous treatment', 'Esthetic concern', 'Difficulty chewing'];
+
+  var attachments = [
+    ['Facial photos', 'Facial photos', true],
+    ['Intraoral photos', 'Intraoral photos', true],
+    ['Panoramic (OPG)', 'Panoramic (OPG)', true],
+    ['Lateral cephalogram', 'lateral cephalogram', true],
+    ['CBCT', 'CT imaging', false],
+    ['Previous records (PDF)', 'Previous records', false]
+  ];
+
+  var interviewQuestions = [
+    ['care', 'Is the patient under any medical treatment now or in the past year?', 'Diagnosis · treating physician · date of last review'],
+    ['meds', 'Does the patient take any medication, supplement or herbal remedy regularly?', 'Drug name · dose · reason for use'],
+    ['hosp', 'Has the patient had surgery or a hospital admission?', 'Type of operation · date · hospital'],
+    ['anaes', 'Was there any problem with local or general anaesthesia?', 'Type of anaesthesia · what happened in detail'],
+    ['immun', 'Are the vaccinations complete and up to date?', 'Missing vaccinations or date of last tetanus dose'],
+    ['family', 'Is there a family history of malocclusion or skeletal deformity?', 'Relationship · description — an indicator of the inherited pattern'],
+    ['prevOrtho', 'Any previous orthodontic treatment?', 'Appliance type · duration · reason for stopping · clinician name'],
+    ['trauma', 'Any dental trauma to the teeth or jaws?', 'Date · teeth affected · treatment carried out'],
+    ['extraction', 'Have any permanent teeth been extracted?', 'Tooth numbers · date · reason'],
+    ['tmj', 'Any TMJ symptoms?', 'Symptom description · since when · what makes it worse'],
+    ['pain', 'Is there any tooth pain or sensitivity now?', 'Site of pain · type · duration']
+  ];
+
+  /* ---------- constraint builder ----------
+     Turns picked conditions + their sub-answers into first-class constraints:
+     { source, sourceAr, field, value, text, tone, blocks }                */
+  function buildConstraints(pickedIdx, fieldVals) {
+    var out = [];
+    (pickedIdx || []).forEach(function (i) {
+      var c = conditions[i];
+      if (!c) return;
+      if (c[4] >= 1 && c[3]) {
+        out.push({ source: c[0], sourceAr: c[1], field: null, value: null,
+          text: c[3], tone: c[4], blocks: (c[6] || []).slice() });
+      }
+      (fieldSets[c[5]] || []).forEach(function (fd) {
+        var val = (fieldVals || {})['f' + i + '-' + fd[0]];
+        var nd = (fd[4] || {})[val];
+        if (!nd) return;
+        out.push({ source: c[0], sourceAr: c[1], field: fd[1], value: val,
+          text: nd[0], tone: nd[1], blocks: (nd[2] || []).slice() });
+      });
+    });
+    return out.sort(function (a, b) { return b.tone - a.tone; });
+  }
+
+  function blockedCapabilities(constraints) {
+    var set = {};
+    (constraints || []).forEach(function (c) {
+      (c.blocks || []).forEach(function (b) {
+        if (!set[b]) set[b] = [];
+        set[b].push(c);
+      });
+    });
+    return set;
+  }
+
+  /* ---------- diagnosis stage ----------
+     Problems the measurement engine cannot reveal, plus the prioritisation rule
+     the ranked list is built on. Literature: the problem list is organised by
+     priority in the clinician\'s judgement — chief complaint first, then medical
+     conditions, then general dental problems, then specific lesions; and the
+     chief complaint should sit among the first two priorities.               */
+
+  var priorityRule = {
+    ar: 'The chief complaint is treated as one of the first two priorities. Then medical conditions, then general dental problems, then specific items.',
+    order: ['chief complaint', 'medical conditions', 'general dental problems', 'specific lesions']
+  };
+
+  var complaintCategories = [
+    ['pain', 'Pain', 'Pain'],
+    ['function', 'Function', 'Function'],
+    ['aesthetics', 'Aesthetics', 'Appearance']
+  ];
+
+  /* remarkable dental / medical findings — listed alongside the three dimensions,
+     not inside them */
+  var manualProblemDefs = [
+    ['dental', 'Dental status', 'Dental condition', [
+      'Caries', 'Enamel hypoplasia', 'Missing teeth', 'Supernumerary teeth',
+      'Wear facets', 'Retained deciduous tooth', 'Impacted tooth', 'Root-treated tooth'
+    ]],
+    ['perio', 'Periodontal', 'Gingiva and supporting tissues', [
+      'Gingivitis', 'Active periodontal disease', 'Gingival recession',
+      'Poor oral hygiene', 'Reduced bone support'
+    ]],
+    ['tmd', 'TMD', 'Temporomandibular joint', [
+      'Masticatory muscle disorder', 'TM joint disorder',
+      'Chronic mandibular hypomobility', 'Growth disorder'
+    ]],
+    ['alignment', 'Alignment', 'Alignment', [
+      'Crowding — upper', 'Crowding — lower', 'Spacing — upper', 'Spacing — lower',
+      'Rotated tooth', 'Midline discrepancy', 'Ectopic eruption'
+    ]],
+    ['medical', 'Medical', 'Medical considerations', [
+      'Bisphosphonate therapy', 'Uncontrolled diabetes', 'Bleeding disorder',
+      'Phenytoin therapy', 'Nickel allergy', 'Latex allergy'
+    ]]
+  ];
+
+  /* problems that contraindicate starting treatment until controlled */
+  var blockingProblems = ['Active periodontal disease', 'Poor oral hygiene'];
+
+
+  /* ---------- clinic operations ----------
+     Case phases, gate requirements, recall intervals, visit types and the
+     archwire inventory. The dashboard reads these; it owns none of them. */
+
+  /* [key, en, sub-label, dot colour, tint bg, text colour] */
+  var caseStages = [
+    ['consultation', 'Consultation',      'First visit',        '#94a3b8', '#f1f5f9', '#475569'],
+    ['records',      'Records collection','Records',            '#2563eb', '#eff6ff', '#1d4ed8'],
+    ['diagnosis',    'Diagnosis',         'Diagnosis',          '#7c3aed', '#f5f3ff', '#6d28d9'],
+    ['planning',     'Treatment planning','Planning',           '#d97706', '#fffbeb', '#b45309'],
+    ['active',       'Active treatment',  'In treatment',       '#059669', '#ecfdf5', '#047857'],
+    ['retention',    'Retention',         'Retention',          '#0891b2', '#ecfeff', '#0e7490']
+  ];
+
+  /* what must be satisfied before a case may enter a phase */
+  var stageGates = {
+    records:   [],
+    diagnosis: [['recordsComplete', 'Records incomplete — photos, radiographs or cephalometric values missing']],
+    planning:  [['recordsComplete', 'Records incomplete'],
+                ['problemListApproved', 'Problem list not yet approved']],
+    active:    [['problemListApproved', 'Problem list not yet approved'],
+                ['planApproved', 'Treatment plan not yet approved'],
+                ['consentSigned', 'Informed consent not signed']],
+    retention: [['planApproved', 'Treatment plan not yet approved'],
+                ['debondDone', 'Debond not yet recorded']]
+  };
+
+  /* default days between contacts, per phase. Adjustable from Settings. */
+  var recallIntervals = {
+    consultation: { days: 14, ar: 'Two weeks to book the records session' },
+    records:      { days: 14, ar: 'Two weeks to complete records' },
+    diagnosis:    { days: 10, ar: 'Ten days to approve the problem list' },
+    planning:     { days: 10, ar: 'Ten days to approve the treatment plan' },
+    active:       { days: 49, ar: '6–8 weeks between adjustment visits' },
+    retention:    { days: 182, ar: 'Six months between retention checks' }
+  };
+
+  /* [key, en, note, default minutes, phase] */
+  var visitTypes = [
+    ['consultation',  'Consultation',        'Initial exam and complaint',      40, 'consultation'],
+    ['records',       'Records session',     'photos · radiographs · scans',    30, 'records'],
+    ['bonding',       'Bonding / banding',   'Appliance placement',             60, 'active'],
+    ['wire',          'Arch wire change',    'Arch wire change',                20, 'active'],
+    ['adjustment',    'Adjustment',          'Routine visit',                   20, 'active'],
+    ['ipr',           'IPR',                 'Interproximal reduction',         25, 'active'],
+    ['elastics',      'Elastics check',      'Elastics and compliance review',  15, 'active'],
+    ['aligner',       'Aligner delivery',    'Aligner delivery or review',      20, 'active'],
+    ['progress',      'Progress records',    'Progress photos',                 20, 'active'],
+    ['debond',        'Debond',              'Appliance removal',               50, 'active'],
+    ['retainer',      'Retainer fit',        'Retainer fit or review',          25, 'retention'],
+    ['emergency',     'Emergency',           'Breakage or pain',                15, null]
+  ];
+
+  var archwires = [
+    '.014 NiTi', '.016 NiTi', '.016×.022 NiTi', '.017×.025 NiTi',
+    '.019×.025 NiTi', '.016 SS', '.017×.025 SS', '.019×.025 SS',
+    '.017×.025 TMA', '.019×.025 TMA'
+  ];
+
+  var procedures = {
+    consultation: ['Clinical exam', 'Discuss treatment options', 'Medical history review', 'Book records session'],
+    records:      ['Intraoral photos', 'Extraoral photos', 'Lateral ceph', 'OPG', 'CBCT', 'Intraoral scan', 'Bite registration'],
+    diagnosis:    ['Cephalometric analysis', 'Space analysis', 'Problem list approval', 'Diagnostic statement', 'Specialist referral'],
+    planning:     ['Treatment plan approval', 'Extraction decision', 'Anchorage planning', 'Informed consent', 'Appliance selection'],
+    active:       ['Arch wire change', 'Adjustment', 'Elastics check', 'IPR', 'Aligner delivery', 'Power chain', 'Coil spring activation',
+                   'Bracket repair', 'Progress photos', 'TAD check', 'Bonding', 'Debond', 'Retainer impression'],
+    retention:    ['Retainer check', 'Retainer replacement', 'Relapse assessment', 'Bonded retainer repair', 'Final records']
+  };
+
+  function stageDef(key) {
+    var f = caseStages.filter(function (s) { return s[0] === key; })[0];
+    return f ? { key: f[0], en: f[1], ar: f[2], dot: f[3], bg: f[4], fg: f[5] } : null;
+  }
+  function gateCheck(caseFlags, toKey) {
+    return (stageGates[toKey] || []).filter(function (g) { return !(caseFlags || {})[g[0]]; })
+      .map(function (g) { return g[1]; });
+  }
+  function overdueBy(stageKey, daysSinceContact, override) {
+    var iv = (override && override[stageKey]) || (recallIntervals[stageKey] || {}).days || 21;
+    return daysSinceContact - iv;
+  }
+
+  /* ---------- treatment progress (chairside summary) ---------- */
+  var treatmentPhases = [
+    ['alignment', 'Alignment',     'Initial alignment'],
+    ['leveling',  'Leveling',      'Leveling the occlusion'],
+    ['space',     'Space closure', 'Space closure'],
+    ['finishing', 'Finishing',     'Finishing and detailing'],
+    ['retention', 'Retention',     'Retention']
+  ];
+  var progressMeasures = {
+    overjet:   ['Overjet',            'mm', 'num', '2–4 mm'],
+    overbite:  ['Overbite',           'mm', 'num', '2–4 mm'],
+    midline:   ['Midline deviation',  'mm', 'num', '0 mm'],
+    molar:     ['Molar relationship', '',   'cat', 'Class I'],
+    canine:    ['Canine relationship','',   'cat', 'Class I'],
+    crowding:  ['Crowding / spacing', 'mm', 'num', '0 mm'],
+    crossbite: ['Crossbite teeth',    '',   'cat', 'none'],
+    openbite:  ['Open bite',          'mm', 'num', '0 mm']
+  };
+  var trackedByMalocclusion = [
+    [/class ii\b/i,   ['overjet', 'overbite', 'molar', 'canine']],
+    [/class iii/i,    ['overjet', 'molar', 'canine']],
+    [/open bite/i,    ['openbite', 'overbite', 'molar']],
+    [/deep bite/i,    ['overbite', 'overjet']],
+    [/crowding/i,     ['crowding', 'midline', 'canine']],
+    [/spacing/i,      ['crowding', 'midline']],
+    [/crossbite/i,    ['crossbite', 'midline', 'molar']],
+    [/impacted/i,     ['canine', 'midline']]
+  ];
+  function trackedMeasures(malocclusion, override) {
+    if (override && override.length) return override.slice();
+    for (var i = 0; i < trackedByMalocclusion.length; i++) {
+      if (trackedByMalocclusion[i][0].test(malocclusion || '')) return trackedByMalocclusion[i][1].slice();
+    }
+    return ['overjet', 'overbite', 'midline'];
+  }
+  var problemStatuses = [
+    ['pending',  'Pending',     'Not started'],
+    ['progress', 'In progress', 'Being treated'],
+    ['resolved', 'Resolved',    'Resolved']
+  ];
+  function medicalFlags(names) {
+    return (names || []).map(function (n) {
+      return conditions.filter(function (c) { return c[0] === n; })[0];
+    }).filter(function (c) { return c && c[4] >= 1; })
+      .map(function (c) { return { en: c[0], tone: c[4], impact: c[3] }; })
+      .sort(function (a, b) { return b.tone - a.tone; });
+  }
+
+  window.OrthoKnowledge = {
+    caseStages: caseStages,
+    stageGates: stageGates,
+    recallIntervals: recallIntervals,
+    visitTypes: visitTypes,
+    archwires: archwires,
+    procedures: procedures,
+    stageDef: stageDef,
+    gateCheck: gateCheck,
+    overdueBy: overdueBy,
+    treatmentPhases: treatmentPhases,
+    progressMeasures: progressMeasures,
+    trackedMeasures: trackedMeasures,
+    problemStatuses: problemStatuses,
+    medicalFlags: medicalFlags,
+    capabilities: capabilities,
+    photoViews: photoViews,
+    radiographTypes: radiographTypes,
+    radiographTools: radiographTools,
+    conditions: conditions,
+    fieldSets: fieldSets,
+    measurementGroups: measurementGroups,
+    measurements: measurements,
+    interpret: interpret,
+    caseSummary: caseSummary,
+    problemList: problemList,
+    problemMap: problemMap,
+    gridRows: gridRows,
+    gridCols: gridCols,
+    sdOf: sd,
+    bandOf: band,
+    occlusalFields: occlusalFields,
+    occlusionSections: occlusionSections,
+    functionSections: functionSections,
+    overlayTools: overlayTools,
+    toothStates: toothStates,
+    fdiChart: fdiChart,
+    growthFields: growthFields,
+    cvmObservations: cvmObservations,
+    cvmStages: cvmStages,
+    stageCVM: stageCVM,
+    radiographicFindings: radiographicFindings,
+    stages: stages,
+    complaints: complaints,
+    attachments: attachments,
+    interviewQuestions: interviewQuestions,
+    buildConstraints: buildConstraints,
+    blockedCapabilities: blockedCapabilities,
+    priorityRule: priorityRule,
+    complaintCategories: complaintCategories,
+    manualProblemDefs: manualProblemDefs,
+    blockingProblems: blockingProblems
+  };
+})();
+
+/* OrthoTrack — case dataset (demo)
+   Shared by the dashboard and the case-file screen. Clinical facts, normal
+   ranges and definitions live in ortho-knowledge-en.js, never here. */
+(function () {
+  /* One record per case. last = the session that happened, next = the session to come;
+     next.plan[0] IS the objective — it is never stored twice. */
+  var seed = [
+    { id: '2026-0131', n: 'Sara Al-Qahtani', p: 12, meta: '12y · Female · Open bite', stage: 'consultation', mo: 0, f: [],
+      last: { d: 23, items: ['First consultation and esthetic complaint discussion'] },
+      next: { off: 0, t: '09:00', v: 'consultation', plan: ['Complete clinical exam', 'Upload photos and radiographs', 'Explain treatment options'] } },
+    { id: '2026-0155', n: 'Yousef Al-Zahrani', p: 1, meta: '9y · Male · Crossbite', stage: 'consultation', mo: 0, f: [],
+      last: { d: 3, items: ['Initial exam — anterior crossbite on 21'] },
+      next: { off: 2, t: '10:00', v: 'records', plan: ['Intraoral and extraoral photos', 'OPG', 'Intraoral scan'] } },
+    { id: '2026-0156', n: 'Lama Al-Shehri', p: 3, meta: '15y · Female · Crowding', stage: 'consultation', mo: 0, f: [],
+      last: { d: 1, items: ['First consultation — anterior crowding complaint'] },
+      next: { off: 5, t: '11:30', v: 'consultation', plan: ['Complete medical history', 'Preliminary space analysis', 'Discuss treatment options'] } },
+    { id: '2026-0154', n: 'Khaled bin Saeed', p: 5, meta: '31y · Male · Class III', stage: 'consultation', mo: 0, f: [],
+      last: { d: 19, items: ['First consultation — clear skeletal Class III', 'Discussed possible orthognathic surgery'] },
+      next: { off: -4, t: '09:30', v: 'records', plan: ['Lateral ceph', 'Full photo set', 'Maxillofacial referral'] } },
+    { id: '2026-0148', n: 'Ehab Mohammed Hosny', p: 4, meta: '14y · Male · Spacing', stage: 'records', mo: 0, f: [],
+      last: { d: 26, items: ['Intraoral and extraoral photos', 'Lateral ceph — some values not yet traced'] },
+      next: { off: -12, t: '13:00', v: 'records', plan: ['Trace U1-SN', 'Trace IMPA', 'Review tracing quality'] } },
+    { id: '2026-0150', n: 'Hind Al-Anazi', p: 6, meta: '13y · Female · Class II', stage: 'records', mo: 0, f: [],
+      last: { d: 5, items: ['Intraoral and extraoral photos'] },
+      next: { off: 0, t: '09:30', v: 'records', plan: ['Lateral ceph', 'OPG', 'Review photo quality before closing'] } },
+    { id: '2026-0149', n: 'Faisal Al-Mutairi', p: 7, meta: '16y · Male · Impacted canine', stage: 'records', mo: 0, f: [],
+      last: { d: 8, items: ['OPG showed impacted canine at 23'] },
+      next: { off: 1, t: '10:30', v: 'records', plan: ['CBCT to localise the impacted canine', 'Assess root resorption on 22', 'Follow-up photos'] } },
+    { id: '2026-0151', n: 'Jood Al-Ghamdi', p: 9, meta: '11y · Female · Deep bite', stage: 'records', mo: 0, f: [],
+      last: { d: 6, items: ['Full photo set', 'Lateral ceph'] },
+      next: { off: 4, t: '12:00', v: 'records', plan: ['Intraoral scan of both arches', 'Bite registration'] } },
+    { id: '2026-0147', n: 'Majed Al-Dossari', p: 10, meta: '19y · Male · Crowding', stage: 'records', mo: 0, f: ['R'],
+      last: { d: 17, items: ['Photos and radiographs complete', 'Scan of both arches'] },
+      next: { off: -3, t: '11:00', v: 'records', plan: ['Review photo quality', 'Retake photos not aligned to Frankfort horizontal'] } },
+    { id: '2026-0142', n: 'Noura Al-Otaibi', p: 14, meta: '14y · Female · Class II', stage: 'diagnosis', mo: 0, f: ['R'],
+      last: { d: 9, items: ['Cephalometric analysis review', 'ANB 7.4° · Wits 5.2mm'] },
+      next: { off: null, t: '', v: '', plan: ['Approve problem list', 'Prioritise by complaint', 'Write diagnostic statement'] } },
+    { id: '2026-0143', n: 'Abdulrahman Al-Harthi', p: 8, meta: '17y · Male · Class II div 2', stage: 'diagnosis', mo: 0, f: ['R'],
+      last: { d: 4, items: ['Records completed', 'Tracing started'] },
+      next: { off: null, t: '', v: '', plan: ['Cephalometric analysis review', 'Assess incisor inclination', 'Approve problem list'] } },
+    { id: '2026-0144', n: 'Dana Al-Subaie', p: 11, meta: '12y · Female · Anterior crossbite', stage: 'diagnosis', mo: 0, f: ['R'],
+      last: { d: 12, items: ['Records complete', 'CVM staging — CS3'] },
+      next: { off: null, t: '', v: '', plan: ['Approve problem list', 'Assess growth modification window'] } },
+    { id: '2026-0140', n: 'Turki Al-Rashid', p: 2, meta: '22y · Male · Class III', stage: 'diagnosis', mo: 0, f: ['R'],
+      last: { d: 15, items: ['Ceph analysis — maxillary retrusion with mandibular protrusion', 'Growth complete'] },
+      next: { off: null, t: '', v: '', plan: ['Orthognathic surgery referral', 'Prepare decompensation plan', 'Discuss treatment timeline'] } },
+    { id: '2026-0126', n: 'Reem Al-Dossari', p: 13, meta: '16y · Female · Deep bite', stage: 'planning', mo: 0, f: ['R', 'P'],
+      last: { d: 19, items: ['Problem list approved', 'Treatment objectives written'] },
+      next: { off: null, t: '', v: '', plan: ['Approve treatment plan v2', 'Decide bite opening mechanics', 'Review retention protocol'] } },
+    { id: '2026-0136', n: 'Badr Al-Qahtani', p: 7, meta: '15y · Male · Class II', stage: 'planning', mo: 0, f: ['R', 'P'],
+      last: { d: 6, items: ['Problem list approved', 'Space analysis — 6mm crowding'] },
+      next: { off: null, t: '', v: '', plan: ['Extraction vs non-extraction decision', 'Assess anchorage requirement', 'Present plan to patient'] } },
+    { id: '2026-0137', n: 'Shahad Al-Malki', p: 3, meta: '14y · Female · Crowding', stage: 'planning', mo: 0, f: ['R', 'P', 'A'],
+      last: { d: 2, items: ['Treatment plan approved', 'Explained duration and cost'] },
+      next: { off: 3, t: '14:00', v: 'bonding', plan: ['Sign informed consent', 'Upper arch bonding', 'Place .014 NiTi'] } },
+    { id: '2026-0138', n: 'Mohammed Al-Harbi', p: 8, meta: '17y · Male · Crowding', stage: 'active', mo: 7, f: ['R', 'P', 'A', 'C'],
+      last: { d: 44, u: '.017×.025 NiTi', l: '.017×.025 NiTi', items: ['Both arches to .017×.025 NiTi', 'Rebonded bracket 24 after debond', 'Oral hygiene instructions'] },
+      next: { off: 0, t: '10:00', v: 'wire', plan: ['Change arch wire to .019×.025 SS both arches', 'Check bracket 24', 'Assess rotation on 13'] } },
+    { id: '2026-0121', n: 'Lina Al-Buqami', p: 9, meta: '15y · Female · Class II', stage: 'active', mo: 11, f: ['R', 'P', 'A', 'C'],
+      last: { d: 51, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Started Class II elastics — 3/16" medium', 'Explained 20-hour wear protocol'] },
+      next: { off: 0, t: '10:30', v: 'elastics', plan: ['Assess elastics compliance', 'Measure overjet and compare with last session', 'Adjust prescription if needed'] } },
+    { id: '2026-0118', n: 'Salman Al-Omari', p: 10, meta: '16y · Male · Extraction case', stage: 'active', mo: 14, f: ['R', 'P', 'A', 'C'],
+      last: { d: 46, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Started space closure with sliding mechanics', 'Activated NiTi coil spring'] },
+      next: { off: 0, t: '11:15', v: 'adjustment', plan: ['Measure remaining space', 'Reactivate mechanics', 'Check anchorage'] } },
+    { id: '2026-0129', n: 'Ghada Al-Shammari', p: 11, meta: '13y · Female · Aligners', stage: 'active', mo: 5, f: ['R', 'P', 'A', 'C'],
+      last: { d: 28, items: ['Delivered aligners 7–12', 'Attachments intact'] },
+      next: { off: 0, t: '12:00', v: 'aligner', plan: ['Review tracking on aligner 12', 'Deliver aligners 13–18', 'IPR if needed'] } },
+    { id: '2026-0115', n: 'Anas Al-Juhani', p: 1, meta: '18y · Male · Open bite', stage: 'active', mo: 17, f: ['R', 'P', 'A', 'C'],
+      last: { d: 58, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Anterior vertical elastics', 'Tongue habit follow-up'] },
+      next: { off: -9, t: '13:30', v: 'adjustment', plan: ['Assess open bite closure', 'Review elastics wear', 'Reschedule the missed visit'] } },
+    { id: '2026-0124', n: 'Rana Al-Khalidi', p: 2, meta: '14y · Female · Deep bite', stage: 'active', mo: 9, f: ['R', 'P', 'A', 'C'],
+      last: { d: 40, u: '.019×.025 NiTi', l: '.019×.025 NiTi', items: ['Reverse curve of Spee lower arch', 'Assessed bite opening'] },
+      next: { off: 2, t: '09:00', v: 'ipr', plan: ['IPR 0.5mm between 13 and 23', 'Reassess overbite', 'Adjust arch form'] } },
+    { id: '2026-0112', n: 'Waleed Al-Fahad', p: 12, meta: '20y · Male · Crowding', stage: 'active', mo: 19, f: ['R', 'P', 'A', 'C'],
+      last: { d: 35, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Finishing bends upper arch', 'Midline check'] },
+      next: { off: 5, t: '10:00', v: 'progress', plan: ['Progress records at 6 months', 'Compare photos with baseline', 'Assess plan objectives reached'] } },
+    { id: '2026-0119', n: 'Mariam Al-Asiri', p: 13, meta: '16y · Female · Class II', stage: 'active', mo: 22, f: ['R', 'P', 'A', 'C'],
+      last: { d: 47, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Finishing bends', 'Settling elastics for two weeks'] },
+      next: { off: 0, t: '13:00', v: 'debond', plan: ['Full debond both arches', 'Clean residual composite', 'Scan for retainers'] } },
+    { id: '2026-0133', n: 'Yasser Al-Saedi', p: 4, meta: '15y · Male · Crossbite', stage: 'active', mo: 6, f: ['R', 'P', 'A', 'C'],
+      last: { d: 66, u: '.016 NiTi', l: '.016 NiTi', items: ['Posterior crossbite correction ongoing', 'Patient missed the last two visits'] },
+      next: { off: -16, t: '11:00', v: 'adjustment', plan: ['Contact patient and rebook', 'Check appliance after the gap', 'Assess impact of the gap on the plan'] } },
+    { id: '2025-0994', n: 'Abdullah Al-Shammari', p: 10, meta: '21y · Male · Class III', stage: 'retention', mo: 26, f: ['R', 'P', 'A', 'C', 'D'],
+      last: { d: 172, items: ['Retention check — stable', 'Retainer cleaned'] },
+      next: { off: 0, t: '14:30', v: 'retainer', plan: ['Check stability', 'Check bonded retainer', 'Set next review date'] } },
+    { id: '2025-0981', n: 'Salma Al-Harbi', p: 6, meta: '19y · Female · Crowding', stage: 'retention', mo: 30, f: ['R', 'P', 'A', 'C', 'D'],
+      last: { d: 120, items: ['Retention check — mild relapse on 31'] },
+      next: { off: 21, t: '09:30', v: 'retainer', plan: ['Assess relapse on 31', 'Check retainer fit', 'Discuss increasing wear hours'] } },
+    { id: '2025-0975', n: 'Nayef Al-Qarni', p: 5, meta: '23y · Male · Deep bite', stage: 'retention', mo: 33, f: ['R', 'P', 'A', 'C', 'D'],
+      last: { d: 205, items: ['Retention check', 'Patient reported a broken retainer'] },
+      next: { off: -20, t: '10:00', v: 'retainer', plan: ['Assess after the period without a retainer', 'Scan for a replacement retainer', 'Check current overbite'] } }
+  ];
+
+  /* records completeness per case whose workup is still open.
+     done/total = uploaded slots of the standard 14-item record set;
+     missing = the named items that still block the next stage.        */
+  var records = {
+    'ORT-2026-0148': { done: 9,  total: 14, missing: ['Lateral ceph tracing', 'U1-SN', 'IMPA', 'Intraoral scan', 'Bite registration'] },
+    'ORT-2026-0150': { done: 6,  total: 14, missing: ['Lateral ceph', 'OPG', 'Right buccal', 'Left buccal', 'Upper occlusal', 'Lower occlusal', 'Intraoral scan', 'Bite registration'] },
+    'ORT-2026-0149': { done: 11, total: 14, missing: ['CBCT for the impacted canine', 'Follow-up photos', 'Bite registration'] },
+    'ORT-2026-0151': { done: 12, total: 14, missing: ['Intraoral scan', 'Bite registration'] },
+    'ORT-2026-0147': { done: 13, total: 14, missing: ['Two extraoral photos off the Frankfort horizontal'] },
+    'ORT-2026-0142': { done: 12, total: 14, missing: ['Cephalometric values not fully traced', 'Bite registration'] },
+    'ORT-2026-0155': { done: 2,  total: 14, missing: ['Intraoral photos', 'Extraoral photos', 'OPG', 'Intraoral scan'] }
+  };
+
+  /* chairside detail per case */
+  var detail = {
+    'ORT-2026-0138': { cc: 'Crowded upper front teeth', est: 20,
+      ap: [['UPPER', '.017×.025 NiTi'], ['LOWER', '.017×.025 NiTi']],
+      cmp: [['Oral hygiene', 'Good', true]],
+      carry: ['Check bracket 24 after rebonding'] },
+    'ORT-2026-0121': { cc: 'Protruding front teeth', est: 24,
+      al: [['amber', 'Patient on orthodontic elastics — compliance below target']],
+      ap: [['UPPER', '.019×.025 SS'], ['LOWER', '.019×.025 SS'], ['ELASTICS', 'Class II 3/16" medium']],
+      cmp: [['Elastics wear', '16h / 20h', false], ['Oral hygiene', 'Fair', false]],
+      carry: [] },
+    'ORT-2026-0118': { cc: 'Severe crowding needing extraction', est: 26,
+      ap: [['UPPER', '.019×.025 SS'], ['LOWER', '.019×.025 SS'], ['MECHANICS', 'NiTi coil spring']],
+      cmp: [['Oral hygiene', 'Good', true]], carry: [] },
+    'ORT-2026-0129': { cc: 'Mild crowding — prefers an invisible option', est: 14,
+      ap: [['ALIGNER', '12 / 30'], ['ATTACHMENTS', 'Intact']],
+      cmp: [['Aligner wear', '21h / 22h', true]], carry: [] },
+    'ORT-2026-0115': { cc: 'Difficulty biting with front teeth', est: 26,
+      al: [['red', 'Missed the last visit — open bite may relapse']],
+      ap: [['UPPER', '.019×.025 SS'], ['LOWER', '.019×.025 SS'], ['ELASTICS', 'Anterior vertical 1/4"']],
+      cmp: [['Elastics wear', 'Unconfirmed', false]],
+      carry: ['Assess tongue habit'] },
+    'ORT-2026-0124': { cc: 'Deep bite causing gum pain', est: 22,
+      ap: [['UPPER', '.019×.025 NiTi'], ['LOWER', '.019×.025 NiTi — reverse curve']],
+      cmp: [['Oral hygiene', 'Good', true]], carry: [] },
+    'ORT-2026-0112': { cc: 'Crowding and an uneven smile', est: 24,
+      ap: [['UPPER', '.019×.025 SS'], ['LOWER', '.019×.025 SS']],
+      cmp: [['Oral hygiene', 'Excellent', true]], carry: [] },
+    'ORT-2026-0119': { cc: 'Protrusion and lips not closing', est: 22,
+      ap: [['UPPER', '.019×.025 SS'], ['LOWER', '.019×.025 SS'], ['ELASTICS', 'Settling 3/16" light']],
+      cmp: [['Elastics wear', '19h / 20h', true]], carry: [] },
+    'ORT-2026-0133': { cc: 'Posterior crossbite', est: 20,
+      al: [['red', 'Missed the last two visits — assess the gap before continuing the plan']],
+      ap: [['UPPER', '.016 NiTi'], ['LOWER', '.016 NiTi']],
+      cmp: [['Oral hygiene', 'Poor', false]],
+      carry: ['Continue posterior crossbite correction'] },
+    'ORT-2025-0994': { cc: 'Protruding lower jaw', est: 26,
+      ap: [['UPPER', 'Vacuum-formed retainer'], ['LOWER', 'Bonded 3-3 retainer']],
+      cmp: [['Retainer wear', 'Nightly — regular', true]], carry: [] },
+    'ORT-2025-0981': { cc: 'Lower anterior crowding', est: 28,
+      al: [['amber', 'Mild relapse on 31 — needs follow-up']],
+      ap: [['UPPER', 'Vacuum-formed retainer'], ['LOWER', 'Bonded 3-3 retainer']],
+      cmp: [['Retainer wear', 'Irregular', false]], carry: [] },
+    'ORT-2025-0975': { cc: 'Deep bite', est: 30,
+      al: [['red', 'Retainer broken for weeks — relapse risk']],
+      ap: [['UPPER', 'None — retainer broken'], ['LOWER', 'Bonded 3-3 retainer']],
+      cmp: [['Retainer wear', 'Stopped', false]], carry: [] },
+    'ORT-2026-0131': { cc: 'Front teeth do not meet when biting' },
+    'ORT-2026-0155': { cc: 'A front tooth behind the bite' },
+    'ORT-2026-0156': { cc: 'Crowded front teeth' },
+    'ORT-2026-0154': { cc: 'Protruding lower jaw — esthetic complaint',
+      al: [['amber', 'Growth complete — full correction needs orthognathic surgery']] },
+    'ORT-2026-0148': { cc: 'Gaps between the front teeth' },
+    'ORT-2026-0150': { cc: 'Protruding upper front teeth' },
+    'ORT-2026-0149': { cc: 'Upper canine has not erupted',
+      al: [['amber', 'Root resorption risk on 22 — CBCT required before planning']] },
+    'ORT-2026-0151': { cc: 'Deep bite' },
+    'ORT-2026-0147': { cc: 'Crowded front teeth' },
+    'ORT-2026-0142': { cc: 'Protruding front teeth' },
+    'ORT-2026-0143': { cc: 'Front teeth tilted inward' },
+    'ORT-2026-0144': { cc: 'A front tooth behind the bite' },
+    'ORT-2026-0140': { cc: 'Protruding lower jaw',
+      al: [['amber', 'Growth complete — decompensation before surgery']] },
+    'ORT-2026-0126': { cc: 'Deep bite causing tooth wear' },
+    'ORT-2026-0136': { cc: 'Protruding front teeth' },
+    'ORT-2026-0137': { cc: 'Crowded front teeth',
+      al: [['amber', 'Informed consent not signed — required before bonding']] }
+  };
+
+  /* chart summary per case */
+  var chart = {
+    'ORT-2026-0138': { dx: [['Class I', 0], ['crowding U 6 mm · L 4 mm', 2], ['rotation 13', 1], ['Curve of Spee 2 mm', 0]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Arch expansion + IPR', anch: 'Minimal' }, phase: 'alignment',
+      med: ['Asthma'], bonded: '2026-02', sessions: 5, missedAt: [],
+      problems: [['Crowding U 6 mm', 'progress'], ['Crowding L 4 mm', 'progress'], ['Rotation 13', 'pending'], ['Curve of Spee', 'pending']],
+      meas: { crowding: ['6', '2.5'], midline: ['1', '0.5'], canine: ['Class I', 'Class I'] } },
+    'ORT-2026-0121': { dx: [['Class II div 1', 2], ['skeletal Class II · ANB 6.8°', 2], ['overjet 8 mm', 2], ['lip incompetence', 1], ['crowding U 3 mm', 0]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Class II elastics', anch: 'Moderate' }, phase: 'space',
+      med: ['Nickel allergy', 'Irregular attendance'], bonded: '2025-10', sessions: 9, missedAt: [3, 7],
+      problems: [['Overjet 8 mm', 'progress'], ['Molar Class II', 'progress'], ['Lip incompetence', 'progress'], ['Crowding U 3 mm', 'resolved']],
+      meas: { overjet: ['8', '5'], overbite: ['4', '3'], molar: ['Class II', 'end-on'], canine: ['Class II', 'end-on'] } },
+    'ORT-2026-0118': { dx: [['Class I', 0], ['severe crowding U 9 mm · L 7 mm', 2], ['bimaxillary proclination', 1], ['midline L 2 mm', 1]],
+      plan: { ex: 'Extraction 14 · 24 · 34 · 44', appl: 'Fixed · MBT .022', mech: 'Sliding mechanics · NiTi coils', anch: 'Maximum' }, phase: 'space',
+      med: [], bonded: '2025-07', sessions: 11, missedAt: [],
+      problems: [['Crowding U 9 mm', 'resolved'], ['Crowding L 7 mm', 'resolved'], ['Residual spaces', 'progress'], ['Midline L 2 mm', 'progress'], ['Incisor proclination', 'pending']],
+      meas: { crowding: ['9', '0'], midline: ['2', '1'], canine: ['Class I', 'Class I'], overjet: ['5', '4'] } },
+    'ORT-2026-0129': { dx: [['Class I', 0], ['mild crowding U 3 mm · L 2 mm', 0], ['rotation 12 · 22', 1]],
+      plan: { ex: 'Non-extraction', appl: 'Clear aligners · 30 stages', mech: 'IPR 0.3 mm anterior', anch: 'Minimal' }, phase: 'alignment',
+      med: ['Latex allergy'], bonded: '2026-04', sessions: 3, missedAt: [],
+      problems: [['Crowding U 3 mm', 'progress'], ['Crowding L 2 mm', 'progress'], ['Rotation 12 · 22', 'progress']],
+      meas: { crowding: ['3', '1.5'], midline: ['0', '0'], canine: ['Class I', 'Class I'] } },
+    'ORT-2026-0115': { dx: [['anterior open bite 4 mm', 2], ['hyperdivergent · MMPA 34°', 2], ['tongue thrust', 1], ['Class I molars', 0]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Anterior vertical elastics · posterior bite blocks', anch: 'Moderate' }, phase: 'finishing',
+      med: ['Tongue thrust', 'Mouth breathing'], bonded: '2025-04', sessions: 12, missedAt: [10, 11],
+      problems: [['Open bite 4 mm', 'progress'], ['Tongue thrust', 'progress'], ['Posterior crossbite', 'resolved']],
+      meas: { openbite: ['4', '1.5'], overbite: ['-4', '-1.5'], molar: ['Class I', 'Class I'] } },
+    'ORT-2026-0124': { dx: [['Class II div 2', 2], ['deep bite · overbite 7 mm', 2], ['retroclined U1 · Ui/MxP 98°', 1], ['gingival trauma palatal 11 · 21', 1]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Bite opening · reverse curve NiTi', anch: 'Moderate' }, phase: 'leveling',
+      med: [], bonded: '2025-12', sessions: 7, missedAt: [],
+      problems: [['Overbite 7 mm', 'progress'], ['Retroclined U1', 'progress'], ['Gingival trauma', 'resolved'], ['Molar Class II', 'pending']],
+      meas: { overbite: ['7', '4.5'], overjet: ['3', '4'], molar: ['Class II', 'Class II'] } },
+    'ORT-2026-0112': { dx: [['Class I', 0], ['crowding U 5 mm', 1], ['midline U 1.5 mm', 1]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Expansion + finishing bends', anch: 'Minimal' }, phase: 'finishing',
+      med: [], bonded: '2025-02', sessions: 15, missedAt: [],
+      problems: [['Crowding U 5 mm', 'resolved'], ['Midline U 1.5 mm', 'progress'], ['Smile arc', 'progress']],
+      meas: { crowding: ['5', '0'], midline: ['1.5', '0.5'], canine: ['Class I', 'Class I'] } },
+    'ORT-2026-0119': { dx: [['Class II div 1', 2], ['overjet 7 mm', 2], ['lip incompetence', 1]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Class II elastics', anch: 'Moderate' }, phase: 'finishing',
+      med: [], bonded: '2024-11', sessions: 17, missedAt: [6],
+      problems: [['Overjet 7 mm', 'resolved'], ['Molar Class II', 'resolved'], ['Lip incompetence', 'resolved'], ['Settling', 'progress']],
+      meas: { overjet: ['7', '2.5'], overbite: ['3', '2.5'], molar: ['Class II', 'Class I'], canine: ['Class II', 'Class I'] } },
+    'ORT-2026-0133': { dx: [['posterior crossbite R', 2], ['narrow maxilla', 1], ['Class I molars', 0]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Quad helix expansion', anch: 'Minimal' }, phase: 'alignment',
+      med: ['Poor oral hygiene', 'Irregular attendance'], bonded: '2026-03', sessions: 4, missedAt: [2, 3],
+      problems: [['Posterior crossbite R', 'progress'], ['Narrow maxilla', 'progress']],
+      meas: { crossbite: ['16 · 17', '17'], midline: ['1', '1'], molar: ['Class I', 'Class I'] } },
+    'ORT-2025-0994': { dx: [['Class III', 2], ['skeletal Class III · ANB -2°', 2], ['reverse overjet -2 mm', 2]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Class III elastics · camouflage', anch: 'Moderate' }, phase: 'retention',
+      med: [], bonded: '2023-08', sessions: 21, missedAt: [],
+      problems: [['Reverse overjet', 'resolved'], ['Molar Class III', 'resolved'], ['Retention stability', 'progress']],
+      meas: { overjet: ['-2', '2'], molar: ['Class III', 'Class I'], canine: ['Class III', 'Class I'] } },
+    'ORT-2025-0981': { dx: [['Class I', 0], ['crowding L 6 mm', 2], ['crowding U 3 mm', 0]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'IPR + expansion', anch: 'Minimal' }, phase: 'retention',
+      med: ['Bruxism'], bonded: '2023-05', sessions: 19, missedAt: [],
+      problems: [['Crowding L 6 mm', 'resolved'], ['Crowding U 3 mm', 'resolved'], ['Relapse 31', 'progress']],
+      meas: { crowding: ['6', '0.5'], midline: ['0.5', '0'], canine: ['Class I', 'Class I'] } },
+    'ORT-2025-0975': { dx: [['Class II div 2', 2], ['deep bite · overbite 6 mm', 2], ['retroclined U1', 1]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Bite opening · anterior bite plane', anch: 'Moderate' }, phase: 'retention',
+      med: [], bonded: '2023-01', sessions: 22, missedAt: [14],
+      problems: [['Overbite 6 mm', 'resolved'], ['Retroclined U1', 'resolved'], ['Retainer broken', 'progress']],
+      meas: { overbite: ['6', '3'], overjet: ['2', '3'] } },
+    'ORT-2026-0142': { dx: [['Class II div 1', 2], ['skeletal Class II · ANB 7.4° · Wits 5.2 mm', 2], ['overjet 9 mm', 2], ['crowding U 4 mm', 1]], plan: null, phase: null,
+      med: ['Asthma'], problems: [['Overjet 9 mm', 'pending'], ['Skeletal Class II', 'pending'], ['Crowding U 4 mm', 'pending']],
+      meas: { overjet: ['9', ''], overbite: ['4', ''], molar: ['Class II', ''], canine: ['Class II', ''] } },
+    'ORT-2026-0143': { dx: [['Class II div 2', 2], ['deep bite · overbite 6 mm', 2], ['retroclined U1', 1]], plan: null, phase: null, med: [],
+      problems: [['Overbite 6 mm', 'pending'], ['Retroclined U1', 'pending']], meas: { overbite: ['6', ''], overjet: ['2', ''] } },
+    'ORT-2026-0144': { dx: [['anterior crossbite 11 · 21', 2], ['skeletal Class III tendency', 1], ['CVM CS3', 0]], plan: null, phase: null, med: [],
+      problems: [['Anterior crossbite', 'pending'], ['Class III tendency', 'pending']], meas: { overjet: ['-1', ''], crossbite: ['11 · 21', ''] } },
+    'ORT-2026-0140': { dx: [['Class III', 2], ['skeletal Class III · maxillary retrusion', 2], ['reverse overjet -3 mm', 2], ['growth complete', 0]], plan: null, phase: null, med: [],
+      problems: [['Skeletal Class III', 'pending'], ['Reverse overjet', 'pending'], ['Dental compensation', 'pending']], meas: { overjet: ['-3', ''], molar: ['Class III', ''] } },
+    'ORT-2026-0126': { dx: [['Class II div 2', 2], ['deep bite · overbite 7 mm', 2], ['enamel wear 31 · 41', 1]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Bite opening · reverse curve', anch: 'Moderate' }, phase: null, med: ['Bruxism'],
+      problems: [['Overbite 7 mm', 'pending'], ['Enamel wear', 'pending']], meas: { overbite: ['7', ''], overjet: ['3', ''] } },
+    'ORT-2026-0136': { dx: [['Class II div 1', 2], ['overjet 6 mm', 2], ['crowding U 6 mm', 2]], plan: null, phase: null, med: [],
+      problems: [['Overjet 6 mm', 'pending'], ['Crowding U 6 mm', 'pending'], ['Molar Class II', 'pending']], meas: { overjet: ['6', ''], molar: ['Class II', ''], canine: ['Class II', ''] } },
+    'ORT-2026-0137': { dx: [['Class I', 0], ['crowding U 5 mm · L 3 mm', 1]],
+      plan: { ex: 'Non-extraction', appl: 'Fixed · MBT .022', mech: 'Expansion + IPR', anch: 'Minimal' }, phase: null, med: ['Penicillin allergy'],
+      problems: [['Crowding U 5 mm', 'pending'], ['Crowding L 3 mm', 'pending']], meas: { crowding: ['5', ''], midline: ['0', ''] } },
+    'ORT-2026-0154': { dx: [['skeletal Class III', 2], ['growth complete', 0]], plan: null, phase: null, med: [], problems: [], meas: {} },
+    'ORT-2026-0149': { dx: [['impacted canine 23', 2]], plan: null, phase: null, med: ['Impacted tooth'], problems: [], meas: {} },
+    'ORT-2026-0148': { dx: [['spacing U 4 mm', 1]], plan: null, phase: null, med: [], problems: [], meas: {} },
+    'ORT-2026-0150': { dx: [['Class II div 1', 2], ['overjet 6 mm', 2]], plan: null, phase: null, med: [], problems: [], meas: {} }
+  };
+
+  /* Derived session history for the case-file log. The dataset stores only the
+     last and next session; the visits between them are reconstructed so the log
+     has a believable spine. Three shapes, because a fixed case, an aligner case
+     and a debonded case do not have the same appliance history:
+       fixed      — the wire ladder, ending at the wire that is in the mouth
+       aligner    — aligner sets, no archwires at all
+       retention  — wires up to a debond visit, then retainer checks
+     Each entry carries the appliance state it produced, so the appliance tab and
+     the log can never disagree. Demo derivation only — never a clinical claim. */
+  var wireLadder = ['.014 NiTi', '.016 NiTi', '.016×.022 NiTi', '.017×.025 NiTi', '.019×.025 NiTi', '.019×.025 SS'];
+
+  /* how a given measurement typically moves: < 1 = mostly early, > 1 = mostly late */
+  var moveCurve = { crowding: 0.55, midline: 0.7, overbite: 1.15, openbite: 1.35, overjet: 1.7 };
+
+  function ladderFor(current) {
+    var at = wireLadder.indexOf(current);
+    return at < 0 ? wireLadder.slice() : wireLadder.slice(0, at + 1);
+  }
+
+  function apOf(d, label) {
+    var row = (d.ap || []).filter(function (a) { return a[0] === label; })[0];
+    return row ? row[1] : null;
+  }
+
+  function history(c) {
+    var ch = c.chart || {}, d = c.detail || {};
+    var n = ch.sessions || 0;
+    if (!n) return [];
+    var missed = ch.missedAt || [];
+    var startD = ch.bonded ? new Date(ch.bonded + '-01') : new Date();
+    var lastGap = (c.seed.last && c.seed.last.d) || 0;
+    var endD = new Date(); endD.setDate(endD.getDate() - lastGap);
+    var span = Math.max(1, endD - startD);
+    var meas = ch.meas || {};
+    var keys = Object.keys(meas).filter(function (k) {
+      return !isNaN(parseFloat((meas[k] || [])[0])) && !isNaN(parseFloat((meas[k] || [])[1]));
+    });
+
+    var isAligner = !!apOf(d, 'ALIGNER');
+    var isRetention = ch.phase === 'retention';
+    var retainerRows = (d.ap || []).filter(function (a) { return /retainer/i.test(a[0]) || /retainer/i.test(a[1]); });
+    if (!retainerRows.length && isRetention) retainerRows = (d.ap || []).slice();
+    /* what was fitted at the debond, before anything went wrong with it */
+    var retainerAtFit = retainerRows.map(function (a) {
+      return [a[0], /none|broken|stopped/i.test(a[1]) ? 'Vacuum-formed retainer' : a[1]];
+    });
+    /* the auxiliary this case actually has, not a generic per-phase guess */
+    var auxRow = (d.ap || []).filter(function (a) {
+      return ['UPPER', 'LOWER', 'ALIGNER', 'ATTACHMENTS'].indexOf(a[0]) < 0 && !/retainer/i.test(a[0]) && !/retainer/i.test(a[1]);
+    })[0] || null;
+    /* the debond sits before the retention checks */
+    var debondIdx = isRetention ? Math.max(1, n - Math.max(1, Math.round(n * 0.15)) - 1) : -1;
+
+    var ladU = isAligner ? [] : ladderFor(isRetention ? '.019×.025 SS' : apOf(d, 'UPPER'));
+    var ladL = isAligner ? [] : ladderFor(isRetention ? '.019×.025 SS' : apOf(d, 'LOWER'));
+
+    var alignerTotal = 30, alignerNow = 12;
+    if (isAligner) {
+      var m = String(apOf(d, 'ALIGNER')).match(/(\d+)\s*\/\s*(\d+)/);
+      if (m) { alignerNow = parseInt(m[1], 10); alignerTotal = parseInt(m[2], 10); }
+    }
+
+    /* only attended visits BEFORE the debond move the clock, and the last of
+       them must land exactly on the recorded current values */
+    var attendedTotal = 0;
+    for (var j = 0; j < n; j++) {
+      if (missed.indexOf(j) >= 0) continue;
+      if (debondIdx >= 0 && j >= debondIdx) continue;
+      attendedTotal++;
+    }
+    attendedTotal = Math.max(1, attendedTotal - 1);
+
+    /* the clock only advances at attended visits, and stops at the debond:
+       tooth movement cannot continue after the appliance comes off */
+    /* the auxiliary is only evidenced by the most recent attended visit's own
+       notes, so that is where it starts — not at an arbitrary point in the clock */
+    var lastAdvancing = -1;
+    for (var q = 0; q < n; q++) {
+      if (missed.indexOf(q) >= 0) continue;
+      if (debondIdx >= 0 && q >= debondIdx) continue;
+      lastAdvancing = q;
+    }
+
+    var out = [], prev = null, attended = 0, sinceChange = 0;
+    for (var i = 0; i < n; i++) {
+      var isMissed = missed.indexOf(i) >= 0;
+      var t = Math.min(1, attended / attendedTotal);
+      var when = new Date(startD.getTime() + span * (n === 1 ? 1 : i / (n - 1)));
+      var afterDebond = isRetention && i > debondIdx;
+      var atDebond = isRetention && i === debondIdx;
+
+      var wireU = null, wireL = null, aux = '', procs = [], deltas = [], appliance = [], type;
+
+      if (isMissed) {
+        /* a visit that did not happen produced nothing: no wire, no appliance, no measurement */
+        type = 'Missed';
+      } else if (isAligner) {
+        var set = Math.max(1, Math.round(alignerNow * (t || (1 / n))));
+        type = i === 0 ? 'Aligner start' : 'Aligner delivery';
+        procs = i === 0 ? ['Attachments placed', 'Aligners 1–6 delivered']
+          : ['Tracking check on aligner ' + set, 'Next set delivered'];
+        if (t > 0.4) procs = procs.concat(['IPR reviewed']);
+        appliance = [['ALIGNER', set + ' / ' + alignerTotal], ['ATTACHMENTS', 'Intact']];
+      } else if (afterDebond) {
+        type = 'Retainer check';
+        procs = ['Retention check', 'Retainer fit assessed'];
+        /* only the newest visit carries the retainer's present-day state */
+        appliance = (i === n - 1 ? retainerRows : retainerAtFit).slice();
+        if (i === n - 1 && c.seed.last) procs = (c.seed.last.items || []).slice();
+      } else if (atDebond) {
+        type = 'Debond';
+        procs = ['Debond both arches', 'Composite clean-up', 'Retainer fitted'];
+        appliance = retainerAtFit.slice();
+      } else {
+        wireU = ladU[Math.min(ladU.length - 1, Math.round(t * (ladU.length - 1)))];
+        var li = Math.min(ladL.length - 1, Math.max(0, Math.round(t * (ladL.length - 1)) - (t < 0.9 ? 1 : 0)));
+        if (prev && prev.wireL) li = Math.max(li, ladL.indexOf(prev.wireL));
+        wireL = ladL[Math.max(0, li)];
+        if (prev && prev.wireU && ladU.indexOf(wireU) < ladU.indexOf(prev.wireU)) wireU = prev.wireU;
+        var changed = !!(prev && prev.wireU && (prev.wireU !== wireU || prev.wireL !== wireL));
+        aux = auxRow && i >= lastAdvancing ? auxRow[1] : '';
+        sinceChange = changed || i === 0 ? 0 : sinceChange + 1;
+        /* the type states what the visit WAS, and the procedures follow from it */
+        type = i === 0 ? 'Bonding' : changed ? 'Arch wire change' : sinceChange >= 3 ? 'Progress records' : 'Adjustment';
+        sinceChange = type === 'Progress records' ? 0 : sinceChange;
+        procs = type === 'Bonding' ? ['Bonding both arches', 'Initial archwire ' + wireU]
+          : type === 'Arch wire change' ? ['Arch wire change to ' + wireU, 'Ligature change']
+          : type === 'Progress records' ? ['Progress photos', 'Compared against baseline']
+          : ['Adjustment', 'Progress check'];
+        if (aux) procs = procs.concat([aux]);
+        if (i === n - 1 && c.seed.last) procs = (c.seed.last.items || []).slice();
+        appliance = [['UPPER', wireU], ['LOWER', wireL]];
+        if (aux) appliance = appliance.concat([[auxRow[0], aux]]);
+      }
+
+      if (!isMissed) {
+        deltas = keys.map(function (k) {
+          var pair = meas[k];
+          var a = parseFloat(pair[0]), b = parseFloat(pair[1]);
+          var e = moveCurve[k] || 1;
+          var now = a + (b - a) * Math.pow(t, e);
+          var before = prev && prev._raw && prev._raw[k] !== undefined ? prev._raw[k] : a;
+          return {
+            key: k,
+            value: Math.round(now * 10) / 10,
+            delta: Math.round((now - before) * 100) / 100,
+            total: Math.round((now - a) * 10) / 10,
+            _now: now
+          };
+        });
+      }
+
+      var raw = prev && prev._raw ? Object.assign({}, prev._raw) : {};
+      deltas.forEach(function (x) { raw[x.key] = x._now; delete x._now; });
+
+      var entry = {
+        index: i, date: when, missed: isMissed, type: type,
+        wireU: wireU, wireL: wireL, aux: aux,
+        appliance: appliance,
+        procs: procs,
+        compliance: isMissed ? null : ((d.cmp || [])[0] || null),
+        note: isMissed ? 'Patient did not attend — rebooked' : '',
+        by: isMissed ? '' : 'Dr. Mohammed Shady',
+        deltas: deltas,
+        _raw: raw
+      };
+      out.push(entry);
+      prev = entry;
+      if (!isMissed && !afterDebond && !atDebond) attended++;
+    }
+    out.forEach(function (e) { delete e._raw; });
+    return out.reverse();
+  }
+
+  /* appliance change log, derived from the same entries the log shows:
+     one row per label whose value changed at that visit */
+  function applianceLog(hist) {
+    var chrono = hist.slice().reverse();
+    var seen = {}, rows = [];
+    chrono.forEach(function (e) {
+      if (e.missed) return;
+      (e.appliance || []).forEach(function (a) {
+        if (!a[1]) return;
+        if (seen[a[0]] === a[1]) return;
+        seen[a[0]] = a[1];
+        rows.push({ date: e.date, arch: a[0], value: a[1], by: e.by, index: e.index });
+      });
+    });
+    return rows.reverse();
+  }
+
+  function byId(id) {
+    var key = String(id || '').replace(/^ORT-/, '');
+    var s = seed.filter(function (c) { return c.id === key; })[0] || null;
+    if (!s) return null;
+    var full = 'ORT-' + s.id;
+    return { seed: s, id: full, name: s.n, meta: s.meta, stage: s.stage, mo: s.mo,
+             detail: detail[full] || {}, chart: chart[full] || {}, records: records[full] || null };
+  }
+
+  window.OrthoCases = { seed: seed, detail: detail, chart: chart, records: records, byId: byId, history: history, applianceLog: applianceLog };
+})();
+
+</script>
+<!-- OT-DATA-END -->
+</head>
+<body>
+
+<x-dc>
+
+<helmet>
+<meta charset="utf-8">
+<title>OrthoTrack — full prototype</title>
+<style>/*! Thmanyah Sans | github.com/engdawood/thmanyah-font-web */
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("assets/vendor/fonts/c4df2aa7-4be4-4e0b-b8fd-dfb10ecda8e3.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("assets/vendor/fonts/a64a6924-0450-4020-8129-f6a38469d698.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("assets/vendor/fonts/9513704b-9ffe-4b36-9b07-789575414861.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("assets/vendor/fonts/e3f12a05-4cf8-4782-bafe-c1db74fc2a26.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("assets/vendor/fonts/5ba82303-aac6-42fc-b24e-89dc7ed14cfe.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+</style>
+<style>/*! Thmanyah Serif Display | github.com/engdawood/thmanyah-font-web */
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("assets/vendor/fonts/11c5a04b-76bd-4071-8c94-9456dde0c965.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("assets/vendor/fonts/12120958-009a-4ec3-9ca6-d89d1366eaea.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("assets/vendor/fonts/06245e83-5368-449f-8b8a-67598d2780d8.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("assets/vendor/fonts/a946ffc7-fe04-4b2b-81e5-546dd9b475aa.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Display";
+  src: url("assets/vendor/fonts/07f7a64f-e99b-4149-8753-fee826af9e90.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+0020-007F, U+00A0-00FF, U+0100-024F, U+0250-02AF;
+}
+</style>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/vendor/fonts/6bbc399d-c284-4737-b4d6-ffdef803b10c.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/vendor/fonts/b58d6add-aa96-4fb0-8dd2-d99d773fbd2d.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/vendor/fonts/88f32b1a-3cd8-4df1-a060-05ea23949c68.woff2") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e54d7979-2c9d-4205-a0f5-6bc6d21ae1e7.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/vendor/fonts/c2649881-7069-4e0c-bcc1-d64704c4102d.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/vendor/fonts/1dea810c-40ba-42db-8878-aa5d72771372.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e2422727-920b-4a19-8407-4cefb3065d21.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/vendor/fonts/6bbc399d-c284-4737-b4d6-ffdef803b10c.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/vendor/fonts/b58d6add-aa96-4fb0-8dd2-d99d773fbd2d.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/vendor/fonts/88f32b1a-3cd8-4df1-a060-05ea23949c68.woff2") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e54d7979-2c9d-4205-a0f5-6bc6d21ae1e7.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/vendor/fonts/c2649881-7069-4e0c-bcc1-d64704c4102d.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/vendor/fonts/1dea810c-40ba-42db-8878-aa5d72771372.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e2422727-920b-4a19-8407-4cefb3065d21.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/vendor/fonts/6bbc399d-c284-4737-b4d6-ffdef803b10c.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/vendor/fonts/b58d6add-aa96-4fb0-8dd2-d99d773fbd2d.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/vendor/fonts/88f32b1a-3cd8-4df1-a060-05ea23949c68.woff2") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e54d7979-2c9d-4205-a0f5-6bc6d21ae1e7.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/vendor/fonts/c2649881-7069-4e0c-bcc1-d64704c4102d.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/vendor/fonts/1dea810c-40ba-42db-8878-aa5d72771372.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e2422727-920b-4a19-8407-4cefb3065d21.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/vendor/fonts/6bbc399d-c284-4737-b4d6-ffdef803b10c.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/vendor/fonts/b58d6add-aa96-4fb0-8dd2-d99d773fbd2d.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/vendor/fonts/88f32b1a-3cd8-4df1-a060-05ea23949c68.woff2") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e54d7979-2c9d-4205-a0f5-6bc6d21ae1e7.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/vendor/fonts/c2649881-7069-4e0c-bcc1-d64704c4102d.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/vendor/fonts/1dea810c-40ba-42db-8878-aa5d72771372.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e2422727-920b-4a19-8407-4cefb3065d21.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/vendor/fonts/6bbc399d-c284-4737-b4d6-ffdef803b10c.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/vendor/fonts/b58d6add-aa96-4fb0-8dd2-d99d773fbd2d.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/vendor/fonts/88f32b1a-3cd8-4df1-a060-05ea23949c68.woff2") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e54d7979-2c9d-4205-a0f5-6bc6d21ae1e7.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/vendor/fonts/c2649881-7069-4e0c-bcc1-d64704c4102d.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/vendor/fonts/1dea810c-40ba-42db-8878-aa5d72771372.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/vendor/fonts/e2422727-920b-4a19-8407-4cefb3065d21.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{direction:ltr;background:#f6f8fb;color:#0f172a;font-family:Inter,'Thmanyah Sans',system-ui,sans-serif;font-weight:500;line-height:1.7;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#2563eb;text-decoration:none}
+a:hover{color:#1d4ed8;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+@keyframes otIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes otScreen{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes otFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">
+  <img data-ot-key="assets/face-f.jpeg" src="assets/img/face-f.png" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/face-m.jpeg" src="assets/img/face-m.png" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p01.jpeg" src="assets/img/p01.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p02.jpeg" src="assets/img/p02.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p03.jpeg" src="assets/img/p03.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p04.jpeg" src="assets/img/p04.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p05.jpeg" src="assets/img/p05.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p06.jpeg" src="assets/img/p06.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p07.jpeg" src="assets/img/p07.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p08.jpeg" src="assets/img/p08.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p09.jpeg" src="assets/img/p09.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p10.jpeg" src="assets/img/p10.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p11.jpeg" src="assets/img/p11.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p12.jpeg" src="assets/img/p12.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p13.jpeg" src="assets/img/p13.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+  <img data-ot-key="assets/p14.jpeg" src="assets/img/p14.jpeg" alt="" width="1" height="1" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+</div>
+
+
+<sc-if value="{{ isLoggedOut }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;display:flex;background:#f6f8fb;animation:otFade .25s ease-out">
+  <div style="flex:1 1 52%;min-width:0;display:flex;flex-direction:column;padding:28px 32px 40px;background:#ffffff">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:26px;height:26px;border-radius:11px;background:#2563eb"></div>
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#0f172a">OrthoTrack</span>
+    </div>
+
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 0 0">
+      <div style="width:100%;max-width:396px;display:grid;gap:24px;animation:otIn .3s ease-out">
+
+        <sc-if value="{{ isAuthLogin }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;gap:6px">
+            <h1 style="margin:0;font-size:28px;font-weight:700;line-height:1.4">Sign in</h1>
+            <p style="margin:0;font-size:14px;font-weight:400;color:#64748b">A unified prototype bringing together every screen of <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">OrthoTrack</span> — <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">Dashboard</span>, new case, the <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">clinical records</span> and the case summary.</p>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:11px;padding:13px 15px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe">
+            <span style="width:18px;height:18px;flex:none;margin-top:2px;border-radius:5px;background:#2563eb;color:#ffffff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">i</span>
+            <div style="display:grid;gap:3px">
+              <span style="font-size:13px;font-weight:700;color:#1d4ed8">Demo build — loaded with 28 sample cases</span>
+              <span style="font-size:12.5px;font-weight:400;color:#1d4ed8;line-height:1.6">Press <span style="font-weight:600">Continue with Google</span>, or type any email with a password of six characters or more. No data leaves this file.</span>
+            </div>
+          </div>
+
+          <div style="display:grid;gap:10px">
+            <button type="button" sc-camel-on-click="{{ ssoLogin }}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;cursor:pointer;transition:transform .15s,border-color .15s" style-hover="background:#f6f8fb;border-color:#cbd5e1;transform:translateY(-1px)">
+              <svg width="17" height="17" sc-camel-view-box="0 0 18 18" style="flex:none"><path d="M17.6 9.2c0-.6-.05-1.2-.16-1.75H9v3.32h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.71-1.57 2.64-3.89 2.64-6.55Z" fill="#4285F4"></path><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.81.54-1.85.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.98v2.34A9 9 0 0 0 9 18Z" fill="#34A853"></path><path d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.94H.98a9 9 0 0 0 0 8.12l2.99-2.34Z" fill="#FBBC05"></path><path d="M9 3.58c1.32 0 2.5.46 3.44 1.35l2.58-2.59C13.46.9 11.43 0 9 0A9 9 0 0 0 .98 4.94l2.99 2.34C4.68 5.16 6.66 3.58 9 3.58Z" fill="#EA4335"></path></svg>
+             <span>Continue with Google</span>
+            </button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="flex:1;height:1px;background:#e8edf3"></div>
+           <span style="font-size:12.5px;font-weight:400;color:#94a3b8">or</span>
+            <div style="flex:1;height:1px;background:#e8edf3"></div>
+          </div>
+
+          <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:13px 15px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;animation:otIn .18s ease-out">
+             <span style="width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;background:#dc2626;color:#ffffff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">✕</span>
+             <span style="font-size:13px;font-weight:500;color:#b91c1c">{{ errText }}</span>
+            </div>
+          </sc-if>
+
+          <div style="display:grid;gap:16px">
+            <div style="display:grid;gap:8px">
+              <label style="font-size:13px;font-weight:700">Email or mobile number</label>
+              <input type="text" dir="ltr" value="{{ idValue }}" sc-camel-on-change="{{ setId }}" placeholder="name@clinic.sa" style="width:100%;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid {{ fieldBd }};background:#ffffff;font-family:Inter,sans-serif;font-size:15px;font-weight:500;color:#0f172a;text-align:left;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+            </div>
+            <div style="display:grid;gap:8px">
+              <label style="font-size:13px;font-weight:700">Password</label>
+              <div style="position:relative">
+                <input type="{{ pwType }}" dir="ltr" value="{{ pwValue }}" sc-camel-on-change="{{ setPw }}" style="width:100%;min-height:44px;padding-inline-start:14px;padding-inline-end:74px;border-radius:12px;border:1px solid {{ fieldBd }};background:#ffffff;font-family:Inter,sans-serif;font-size:15px;font-weight:500;color:#0f172a;text-align:left;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                <button type="button" sc-camel-on-click="{{ togglePw }}" title="{{ pwLabel }}" style="position:absolute;left:8px;inset-inline-end:auto;top:50%;transform:translateY(-50%);width:32px;height:32px;padding:0;border-radius:10px;border:1px solid transparent;background:transparent;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#eff6ff;color:#2563eb">
+                  <sc-if value="{{ showPw }}" hint-placeholder-val="{{ false }}">
+                    <svg width="18" height="18" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6Z"></path><circle cx="10" cy="10" r="2.4"></circle></svg>
+                  </sc-if>
+                  <sc-if value="{{ hidePw }}" hint-placeholder-val="{{ true }}">
+                    <svg width="18" height="18" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6Z"></path><circle cx="10" cy="10" r="2.4"></circle><path d="M3 3l14 14"></path></svg>
+                  </sc-if>
+                </button>
+              </div>
+              <a href="#" sc-camel-on-click="{{ goForgot }}" style="justify-self:start;font-size:12.5px;font-weight:500">Forgot your password?</a>
+            </div>
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13.5px;font-weight:500;min-height:44px">
+              <input type="checkbox" checked="{{ remember }}" sc-camel-on-change="{{ toggleRemember }}" style="width:17px;height:17px;accent-color:#2563eb;cursor:pointer;margin:0">
+             <span>Remember me on this device</span>
+            </label>
+            <button type="button" sc-camel-on-click="{{ submitLogin }}" style="min-height:48px;padding:0 22px;border-radius:12px;background:#2563eb;color:#ffffff;border:1px solid #2563eb;font-size:15.5px;font-weight:700;cursor:pointer;transition:transform .15s,background .15s" style-hover="background:#1d4ed8;transform:translateY(-1px)">Sign in</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isAuthForgot }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:22px">
+            <a href="#" sc-camel-on-click="{{ goLogin }}" style="font-size:13px;font-weight:500;justify-self:start">← Back to sign in</a>
+            <div style="display:grid;gap:6px">
+              <h1 style="margin:0;font-size:26px;font-weight:700;line-height:1.4">Reset password</h1>
+              <p style="margin:0;font-size:14px;font-weight:400;color:#64748b">Enter your account email and we will send a reset link valid for one hour.</p>
+            </div>
+            <div style="display:grid;gap:8px">
+              <label style="font-size:13px;font-weight:700">Email</label>
+              <input type="email" dir="ltr" placeholder="name@clinic.sa" style="width:100%;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-family:Inter,sans-serif;font-size:15px;font-weight:500;color:#0f172a;text-align:left;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+            </div>
+            <button type="button" sc-camel-on-click="{{ sendReset }}" style="min-height:48px;padding:0 22px;border-radius:12px;background:#2563eb;color:#ffffff;border:1px solid #2563eb;font-size:15.5px;font-weight:700;cursor:pointer" style-hover="background:#1d4ed8">Send reset link</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isAuthSent }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:20px;justify-items:start">
+           <span style="width:44px;height:44px;border-radius:50%;background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;font-size:18px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">✓</span>
+            <div style="display:grid;gap:6px">
+              <h1 style="margin:0;font-size:26px;font-weight:700;line-height:1.4">Check your email</h1>
+              <p style="margin:0;font-size:14px;font-weight:400;color:#64748b">We sent the reset link. If it does not arrive within a few minutes, check your spam folder.</p>
+            </div>
+            <button type="button" sc-camel-on-click="{{ goLogin }}" style="min-height:44px;padding:0 20px;border-radius:12px;background:#ffffff;color:#0f172a;border:1px solid #e8edf3;font-size:14.5px;font-weight:500;cursor:pointer" style-hover="background:#f6f8fb;border-color:#cbd5e1">Back to sign in</button>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+
+    <div style="margin-top:32px;display:flex;align-items:center;justify-content:center;gap:14px;font-size:12.5px;font-weight:400;color:#64748b">
+     <span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">Records</span> are encrypted within the clinic domain</span>
+    </div>
+  </div>
+
+  <div style="flex:1 1 48%;min-width:0;background:#2563eb;padding:48px;display:flex;flex-direction:column;justify-content:center;gap:32px;overflow:hidden">
+    <div style="display:grid;gap:14px;max-width:440px">
+      <h2 style="margin:0;font-family:'Thmanyah Serif Display',serif;font-weight:700;font-size:38px;line-height:1.4;color:#ffffff">From consultation to summary, in one place</h2>
+      <p style="margin:0;font-size:15px;font-weight:400;color:#dbeafe;line-height:1.7">The dashboard, a new case, its <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">records</span> and the <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">diagnostic summary</span> — all open from one dashboard and one sidebar.</p>
+    </div>
+    <div style="background:#ffffff;border-radius:16px;box-shadow:0 30px 70px rgba(15,23,42,0.32);overflow:hidden;display:flex;max-width:520px">
+      <div style="width:52px;flex:none;border-inline-end:1px solid #e8edf3;padding:12px 8px;display:grid;gap:6px;align-content:start">
+        <div style="height:8px;width:24px;border-radius:3px;background:#2563eb"></div>
+        <div style="height:20px;border-radius:5px;background:#eff6ff"></div>
+        <div style="height:20px;border-radius:5px;background:#f6f8fb"></div>
+        <div style="height:20px;border-radius:5px;background:#f6f8fb"></div>
+      </div>
+      <div style="flex:1;min-width:0;padding:14px;display:grid;gap:10px">
+       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#0f172a">Dashboard</span>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px">
+          <div style="border:1px solid #e8edf3;border-radius:5px;padding:8px;display:grid;gap:2px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#0f172a">148</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:500;color:#64748b">Active</span></div>
+          <div style="border:1px solid #e8edf3;border-radius:5px;padding:8px;display:grid;gap:2px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#b45309">23</span><span style="font-size:10px;font-weight:400;color:#64748b">Needs action</span></div>
+          <div style="border:1px solid #e8edf3;border-radius:5px;padding:8px;display:grid;gap:2px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#7c3aed">63</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:500;color:#64748b">Retention</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLoggedIn }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;background:#f6f8fb;animation:otFade .3s ease-out">
+
+  <aside style="width:{{ sideW }};flex:none;position:sticky;top:0;height:100vh;align-self:flex-start;background:#ffffff;border-inline-end:1px solid #e8edf3;display:flex;flex-direction:column;padding:18px 12px;gap:5px;transition:width .28s cubic-bezier(.4,0,.2,1);overflow:hidden">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 18px;min-height:44px">
+      <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#2563eb"></div>
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.04em;color:#0f172a;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">OrthoTrack</span>
+    </div>
+    <sc-if value="{{ isCaseNav }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;gap:5px">
+      <button type="button" sc-camel-on-click="{{ goDashboard }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 10px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;cursor:pointer;text-align:start;transition:transform .15s" style-hover="background:#f6f8fb;color:#0f172a;transform:translateX(-2px)">
+       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:16px;font-weight:500">›</span>
+       <span style="font-size:13.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">All cases</span>
+      </button>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 8px 12px;margin-bottom:2px;border-bottom:1px solid #e8edf3">
+        <sc-if value="{{ hasCasePhoto }}" hint-placeholder-val="{{ false }}">{{ caseAvatar }}</sc-if>
+        <div style="display:grid;gap:1px;min-width:0;opacity:{{ labelOp }};transition:opacity .2s">
+         <span dir="rtl" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',Inter,sans-serif;line-height:1.7;font-size:13.5px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ caseName }}</span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:500;color:#94a3b8;white-space:nowrap">{{ caseId }}</span>
+        </div>
+      </div>
+      <sc-for list="{{ stages }}" as="sg" hint-placeholder-count="7">
+        <button type="button" sc-camel-on-click="{{ sg.go }}" title="{{ sg.title }}" style="display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:0 10px;border-radius:12px;border:none;cursor:{{ sg.cursor }};text-align:start;transition:transform .15s;background:{{ sg.bg }};color:{{ sg.fg }}" style-hover="transform:translateX(-2px)">
+         <span style="width:26px;flex:none;display:flex;justify-content:center"><span style="width:9px;height:9px;border-radius:50%;background:{{ sg.dot }};box-shadow:{{ sg.ring }}"></span></span>
+         <span style="display:grid;gap:0;min-width:0;opacity:{{ labelOp }};transition:opacity .2s">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:{{ sg.latinFg }};white-space:nowrap">{{ sg.latin }}</span>
+           <span style="font-size:13.5px;font-weight:{{ sg.fw }};white-space:nowrap">{{ sg.ar }}</span>
+          </span>
+        </button>
+      </sc-for>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isGlobalNav }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;gap:5px">
+    <button type="button" sc-camel-on-click="{{ goDashboard }}" style="display:flex;align-items:center;gap:12px;width:100%;min-height:46px;padding:0 10px;border-radius:12px;border:none;cursor:pointer;text-align:start;transition:transform .15s;background:{{ navDashBg }};color:{{ navDashFg }}" style-hover="transform:translateX(-2px)">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" sc-camel-view-box="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13.5px;font-weight:{{ navDashFw }};letter-spacing:0.02em;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Dashboard</span>
+    </button>
+    <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;background:transparent;color:#cbd5e1;cursor:not-allowed">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" sc-camel-view-box="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.6" y="3.6" width="10.8" height="10.8" rx="2.4" transform="rotate(45 9 9)"></rect></svg></span>
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13.5px;font-weight:500;letter-spacing:0.02em;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Diagnosis queue</span>
+    </div>
+    </div>
+    <div style="padding:16px 10px 6px;opacity:{{ labelOp }};transition:opacity .2s">
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#cbd5e1;white-space:nowrap">Coming soon</span>
+    </div>
+    <div style="display:grid;gap:3px">
+      <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#cbd5e1;cursor:not-allowed">
+       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:13px;font-weight:600">◍</span>
+       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Patients</span>
+      </div>
+      <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#cbd5e1;cursor:not-allowed">
+       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:13px;font-weight:600">≡</span>
+       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Treatment plans</span>
+      </div>
+      <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#cbd5e1;cursor:not-allowed">
+       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:13px;font-weight:600">⚙</span>
+       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Settings</span>
+      </div>
+    </div>
+    </sc-if>
+    <div style="flex:1"></div>
+    <button type="button" sc-camel-on-click="{{ toggleSide }}" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;border:none;background:transparent;color:#94a3b8;cursor:pointer;text-align:start" style-hover="background:#f6f8fb;color:#0f172a">
+     <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:17px;font-weight:500">{{ sideIcon }}</span>
+     <span style="font-size:14px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Collapse menu</span>
+    </button>
+    <div style="display:flex;align-items:center;gap:11px;padding:12px 8px 2px;border-top:1px solid #e8edf3;margin-top:5px">
+      <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">MS</div>
+      <div style="display:grid;gap:0;min-width:0;flex:1;opacity:{{ labelOp }};transition:opacity .2s">
+       <span style="font-size:13.5px;font-weight:500;white-space:nowrap">Dr Mohamed Shady</span>
+       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:500;color:#94a3b8;white-space:nowrap">Orthodontist</span>
+      </div>
+      <button type="button" sc-camel-on-click="{{ signOut }}" title="Sign out" aria-label="Sign out" style="width:32px;height:32px;flex:none;border-radius:10px;border:1px solid #e8edf3;background:#ffffff;color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:{{ labelOp }};transition:opacity .2s" style-hover="background:#fef2f2;border-color:#fecaca;color:#b91c1c">
+        <svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 6V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2"></path><path d="M9 10h8m0 0-2.5-2.5M17 10l-2.5 2.5"></path></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
+    <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Case Dashboard v2 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-reset="{{ onReset }}" on-lang="{{ onLang }}" extra-cases="{{ extraCases }}" open-id="{{ openDrawerId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Case Overview EN" embedded="{{ true }}" on-navigate="{{ nav }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" override-stage="{{ overrideStage }}" override-priority="{{ overridePriority }}" override-notice="{{ overrideNotice }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isCreate }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Case Create v2 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-case-created="{{ onCaseCreated }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isNewCase }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Records Collection v3 EN" embedded="{{ true }}" new-case="{{ true }}" on-navigate="{{ nav }}" on-case-created="{{ onIntakeCreated }}" on-record-change="{{ onRecordChange }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isRecords }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Records Collection v3 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-record-change="{{ onRecordChange }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isDiagnosis }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Diagnosis EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-diagnosis-change="{{ onDiagnosisChange }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isCaseFile }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Case File EN" embedded="{{ true }}" on-navigate="{{ nav }}" case-id="{{ overrideId }}" tab="{{ caseTab }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isStub }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out;padding:34px 36px;display:flex;flex-direction:column;gap:22px;overflow:auto">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#f1f5f9;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#94a3b8"></span></div>
+          <div style="display:grid;gap:3px">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">{{ stubLatin }}</span>
+           <span style="font-size:12.5px;font-weight:400;color:#64748b">{{ stubAr }}</span>
+          </div>
+        </div>
+        <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:16px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;max-width:760px">
+         <span style="width:9px;height:9px;flex:none;margin-top:6px;border-radius:50%;background:#d97706"></span>
+          <div style="display:grid;gap:6px">
+           <span style="font-size:14px;font-weight:700;color:#92400e">This stage is not built in the prototype yet</span>
+            <p style="margin:0;font-size:13.5px;font-weight:400;color:#a16207;line-height:1.7">Navigation is allowed and what is missing is recorded — the sidebar shows this stage is still <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif">upcoming</span>. Start from <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif">Records</span> until we build it.</p>
+          </div>
+        </div>
+        <button type="button" sc-camel-on-click="{{ goRecords }}" style="align-self:flex-start;min-height:44px;padding:0 20px;border-radius:12px;border:none;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;cursor:pointer;transition:transform .15s" style-hover="transform:translateY(-1px)">Back to Records</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isSummary }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
+        <dc-import name="OrthoTrack Case Summary EN" embedded="{{ true }}" on-navigate="{{ nav }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="">
+class Component extends DCLogic {
+  state = {
+    loggedIn: false, authScreen: 'login',
+    id: '', pw: '', showPw: false, remember: true, err: null, touched: false,
+    screen: 'dashboard', collapsed: false, cases: [], activeCase: null,
+    caseTab: 'overview', stageKey: 'overview', openDrawerId: ''
+  };
+
+  /* legacy Arabic values (from the AR build or an older save) normalise to English */
+  stageEN = {
+    '\u0627\u0633\u062a\u0634\u0627\u0631\u0629': 'Consultation',
+    '\u062c\u0645\u0639 \u0627\u0644\u0633\u062c\u0644\u0627\u062a': 'Records collection',
+    '\u0627\u0644\u062a\u0634\u062e\u064a\u0635': 'Diagnosis',
+    '\u0627\u0644\u062a\u062e\u0637\u064a\u0637 \u0627\u0644\u0639\u0644\u0627\u062c\u064a': 'Treatment planning',
+    '\u0639\u0644\u0627\u062c \u0646\u0634\u0637': 'Active treatment',
+    '\u0627\u0644\u062a\u062b\u0628\u064a\u062a': 'Retention',
+    '\u0645\u0643\u062a\u0645\u0644': 'Completed'
+  };
+
+  nextEN = {
+    '\u0627\u0633\u062a\u0643\u0645\u0627\u0644 \u0627\u0644\u0633\u062c\u0644\u0627\u062a': 'Complete the records',
+    '\u0627\u0633\u062a\u0643\u0645\u0627\u0644 \u0627\u0644\u0640records': 'Complete the records',
+    '\u0631\u0641\u0639 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u0623\u0634\u0639\u0629': 'Upload photos and radiographs',
+    '\u0625\u0642\u0631\u0627\u0631 \u0627\u0644\u0640problem list': 'Approve the problem list',
+    '\u0627\u0639\u062a\u0645\u0627\u062f \u0627\u0644\u0640treatment plan': 'Approve the treatment plan'
+  };
+
+  SKEY = 'orthotrack.session.v1';
+  KEY = 'orthotrack.en.cases.v1';
+  RKEY = 'orthotrack.en.recents.v1';
+
+  componentDidMount() {
+    try {
+      if (window.localStorage.getItem(this.SKEY) === '1') this.setState({ loggedIn: true });
+    } catch (e) { /* storage unavailable */ }
+    try {
+      const raw = window.localStorage.getItem(this.KEY);
+      if (raw) {
+        const cases = JSON.parse(raw);
+        if (Array.isArray(cases)) {
+          const tones = ['slate', 'blue', 'green', 'violet'];
+          const clean = cases.filter(t => Array.isArray(t) && t.length >= 10).map(t => {
+            const c = t.slice();
+            if (tones.indexOf(c[5]) < 0) c[5] = 'blue';
+            c[4] = this.stageEN[c[4]] || c[4];
+            c[6] = this.nextEN[c[6]] || c[6];
+            if (c[7] === true) c[7] = 1;
+            return c;
+          });
+          this.setState({ cases: clean });
+          this.persist(clean);
+        }
+      }
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  switchLang = () => {
+    try {
+      const cases = window.localStorage.getItem('orthotrack.en.cases.v1');
+      const recents = window.localStorage.getItem('orthotrack.en.recents.v1');
+      if (cases) window.localStorage.setItem('orthotrack.cases.v1', cases);
+      if (recents) window.localStorage.setItem('orthotrack.recents.v1', recents);
+    } catch (e) { /* storage unavailable */ }
+    window.location.href = encodeURI('OrthoTrack Prototype.dc.html');
+  };
+
+  resetDemo = () => {
+    try {
+      window.localStorage.removeItem(this.KEY);
+      window.localStorage.removeItem(this.RKEY);
+    } catch (e) { /* ignore */ }
+    this.setState({ cases: [], activeCase: null, screen: 'dashboard' });
+  };
+
+  persist(cases) {
+    try { window.localStorage.setItem(this.KEY, JSON.stringify(cases)); } catch (e) { /* ignore */ }
+  }
+
+  submit = () => {
+    const id = this.state.id.trim();
+    if (!id) return this.setState({ err: 'empty', touched: true });
+    if (!this.state.pw) return this.setState({ err: 'empty', touched: true });
+    if (this.state.pw.length < 6) return this.setState({ err: 'password', touched: true });
+    this.markSignedIn();
+  };
+
+  markSignedIn = () => {
+    try { window.localStorage.setItem(this.SKEY, '1'); } catch (e) { /* ignore */ }
+    this.setState({ loggedIn: true });
+  };
+
+  /* signing out returns to the sign-in screens; the saved cases stay put */
+  signOut = () => {
+    try { window.localStorage.removeItem(this.SKEY); } catch (e) { /* ignore */ }
+    this.setState({ loggedIn: false, authScreen: 'login', pw: '', err: null, touched: false,
+                    screen: 'dashboard', activeCase: null });
+  };
+
+  stageDefs = [
+    ['overview', 'Overview', 'Stage flow', true],
+    ['records', 'Records', 'Records and photos', true],
+    ['diagnosis', 'Diagnosis', 'Problem list', true],
+    ['plan', 'Treatment plan', 'Treatment objectives and plan', true],
+    ['treatment', 'Active treatment', 'Visits and progress', true],
+    ['retention', 'Retention', 'Appliance and follow-up', true],
+    ['summary', 'Case summary', 'Case summary', true]
+  ];
+
+  /* stage keys that are rendered as a tab of the case file rather than their own screen */
+  caseFileTabs = { casefile: 'overview', plan: 'plan', treatment: 'log', retention: 'appliance', progress: 'progress' };
+
+  go = screen => {
+    const tab = this.caseFileTabs[screen];
+    if (tab) { this.setState({ screen: 'casefile', caseTab: tab, stageKey: screen }); return; }
+    this.setState({ screen: screen, stageKey: screen });
+  };
+
+  renderVals() {
+    const bad = this.state.touched && this.state.err;
+    const dash = this.state.screen === 'dashboard';
+    const sc = this.state.screen;
+    const ac = this.state.activeCase;
+    const caseScreens = ['create', 'overview', 'casefile', 'records', 'newcase', 'summary', 'diagnosis', 'plan', 'treatment', 'retention'];
+    const inCase = sc === 'create' || sc === 'newcase' || (!!ac && caseScreens.indexOf(sc) > -1);
+    const stubDef = this.stageDefs.filter(d => d[0] === sc && !d[3])[0];
+    const photo = ac ? (ac.photo || '') : '';
+    const rec = ac ? ac.record : null;
+    // Overview counts as done once the case exists; Records once a record is attached.
+    const doneIdx = rec ? 1 : 0;
+    return {
+      hasCasePhoto: true,
+      caseAvatar: photo ? React.createElement('img', {
+        src: photo, alt: '',
+        style: { width: 38, height: 38, flex: 'none', borderRadius: 12, objectFit: 'cover', objectPosition: 'center 22%', background: '#eff6ff' }
+      }) : React.createElement('span', {
+        style: { width: 38, height: 38, flex: 'none', borderRadius: 12, background: '#eff6ff', color: '#1d4ed8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }
+      }, ((ac && ac.name) || '+').slice(0, 1)),
+      isGlobalNav: !inCase,
+      isCaseNav: inCase,
+      caseName: ac ? ac.name : 'New case',
+      caseId: ac ? (ac.id || '') : 'Intake',
+      isStub: !!stubDef,
+      stubLatin: stubDef ? stubDef[1] : '',
+      stubAr: stubDef ? stubDef[2] : '',
+      goRecords: () => this.go('records'),
+      isNewCase: sc === 'newcase',
+      isCaseFile: sc === 'casefile',
+      caseTab: this.state.caseTab,
+      openDrawerId: this.state.openDrawerId,
+      isDiagnosis: sc === 'diagnosis',
+      onDiagnosisChange: snap => this.setState(s => {
+        const a = s.activeCase;
+        if (!a) return null;
+        const record = Object.assign({}, a.record || {}, { diagnosis: snap });
+        const cases = s.cases.map(t => {
+          if (t[3] !== a.id) return t;
+          const copy = t.slice();
+          copy[10] = record;
+          return copy;
+        });
+        this.persist(cases);
+        return { cases: cases, activeCase: Object.assign({}, a, { record: record }) };
+      }),
+      onRecordChange: progress => this.setState(s => {
+        const a = s.activeCase;
+        if (!a) return null;
+        const record = Object.assign({}, a.record || {}, { progress: progress });
+        const cases = s.cases.map(t => {
+          if (t[3] !== a.id) return t;
+          const copy = t.slice();
+          copy[10] = record;
+          return copy;
+        });
+        this.persist(cases);
+        return { cases: cases, activeCase: Object.assign({}, a, { record: record }) };
+      }),
+      onIntakeCreated: info => {
+        const yrs = (info.ageText || '').match(/\d+/);
+        const meta = [yrs ? yrs[0] + 'y' : '', info.gender, info.complaint].filter(Boolean).join(' · ');
+        const id = 'ORT-2026-' + String(149 + Math.floor(Math.random() * 40)).padStart(4, '0');
+        const today = new Date().toISOString().slice(0, 10);
+        const tuple = [info.name, '', meta, id, 'Records collection', 'blue', 'Complete the records', 1, today, 'Normal', info, 0, 0, 'records', 'The records are not complete yet', 'Records incomplete — new case'];
+        this.setState(s => {
+          const cases = s.cases.concat([tuple]);
+          this.persist(cases);
+          return { cases: cases, activeCase: { name: info.name, id: id, meta: meta, photo: '', stage: 'Records collection', priority: 'Normal', record: info } };
+        });
+      },
+      stages: this.stageDefs.map((d, i) => {
+        const cur = d[0] === (sc === 'casefile' ? this.state.stageKey : sc) || (d[0] === 'records' && sc === 'newcase');
+
+        const built = d[3];
+        const locked = !ac && (sc === 'newcase' || sc === 'create') && d[0] !== 'records';
+        return {
+          latin: d[1], ar: d[2],
+          title: locked ? "Opens after the case is saved" : '',
+          cursor: locked ? 'not-allowed' : 'pointer',
+          go: () => { if (!locked) this.go(d[0]); },
+          bg: cur ? '#eff6ff' : 'transparent',
+          fg: locked ? '#cbd5e1' : cur ? '#1d4ed8' : built ? '#0f172a' : '#94a3b8',
+          latinFg: locked ? '#e2e8f0' : cur ? '#2563eb' : '#94a3b8',
+          fw: cur ? 700 : 500,
+          dot: locked ? '#f1f5f9' : cur ? '#2563eb' : i <= doneIdx ? '#059669' : '#cbd5e1',
+          ring: cur ? '0 0 0 4px rgba(37,99,235,0.16)' : 'none'
+        };
+      }),
+      signOut: this.signOut,
+      isLoggedOut: !this.state.loggedIn,
+      isLoggedIn: this.state.loggedIn,
+
+      isAuthLogin: this.state.authScreen === 'login',
+      isAuthForgot: this.state.authScreen === 'forgot',
+      isAuthSent: this.state.authScreen === 'sent',
+      idValue: this.state.id,
+      pwValue: this.state.pw,
+      setId: ev => this.setState({ id: ev.target.value, err: null }),
+      setPw: ev => this.setState({ pw: ev.target.value, err: null }),
+      pwType: this.state.showPw ? 'text' : 'password',
+      pwLabel: this.state.showPw ? 'Hide' : 'Show',
+      togglePw: () => this.setState(s => ({ showPw: !s.showPw })),
+      remember: this.state.remember,
+      toggleRemember: () => this.setState(s => ({ remember: !s.remember })),
+      fieldBd: bad ? '#dc2626' : '#e8edf3',
+      hasError: !!this.state.err,
+      errText: this.state.err === 'password' ? 'The password must be at least 6 characters.' : 'Complete the email or mobile and the password.',
+      submitLogin: this.submit,
+      ssoLogin: this.markSignedIn,
+      goForgot: ev => { ev.preventDefault(); this.setState({ authScreen: 'forgot' }); },
+      goLogin: ev => { if (ev) ev.preventDefault(); this.setState({ authScreen: 'login', err: null }); },
+      sendReset: ev => { if (ev) ev.preventDefault(); this.setState({ authScreen: 'sent' }); },
+
+      sideW: this.state.collapsed ? '76px' : '244px',
+      labelOp: this.state.collapsed ? 0 : 1,
+      sideIcon: this.state.collapsed ? '›' : '‹',
+      toggleSide: () => this.setState(s => ({ collapsed: !s.collapsed })),
+      goDashboard: () => this.setState({ screen: 'dashboard' }),
+      navDashBg: dash ? '#eff6ff' : 'transparent',
+      navDashFg: dash ? '#1d4ed8' : '#64748b',
+      navDashFw: dash ? 700 : 500,
+
+      isDashboard: this.state.screen === 'dashboard',
+      isOverview: this.state.screen === 'overview',
+      isCreate: this.state.screen === 'create',
+      isRecords: this.state.screen === 'records',
+      isSummary: this.state.screen === 'summary',
+      nav: (screen, caseInfo) => this.setState(s => {
+        /* New case → the 6-step intake (patient history · photos · imaging · measurements · occlusion · function) */
+        if (screen === 'newcase') return { screen: 'newcase', stageKey: 'records', activeCase: null };
+        if (screen === 'create') return { screen: 'create', stageKey: 'create', activeCase: null };
+        /* the case file asks for a tab; the dashboard asks for a drawer */
+        const tab = (caseInfo && caseInfo.tab) || this.caseFileTabs[screen] || null;
+        const target = tab ? 'casefile' : screen;
+        const patch = { screen: target, stageKey: tab ? (screen === 'casefile' ? 'casefile' : screen) : screen };
+        if (tab) patch.caseTab = tab;
+        if (!caseInfo) return patch;
+        /* {openId} is a request to open a drawer, not a case — keep the active case intact */
+        if (caseInfo.openId && !caseInfo.name) { patch.openDrawerId = caseInfo.openId; return patch; }
+        const prev = s.activeCase;
+        const merged = Object.assign({}, caseInfo);
+        if (!merged.record && prev && prev.record && prev.id === caseInfo.id) merged.record = prev.record;
+        patch.activeCase = merged;
+        patch.openDrawerId = '';
+        return patch;
+      }),
+      extraCases: this.state.cases,
+      onReset: this.resetDemo,
+      onLang: this.switchLang,
+      overrideName: this.state.activeCase ? this.state.activeCase.name : '',
+      overrideId: this.state.activeCase ? (this.state.activeCase.id || '') : '',
+      overrideMeta: this.state.activeCase ? (this.state.activeCase.meta || '') : '',
+      overridePhoto: this.state.activeCase ? (this.state.activeCase.photo || '') : '',
+      overrideStage: this.state.activeCase ? (this.state.activeCase.stage || '') : '',
+      overridePriority: this.state.activeCase ? (this.state.activeCase.priority || '') : '',
+      overrideRecord: this.state.activeCase ? (this.state.activeCase.record || null) : null,
+      overrideNotice: this.state.activeCase ? (this.state.activeCase.notice || '') : '',
+      onCaseCreated: tuple => this.setState({
+        cases: this.state.cases.concat([tuple]),
+        screen: 'records',
+        activeCase: { name: tuple[0], id: tuple[3], meta: tuple[2], photo: tuple[1], stage: tuple[4], priority: tuple[9] || 'Normal', record: tuple[10] || null }
+      })
+    };
+  }
+}
+
+</script>
+
+
+</body></html>

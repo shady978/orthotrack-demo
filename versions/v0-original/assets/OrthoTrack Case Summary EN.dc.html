@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>OrthoTrack — Case summary</title>
+<link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+<link rel="stylesheet" href="assets/vendor/css/google-inter-300-700-400-600.css">
+<script src="ortho-knowledge-en.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{direction:ltr;background:#f6f8fb;color:#0f172a;font-family:Inter,'Thmanyah Sans',system-ui,sans-serif;font-weight:500;line-height:1.7;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#2563eb;text-decoration:none}
+a:hover{color:#1d4ed8;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+@keyframes otIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes otFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;background:#f6f8fb">
+
+  <sc-if value="{{ showAside }}" hint-placeholder-val="{{ true }}">
+  <aside style="width:68px;flex:none;position:sticky;top:0;height:100vh;align-self:flex-start;background:#ffffff;border-inline-end:1px solid #e8edf3;display:flex;flex-direction:column;padding:18px 12px;gap:5px;align-items:center">
+    <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#2563eb;margin-bottom:14px"></div>
+    <a href="OrthoTrack%20Case%20Dashboard%20v2.dc.html" title="Case dashboard" style="display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;border-radius:12px;color:#64748b" style-hover="background:#f6f8fb;color:#0f172a">
+      <svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg>
+    </a>
+    <a href="#" title="Patients" style="display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;border-radius:12px;color:#64748b" style-hover="background:#f6f8fb;color:#0f172a">
+      <svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><circle cx="9" cy="5.6" r="3.3"></circle><rect x="2.6" y="11" width="12.8" height="5" rx="2.5"></rect></svg>
+    </a>
+    <a href="#" title="Diagnosis queue" style="display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;border-radius:12px;background:#eff6ff;color:#1d4ed8">
+      <svg width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.6" y="3.6" width="10.8" height="10.8" rx="2.4" transform="rotate(45 9 9)"></rect></svg>
+    </a>
+    <div style="flex:1"></div>
+    <div style="width:36px;height:36px;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">MS</div>
+  </aside>
+  </sc-if>
+
+  <div style="flex:1;min-width:780px;display:flex;flex-direction:column">
+
+    <div style="height:56px;flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;display:flex;align-items:center;gap:14px;padding:0 24px">
+      <nav style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;color:#64748b;min-width:0">
+        <a href="#" onClick="{{ onBreadcrumbDash }}" style="color:#64748b">Case dashboard</a>
+       <span style="color:#cbd5e1">‹</span>
+        <a dir="rtl" href="#" onClick="{{ onBreadcrumbRecords }}" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',Inter,sans-serif;line-height:1.7;color:#64748b">{{ headerName }}</a>
+       <span style="color:#cbd5e1">‹</span>
+       <span style="font-weight:500;color:#0f172a">Case summary</span>
+      </nav>
+     <span style="margin-inline-start:auto;flex:none;font-size:12px;font-weight:400;color:#94a3b8">Record closed · <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">v4</span></span>
+    </div>
+
+    <sc-if value="{{ showStageTabs }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:0 24px">
+      <div style="display:flex;gap:4px;overflow-x:auto">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="7">
+          <button type="button" onClick="{{ tb.onClick }}" style="flex:none;min-height:46px;padding:0 14px;border:none;border-bottom:2px solid {{ tb.bd }};background:transparent;color:{{ tb.fg }};font-size:14px;font-weight:{{ tb.fw }};cursor:pointer;white-space:nowrap">{{ tb.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <main style="flex:1;min-width:0;padding:20px 24px 96px;display:grid;gap:14px;align-content:start;max-width:1180px">
+
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="width:64px;height:64px;flex:none;border-radius:16px;overflow:hidden;border:1px solid #e8edf3;background:#0f172a">{{ heroImg }}</div>
+        <div style="display:grid;gap:4px;min-width:0;flex:1">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+           <span dir="rtl" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',Inter,sans-serif;line-height:1.7;font-size:20px;font-weight:700;line-height:1.35">{{ headerName }}</span>
+           <span style="display:inline-flex;align-items:center;gap:7px;padding:3px 11px;border-radius:999px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:12.5px;font-weight:500"><span style="width:6px;height:6px;border-radius:50%;background:#2563eb"></span>ready for diagnosis</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12.5px;font-weight:400;color:#64748b">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">{{ headerId }}</span>
+           <span style="color:#e8edf3">·</span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">{{ headerMeta }}</span>
+           <span style="color:#e8edf3">·</span>
+           <span>file <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">{{ headerFile }}</span></span>
+           <span style="color:#e8edf3">·</span>
+           <span>Records <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">{{ headerRecords }}</span></span>
+          </div>
+        </div>
+        <div style="flex:none;display:grid;gap:3px;max-width:290px;padding-inline-start:16px;border-inline-start:1px solid #eef2f7">
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#94a3b8">Chief complaint</span>
+         <span style="font-size:13px;font-weight:500;line-height:1.6;color:#0f172a">«{{ complaint }}»</span>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3;flex-wrap:wrap">
+         <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
+          <div style="display:grid;gap:1px;min-width:0">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Diagnostic summary</span>
+           <span style="font-size:12.5px;font-weight:400;color:#64748b">The diagnostic summary</span>
+          </div>
+         <span style="margin-inline-start:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:{{ diffFg }};background:{{ diffBg }};border:1px solid {{ diffBd }};border-radius:999px;padding:2px 10px">{{ difficulty }}</span>
+            <button type="button" onClick="{{ onProblems }}" style="min-height:30px;padding:0 12px;border-radius:10px;border:1px solid #fecaca;background:#fef2f2;color:#b91c1c;font-family:Inter,sans-serif;font-size:11.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px" style-hover="background:#fee2e2">
+              Problem list
+             <span style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;color:#ffffff;background:#dc2626;border-radius:999px;padding:1px 6px">{{ problemCount }}</span>
+             <span style="font-family:Inter,sans-serif;font-size:11px;font-weight:500;color:#fca5a5">↓</span>
+            </button>
+            <button type="button" onClick="{{ onCopy }}" style="min-height:30px;padding:0 12px;border-radius:10px;border:1px solid {{ copyBd }};background:{{ copyBg }};color:{{ copyFg }};font-family:Inter,sans-serif;font-size:11.5px;font-weight:600;cursor:pointer">{{ copyLabel }}</button>
+          </span>
+        </div>
+        <div dir="ltr" style="padding:20px 22px;display:grid;gap:11px">
+          <p style="margin:0;font-family:Inter,sans-serif;font-size:20px;font-weight:500;color:#0f172a;line-height:1.6">{{ sentence }}</p>
+          <p style="margin:0;font-family:Inter,sans-serif;font-size:14px;font-weight:400;color:#64748b;line-height:1.7"><span style="font-weight:600;color:#475569">Complicated by</span> {{ compsText }}</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;align-items:start">
+
+        <div style="display:grid;gap:14px;min-width:0">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:12px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+             <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#f5f3ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#7c3aed"></span></span>
+              <div style="display:grid;gap:1px;min-width:0">
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Records</span>
+               <span style="font-size:12.5px;font-weight:400;color:#64748b">The visual record</span>
+              </div>
+             <span style="margin-inline-start:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+               <span style="font-size:11.5px;font-weight:500;color:#94a3b8"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#475569">16</span> files</span>
+               <span style="display:inline-flex;padding:3px;gap:3px;background:#f1f5f9;border-radius:10px">
+                  <sc-for list="{{ mediaModes }}" as="mm" hint-placeholder-count="2">
+                    <button type="button" onClick="{{ mm.onClick }}" style="min-height:28px;padding:0 11px;border-radius:8px;border:none;background:{{ mm.bg }};color:{{ mm.fg }};font-family:Inter,sans-serif;font-size:11px;font-weight:{{ mm.fw }};cursor:pointer;box-shadow:{{ mm.sh }};white-space:nowrap">{{ mm.label }}</button>
+                  </sc-for>
+                </span>
+              </span>
+            </div>
+
+            <sc-if value="{{ isComposite }}" hint-placeholder-val="{{ true }}">
+              <div dir="ltr" style="padding:15px 18px;display:grid;gap:9px">
+                <div style="display:grid;grid-template-columns:0.82fr 1fr 1fr 1fr;grid-template-rows:auto auto;gap:9px">
+                  <sc-for list="{{ compTop }}" as="ct" hint-placeholder-count="5">
+                    <button type="button" onClick="{{ ct.onClick }}" title="{{ ct.label }}" style="grid-column:{{ ct.col }};grid-row:{{ ct.row }};padding:0;border:none;border-radius:12px;overflow:hidden;background:#0f172a;cursor:pointer;display:block;position:relative;aspect-ratio:{{ ct.ratio }}" style-hover="box-shadow:0 0 0 2px #2563eb">
+                      {{ ct.img }}
+                     <span style="position:absolute;bottom:0;left:0;right:0;padding:9px 8px 5px;background:linear-gradient(transparent,rgba(9,14,26,0.72));font-family:Inter,sans-serif;font-size:9px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#ffffff;text-align:left">{{ ct.label }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+                  <sc-for list="{{ compBottom }}" as="cb" hint-placeholder-count="3">
+                    <button type="button" onClick="{{ cb.onClick }}" title="{{ cb.label }}" style="padding:0;border:none;border-radius:12px;overflow:hidden;background:#0f172a;cursor:pointer;display:block;position:relative;aspect-ratio:4/3" style-hover="box-shadow:0 0 0 2px #2563eb">
+                      {{ cb.img }}
+                     <span style="position:absolute;bottom:0;left:0;right:0;padding:9px 8px 5px;background:linear-gradient(transparent,rgba(9,14,26,0.72));font-family:Inter,sans-serif;font-size:9px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#ffffff;text-align:left">{{ cb.label }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:9px">
+                  <sc-for list="{{ compRad }}" as="cr" hint-placeholder-count="2">
+                    <button type="button" onClick="{{ cr.onClick }}" title="{{ cr.label }}" style="padding:0;border:none;border-radius:12px;overflow:hidden;background:#0f172a;cursor:pointer;display:block;position:relative;aspect-ratio:16/9" style-hover="box-shadow:0 0 0 2px #2563eb">
+                      {{ cr.img }}
+                     <span style="position:absolute;bottom:0;left:0;right:0;padding:9px 8px 5px;background:linear-gradient(transparent,rgba(9,14,26,0.72));font-family:Inter,sans-serif;font-size:9px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#ffffff;text-align:left">{{ cr.label }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isSheet }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:15px 18px;display:grid;gap:13px">
+                <sc-for list="{{ mediaRows }}" as="mr" hint-placeholder-count="3">
+                  <div style="display:grid;gap:7px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#94a3b8">{{ mr.en }}</span>
+                     <span style="flex:1;height:1px;background:#eef2f7"></span>
+                     <span style="font-size:11px;font-weight:400;color:#94a3b8">{{ mr.ar }}</span>
+                    </div>
+                    <div style="display:flex;gap:7px;flex-wrap:wrap">
+                      <sc-for list="{{ mr.items }}" as="mi" hint-placeholder-count="6">
+                        <button type="button" onClick="{{ mi.onClick }}" title="{{ mi.label }}" style="flex:none;width:94px;padding:0;border:1px solid #e8edf3;border-radius:11px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid;gap:0" style-hover="border-color:#2563eb">
+                         <span style="display:block;width:100%;aspect-ratio:4/3;overflow:hidden">{{ mi.img }}</span>
+                         <span dir="ltr" style="unicode-bidi:isolate;padding:5px 6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mi.label }}</span>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+          <sc-for list="{{ sections }}" as="sc" hint-placeholder-count="6">
+            <div id="{{ sc.anchor }}" style="background:#ffffff;border:1px solid {{ sc.cardBd }};border-radius:16px;overflow:hidden;scroll-margin-top:16px">
+              <button type="button" onClick="{{ sc.onToggle }}" style="width:100%;display:grid;gap:6px;padding:14px 18px;background:{{ sc.headBg }};border:none;border-bottom:{{ sc.headBorder }};cursor:pointer;text-align:start;overflow:hidden">
+                <div style="display:flex;align-items:center;gap:12px;min-width:0;overflow:hidden">
+                 <span style="width:34px;height:34px;flex:none;border-radius:11px;background:{{ sc.iconBg }};display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:{{ sc.iconFg }}"></span></span>
+                  <div style="flex:1;min-width:0;overflow:hidden;display:grid;gap:1px">
+                   <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sc.en }}</span>
+                   <span style="font-size:12px;font-weight:400;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sc.ar }}</span>
+                  </div>
+                 <span style="flex:none;display:flex;align-items:center;gap:8px">
+                    <sc-if value="{{ sc.hasFlag }}" hint-placeholder-val="{{ false }}">
+                     <span style="font-size:11px;font-weight:600;color:{{ sc.flagFg }};background:{{ sc.flagBg }};border:1px solid {{ sc.flagBd }};border-radius:999px;padding:2px 9px;white-space:nowrap">{{ sc.flag }}</span>
+                    </sc-if>
+                   <span style="font-family:Inter,sans-serif;font-size:15px;font-weight:500;color:#94a3b8;width:12px;text-align:center">{{ sc.chev }}</span>
+                  </span>
+                </div>
+               <span style="display:block;padding-inline-start:46px;font-size:12.5px;font-weight:500;color:{{ sc.lineFg }};line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sc.line }}</span>
+              </button>
+
+              <sc-if value="{{ sc.open }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:14px 18px;display:grid;gap:9px;animation:otIn .16s ease-out">
+                  <sc-if value="{{ sc.isProblems }}" hint-placeholder-val="{{ false }}">
+                    <sc-for list="{{ sc.problems }}" as="pb" hint-placeholder-count="6">
+                      <div dir="ltr" style="display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid #f6f8fb">
+                       <span style="width:9px;height:9px;flex:none;margin-top:5px;border-radius:50%;background:{{ pb.dot }}"></span>
+                        <div style="flex:1;min-width:0;display:grid;gap:4px">
+                          <div style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap">
+                           <span style="font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;color:#0f172a;line-height:1.45">{{ pb.text }}</span>
+                           <span style="flex:none;font-family:Inter,sans-serif;font-size:9.5px;font-weight:700;color:{{ pb.sevFg }};background:{{ pb.sevBg }};border:1px solid {{ pb.sevBd }};border-radius:999px;padding:1px 8px">{{ pb.severity }}</span>
+                           <span style="flex:none;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">{{ pb.coord }}</span>
+                          </div>
+                          <sc-if value="{{ pb.hasDesc }}" hint-placeholder-val="{{ true }}">
+                           <span style="font-family:Inter,sans-serif;font-size:12px;font-weight:400;color:#64748b;line-height:1.7">{{ pb.desc }}</span>
+                          </sc-if>
+                        </div>
+                        <sc-if value="{{ pb.hasCite }}" hint-placeholder-val="{{ false }}">
+                         <span style="flex:none;display:inline-flex;align-items:baseline;gap:6px;font-family:Inter,sans-serif;font-size:11px;font-weight:600;background:{{ pb.sevBg }};border:1px solid {{ pb.sevBd }};border-radius:999px;padding:3px 10px;font-variant-numeric:tabular-nums;white-space:nowrap">
+                           <span style="color:#94a3b8">{{ pb.cite }}</span><span style="color:#0f172a">{{ pb.value }}</span><span style="color:{{ pb.sevFg }}">{{ pb.sd }}</span>
+                          </span>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </sc-if>
+                  <sc-if value="{{ sc.isTable }}" hint-placeholder-val="{{ true }}">
+                  <div dir="ltr" style="display:flex;align-items:center;gap:10px;padding:0 0 6px;border-bottom:1px solid #eef2f7">
+                   <span style="width:9px;flex:none"></span>
+                   <span style="flex:none;width:118px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94a3b8">Measurement</span>
+                   <span style="flex:none;width:74px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94a3b8;text-align:right">Value</span>
+                   <span style="flex:none;width:74px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94a3b8;text-align:right">Normal</span>
+                   <span style="flex:none;width:62px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94a3b8;text-align:right">Dev</span>
+                   <span style="flex:1;min-width:130px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94a3b8">Finding</span>
+                  </div>
+                  <sc-for list="{{ sc.rows }}" as="rw" hint-placeholder-count="5">
+                    <div dir="ltr" style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f6f8fb">
+                     <span style="width:9px;height:9px;flex:none;border-radius:50%;background:{{ rw.dot }}"></span>
+                     <span style="flex:none;width:118px;display:grid;gap:0;min-width:0">
+                       <span style="font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rw.en }}</span>
+                       <span dir="ltr" style="font-size:10.5px;font-weight:400;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rw.note }}</span>
+                      </span>
+                     <span style="flex:none;width:74px;text-align:right;font-family:Inter,sans-serif;font-size:13px;font-weight:700;color:#0f172a;font-variant-numeric:tabular-nums">{{ rw.value }}</span>
+                     <span style="flex:none;width:74px;text-align:right;font-family:Inter,sans-serif;font-size:11.5px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">{{ rw.norm }}</span>
+                     <span style="flex:none;width:62px;text-align:right;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;color:{{ rw.valFg }};font-variant-numeric:tabular-nums">{{ rw.sd }}</span>
+                     <span style="flex:1;min-width:130px;display:flex;align-items:center;gap:7px">
+                       <span style="font-family:Inter,sans-serif;font-size:12px;font-weight:{{ rw.findFw }};color:{{ rw.findFg }};line-height:1.5">{{ rw.finding }}</span>
+                        <sc-if value="{{ rw.hasBadge }}" hint-placeholder-val="{{ false }}">
+                         <span style="flex:none;font-family:Inter,sans-serif;font-size:9.5px;font-weight:700;color:{{ rw.valFg }};background:{{ rw.valBg }};border:1px solid {{ rw.valBd }};border-radius:999px;padding:1px 7px;white-space:nowrap">{{ rw.badge }}</span>
+                        </sc-if>
+                      </span>
+                    </div>
+                  </sc-for>
+                  </sc-if>
+                  <sc-if value="{{ sc.isEmpty }}" hint-placeholder-val="{{ false }}">
+                   <span style="font-size:12.5px;font-weight:400;color:#cbd5e1;padding:10px 0">{{ sc.emptyText }}</span>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="position:sticky;top:16px;display:grid;gap:12px;min-width:0">
+          <div dir="ltr" style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 16px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+             <span style="width:30px;height:30px;flex:none;border-radius:10px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:10px;height:10px;border-radius:3px;background:#2563eb"></span></span>
+             <span style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f172a">Problem grid</span>
+            </div>
+            <div style="padding:14px 16px;display:grid;gap:10px">
+              <div style="display:grid;grid-template-columns:62px repeat(3,1fr);gap:4px;align-items:center">
+               <span></span>
+                <sc-for list="{{ gridCols }}" as="gc" hint-placeholder-count="3">
+                 <span style="font-family:Inter,sans-serif;font-size:9px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8;text-align:center">{{ gc.short }}</span>
+                </sc-for>
+                <sc-for list="{{ gridRows }}" as="gr" hint-placeholder-count="3">
+                 <span style="font-family:Inter,sans-serif;font-size:10px;font-weight:600;color:#475569">{{ gr.label }}</span>
+                  <sc-for list="{{ gr.cells }}" as="cc" hint-placeholder-count="3">
+                   <span title="{{ cc.title }}" style="height:30px;border-radius:9px;background:{{ cc.bg }};border:1px solid {{ cc.bd }};display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;font-size:10px;font-weight:700;color:{{ cc.fg }}">{{ cc.mark }}</span>
+                  </sc-for>
+                </sc-for>
+              </div>
+             <span dir="ltr" style="font-size:11.5px;font-weight:400;color:#64748b;line-height:1.6">{{ gridNote }}</span>
+            </div>
+          </div>
+
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 16px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+             <span style="width:30px;height:30px;flex:none;border-radius:10px;background:#ecfdf5;display:flex;align-items:center;justify-content:center"><span style="width:10px;height:10px;border-radius:3px;background:#059669"></span></span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f172a">Actions</span>
+            </div>
+            <div style="padding:13px 16px;display:grid;gap:7px">
+              <button type="button" onClick="{{ onDiagnose }}" style="width:100%;min-height:44px;border-radius:12px;border:none;background:#2563eb;color:#ffffff;font-size:14.5px;font-weight:700;cursor:pointer" style-hover="background:#1d4ed8">Start the diagnosis</button>
+              <button type="button" onClick="{{ onShare }}" style="width:100%;min-height:40px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#0f172a;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px" style-hover="background:#f6f8fb;border-color:#cbd5e1">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.5V2.4"></path><path d="M5 5.2L8 2.2l3 3"></path><path d="M2.8 9.6v3.2a1.2 1.2 0 0 0 1.2 1.2h8a1.2 1.2 0 0 0 1.2-1.2V9.6"></path></svg>
+                Referral letter to a colleague
+              </button>
+              <button type="button" onClick="{{ onSnapshot }}" style="width:100%;min-height:40px;border-radius:12px;border:1px solid {{ snapBd }};background:{{ snapBg }};color:{{ snapFg }};font-size:13px;font-weight:600;cursor:pointer" style-hover="border-color:#cbd5e1">{{ snapLabel }}</button>
+              <button type="button" onClick="{{ onBack }}" style="width:100%;min-height:38px;border-radius:12px;border:1px solid transparent;background:transparent;color:#64748b;font-size:12.5px;font-weight:500;cursor:pointer" style-hover="background:#f6f8fb;color:#0f172a">Back to a missing step</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:80;background:rgba(9,14,26,0.9);display:flex;flex-direction:column;animation:otFade .15s ease-out">
+    <div style="flex:none;height:62px;display:flex;align-items:center;gap:14px;padding:0 22px;border-bottom:1px solid rgba(255,255,255,0.09)">
+     <span style="width:32px;height:32px;flex:none;border-radius:10px;background:rgba(37,99,235,0.22);display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#60a5fa"></span></span>
+      <div style="display:grid;gap:1px;min-width:0">
+       <span dir="ltr" style="font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#ffffff">Referral letter</span>
+       <span dir="ltr" style="font-size:11.5px;font-weight:400;color:#94a3b8">Referral letter — choose what is included, then export it</span>
+      </div>
+      <div style="margin-inline-start:auto;display:flex;align-items:center;gap:9px;flex:none">
+        <button type="button" onClick="{{ onExport }}" style="min-height:38px;padding:0 18px;border-radius:11px;border:none;background:#2563eb;color:#ffffff;font-size:13.5px;font-weight:700;cursor:pointer" style-hover="background:#1d4ed8">Export PDF</button>
+        <button type="button" onClick="{{ closeShare }}" style="width:38px;height:38px;border-radius:11px;border:1px solid rgba(255,255,255,0.14);background:transparent;color:#cbd5e1;font-size:14px;cursor:pointer" style-hover="background:rgba(255,255,255,0.09);color:#ffffff">✕</button>
+      </div>
+    </div>
+
+    <div style="flex:1;min-height:0;display:flex;overflow:hidden">
+      <div style="flex:none;width:262px;background:rgba(255,255,255,0.045);border-inline-end:1px solid rgba(255,255,255,0.09);padding:16px;display:grid;gap:14px;align-content:start;overflow-y:auto">
+        <div style="display:grid;gap:8px">
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#94a3b8">Include</span>
+          <sc-for list="{{ shareOpts }}" as="so" hint-placeholder-count="7">
+            <button type="button" onClick="{{ so.onClick }}" style="display:flex;align-items:center;gap:9px;padding:0;border:none;background:transparent;cursor:pointer;text-align:start">
+             <span style="width:17px;height:17px;flex:none;border-radius:5px;border:1.5px solid {{ so.bd }};background:{{ so.bg }};color:#0f172a;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">{{ so.mark }}</span>
+             <span style="font-size:12.5px;font-weight:400;color:{{ so.fg }};line-height:1.5">{{ so.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.1)"></div>
+        <div style="display:grid;gap:8px">
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#94a3b8">Patient identity</span>
+          <sc-for list="{{ privacyOpts }}" as="po" hint-placeholder-count="3">
+            <button type="button" onClick="{{ po.onClick }}" style="display:flex;align-items:center;gap:9px;padding:0;border:none;background:transparent;cursor:pointer;text-align:start">
+             <span style="width:15px;height:15px;flex:none;border-radius:50%;border:1.5px solid {{ po.bd }};background:transparent;display:inline-flex;align-items:center;justify-content:center"><span style="width:7px;height:7px;border-radius:50%;background:{{ po.dot }}"></span></span>
+             <span style="font-size:12.5px;font-weight:400;color:{{ po.fg }}">{{ po.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="flex:1;min-width:0;overflow-y:auto;padding:24px;display:flex;justify-content:center">
+        <div style="width:100%;max-width:780px;background:#ffffff;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,0.4);padding:44px 46px;display:grid;gap:22px;align-content:start;height:fit-content">
+
+          <div style="display:flex;align-items:flex-start;gap:16px;padding-bottom:18px;border-bottom:2px solid #0f172a">
+            <div style="width:46px;height:46px;flex:none;border-radius:12px;background:#2563eb;display:flex;align-items:center;justify-content:center">
+             <span style="width:16px;height:16px;border-radius:4px;background:#ffffff"></span>
+            </div>
+            <div style="display:grid;gap:2px;min-width:0;flex:1">
+             <span style="font-size:17px;font-weight:700;line-height:1.35">Al Zahrani Orthodontic Clinic</span>
+             <span style="font-size:12px;font-weight:400;color:#64748b">Cairo · Egypt — <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">+20 100 000 0000</span> · <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">clinic@alzahrani.example</span></span>
+            </div>
+            <div style="flex:none;display:grid;gap:3px;justify-items:end;text-align:end">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94a3b8">Referral</span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">REF-2026-0148-01</span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:500;color:#64748b;font-variant-numeric:tabular-nums">2026-08-27</span>
+            </div>
+          </div>
+
+          <div style="display:grid;gap:6px">
+           <span style="font-size:13.5px;font-weight:500;color:#0f172a">Dear colleague,</span>
+            <p style="margin:0;font-size:13.5px;font-weight:400;color:#475569;line-height:1.85">I am referring the patient <span style="font-weight:700;color:#0f172a">{{ refName }}</span> for your opinion, and attach below the full orthodontic assessment summary.</p>
+          </div>
+
+          <div style="display:grid;gap:9px">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Patient</span>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:13px 15px;background:#f6f8fb;border-radius:10px">
+              <div style="display:grid;gap:2px"><span style="font-size:10.5px;font-weight:400;color:#94a3b8">Name</span><span style="font-size:13px;font-weight:600">{{ refName }}</span></div>
+              <div style="display:grid;gap:2px"><span style="font-size:10.5px;font-weight:400;color:#94a3b8">Age and sex</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600">{{ headerMeta }}</span></div>
+              <div style="display:grid;gap:2px"><span style="font-size:10.5px;font-weight:400;color:#94a3b8">Case number</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">{{ headerId }}</span></div>
+              <div style="display:grid;gap:2px"><span style="font-size:10.5px;font-weight:400;color:#94a3b8">Date of records</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">{{ headerRecords }}</span></div>
+            </div>
+          </div>
+
+          <div style="display:grid;gap:8px">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Chief complaint</span>
+            <p style="margin:0;font-size:13.5px;font-weight:400;color:#0f172a;line-height:1.8;padding-inline-start:13px;border-inline-start:3px solid #e8edf3">«{{ complaint }}»</p>
+          </div>
+
+          <sc-if value="{{ shMedical }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;gap:8px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Relevant medical history</span>
+              <p style="margin:0;font-size:13px;font-weight:400;color:#475569;line-height:1.8">{{ refMedical }}</p>
+            </div>
+          </sc-if>
+
+          <div style="display:grid;gap:8px">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Assessment</span>
+            <p dir="ltr" style="margin:0;font-family:Inter,sans-serif;font-size:15px;font-weight:500;color:#0f172a;line-height:1.7">{{ sentence }}</p>
+            <p dir="ltr" style="margin:0;font-family:Inter,sans-serif;font-size:13px;font-weight:400;color:#64748b;line-height:1.7"><span style="font-weight:600;color:#475569">Complicated by</span> {{ compsText }}</p>
+          </div>
+
+          <sc-if value="{{ shPhotos }}" hint-placeholder-val="{{ true }}">
+            <div dir="ltr" style="display:grid;gap:9px">
+             <span style="font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Clinical records</span>
+              <div style="display:grid;grid-template-columns:0.82fr 1fr 1fr 1fr;grid-template-rows:auto auto;gap:6px">
+                <sc-for list="{{ compTop }}" as="ct" hint-placeholder-count="5">
+                  <div style="grid-column:{{ ct.col }};grid-row:{{ ct.row }};border-radius:7px;overflow:hidden;background:#0f172a;position:relative;aspect-ratio:{{ ct.ratio }}">
+                    {{ ct.img }}
+                   <span style="position:absolute;bottom:0;left:0;right:0;padding:7px 5px 3px;background:linear-gradient(transparent,rgba(9,14,26,0.72));font-family:Inter,sans-serif;font-size:7.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#ffffff">{{ ct.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+                <sc-for list="{{ compBottom }}" as="cb" hint-placeholder-count="3">
+                  <div style="border-radius:7px;overflow:hidden;background:#0f172a;position:relative;aspect-ratio:4/3">
+                    {{ cb.img }}
+                   <span style="position:absolute;bottom:0;left:0;right:0;padding:7px 5px 3px;background:linear-gradient(transparent,rgba(9,14,26,0.72));font-family:Inter,sans-serif;font-size:7.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#ffffff">{{ cb.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">
+                <sc-for list="{{ compRad }}" as="cr" hint-placeholder-count="2">
+                  <div style="border-radius:7px;overflow:hidden;background:#0f172a;position:relative;aspect-ratio:16/9">
+                    {{ cr.img }}
+                   <span style="position:absolute;bottom:0;left:0;right:0;padding:7px 5px 3px;background:linear-gradient(transparent,rgba(9,14,26,0.72));font-family:Inter,sans-serif;font-size:7.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#ffffff">{{ cr.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ shMeasure }}" hint-placeholder-val="{{ true }}">
+            <div dir="ltr" style="display:grid;gap:9px">
+             <span style="font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Cephalometric analysis</span>
+              <sc-for list="{{ refGroups }}" as="rg" hint-placeholder-count="4">
+                <div style="display:grid;gap:0">
+                  <div style="display:flex;align-items:center;gap:8px;padding:6px 9px;background:#f6f8fb;border-radius:6px 6px 0 0">
+                   <span style="font-family:Inter,sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#475569">{{ rg.en }}</span>
+                   <span style="flex:1"></span>
+                   <span style="font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:{{ rg.fg }}">{{ rg.line }}</span>
+                  </div>
+                  <sc-for list="{{ rg.rows }}" as="rr" hint-placeholder-count="5">
+                    <div style="display:flex;align-items:center;gap:8px;padding:5px 9px;border-bottom:1px solid #f1f5f9">
+                     <span style="flex:none;width:104px;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;color:#0f172a">{{ rr.en }}</span>
+                     <span style="flex:none;width:62px;text-align:right;font-family:Inter,sans-serif;font-size:11px;font-weight:700;color:#0f172a;font-variant-numeric:tabular-nums">{{ rr.value }}</span>
+                     <span style="flex:none;width:60px;text-align:right;font-family:Inter,sans-serif;font-size:10px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">{{ rr.norm }}</span>
+                     <span style="flex:none;width:44px;text-align:right;font-family:Inter,sans-serif;font-size:10px;font-weight:700;color:{{ rr.fg }};font-variant-numeric:tabular-nums">{{ rr.sd }}</span>
+                     <span style="flex:1;min-width:0;font-family:Inter,sans-serif;font-size:10px;font-weight:{{ rr.fw }};color:{{ rr.findFg }}">{{ rr.finding }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ shOcclusion }}" hint-placeholder-val="{{ true }}">
+            <div dir="ltr" style="display:grid;gap:9px">
+             <span style="font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Occlusion · dentition · growth</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+                <sc-for list="{{ refClinical }}" as="rc" hint-placeholder-count="3">
+                  <div style="display:grid;gap:0;border:1px solid #e8edf3;border-radius:7px;overflow:hidden">
+                   <span style="padding:6px 9px;background:#f6f8fb;font-family:Inter,sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#475569">{{ rc.en }}</span>
+                    <sc-for list="{{ rc.rows }}" as="rr" hint-placeholder-count="4">
+                      <div style="display:flex;align-items:baseline;gap:8px;padding:5px 9px;border-top:1px solid #f6f8fb">
+                       <span style="flex:none;width:100px;font-family:Inter,sans-serif;font-size:10px;font-weight:600;color:#0f172a">{{ rr.en }}</span>
+                       <span style="flex:none;font-family:Inter,sans-serif;font-size:10.5px;font-weight:700;color:#0f172a">{{ rr.value }}</span>
+                       <span style="flex:1;min-width:0;text-align:right;font-family:Inter,sans-serif;font-size:9.5px;font-weight:500;color:{{ rr.findFg }}">{{ rr.finding }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ shProblems }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;gap:8px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Problem list</span>
+              <div style="display:grid;gap:5px">
+                <sc-for list="{{ refProblems }}" as="rp" hint-placeholder-count="6">
+                  <div style="display:flex;align-items:baseline;gap:9px">
+                   <span style="width:6px;height:6px;flex:none;margin-top:6px;border-radius:50%;background:{{ rp.dot }}"></span>
+                   <span dir="ltr" style="unicode-bidi:isolate;flex:1;font-family:Inter,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;line-height:1.65">{{ rp.text }}</span>
+                   <span dir="ltr" style="unicode-bidi:isolate;flex:none;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">{{ rp.coord }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:grid;gap:8px;padding:15px 17px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#1d4ed8">Opinion &amp; question</span>
+            <textarea rows="3" value="{{ refOpinion }}" onChange="{{ onOpinion }}" placeholder="My view is that the case needs … and I would value your opinion on …" style="width:100%;padding:11px 13px;border-radius:9px;border:1px solid #bfdbfe;background:#ffffff;font-size:13px;font-weight:400;color:#0f172a;line-height:1.8;resize:vertical;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)"></textarea>
+          </div>
+
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding-top:16px;border-top:1px solid #e8edf3;flex-wrap:wrap">
+            <div style="display:grid;gap:2px;min-width:0">
+             <span style="font-size:13.5px;font-weight:700;color:#0f172a">Dr Mohamed Shady</span>
+             <span style="font-size:11.5px;font-weight:400;color:#64748b">Orthodontist</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;flex:none">
+              <div style="display:grid;gap:2px;justify-items:end;text-align:end">
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#cbd5e1">Generated by OrthoTrack</span>
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:9px;font-weight:500;color:#cbd5e1;font-variant-numeric:tabular-nums">2026-08-27 · v4</span>
+              </div>
+              <div style="width:46px;height:46px;flex:none;border-radius:7px;border:1px solid #e8edf3;background:#ffffff;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:1px;padding:4px">
+                <sc-for list="{{ qrCells }}" as="q" hint-placeholder-count="25">
+                 <span style="background:{{ q.c }};border-radius:1px"></span>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toastOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;bottom:22px;inset-inline-end:22px;z-index:90;display:flex;align-items:flex-start;gap:12px;width:360px;background:#ffffff;border:1px solid #a7f3d0;border-radius:16px;padding:14px 15px;box-shadow:0 10px 30px rgba(15,23,42,0.13);animation:otIn .2s ease-out">
+   <span style="width:32px;height:32px;flex:none;border-radius:11px;background:#ecfdf5;color:#059669;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;font-size:14px;font-weight:700">✓</span>
+    <div style="flex:1;min-width:0;display:grid;gap:2px">
+     <span style="font-size:13.5px;font-weight:700;color:#0f172a">{{ toastTitle }}</span>
+     <span style="font-size:12.5px;font-weight:400;color:#64748b;line-height:1.6">{{ toastBody }}</span>
+    </div>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 940},
+  &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
+  &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string) =&gt; void&quot;}
+}">
+class Component extends DCLogic {
+  get K() { return window.OrthoKnowledge || {}; }
+
+  /* the case as captured in Records Collection */
+  values = {
+    'ap-0': '79.3', 'ap-1': '82.8', 'ap-2': '-3.5', 'ap-3': '-6.7', 'ap-4': '-3.3', 'ap-5': '-4.7',
+    'vert-0': '8.6', 'vert-1': '27.0', 'vert-2': '28.4', 'vert-3': '56.6',
+    'dent-0': '119.9', 'dent-1': '99.4', 'dent-2': '126.4', 'dent-3': '7.6', 'dent-4': '113.7',
+    'soft-0': '77.4', 'soft-1': '1.0'
+  };
+  exam = { 'occ-incisor-incisorRel': 'Class III' };
+
+  mediaDefs = [
+    ['assets/p04.jpeg', 'Frontal repose', 'extraoral'],
+    ['assets/p06.jpeg', 'Frontal smile', 'extraoral'],
+    ['assets/p12.jpeg', 'Oblique repose', 'extraoral'],
+    ['assets/p14.jpeg', 'Oblique smile', 'extraoral'],
+    ['assets/p08.jpeg', 'Profile repose', 'extraoral'],
+    ['assets/p10.jpeg', 'Profile smile', 'extraoral'],
+    ['assets/p02.jpeg', 'Lips at rest', 'extraoral'],
+    ['assets/p07.jpeg', 'Frontal occlusion', 'intraoral'],
+    ['assets/p05.jpeg', 'Frontal open', 'intraoral'],
+    ['assets/p03.jpeg', 'Upper occlusal', 'intraoral'],
+    ['assets/p01.jpeg', 'Lower occlusal', 'intraoral'],
+    ['assets/p09.jpeg', 'Right buccal', 'intraoral'],
+    ['assets/p11.jpeg', 'Left buccal', 'intraoral'],
+    ['assets/p13.jpeg', 'Buccal detail', 'intraoral'],
+    ['assets/ceph.png', 'Lateral cephalogram', 'radiograph'],
+    ['assets/opg.png', 'Panoramic (OPG)', 'radiograph']
+  ];
+
+  groupNames = { ap: 'Skeletal — sagittal', vert: 'Skeletal — vertical', dent: 'Dental', soft: 'Soft tissue' };
+
+  constraintRows = [
+    ['Nickel allergy', 'Confirmed', 2, 'Avoid NiTi archwires and stainless brackets'],
+    ['Mouth breathing', 'Present', 1, 'Address cause before vertical control']
+  ];
+
+  occlusionRows = [
+    ['Incisor relationship', 'Class III', 1, 'Reverse incisor relationship'],
+    ['Molar — right', 'Class III ½ unit', 1, 'Mesial molar relationship'],
+    ['Molar — left', 'Class III ½ unit', 1, 'Mesial molar relationship — symmetric'],
+    ['Overjet', '-2.5 mm', 2, 'Reverse overjet'],
+    ['Overbite', '1.5 mm', 1, 'Reduced overbite'],
+    ['Crowding — upper', '+2.0 mm', 1, 'Upper arch spacing'],
+    ['Crowding — lower', '-1.0 mm', 0, 'Minimal lower crowding']
+  ];
+
+  growthRows = [
+    ['CVM stage', 'CS3', 2, 'Growth peak now — functional window open'],
+    ['TMJ status', 'WNL', 0, 'No joint limitation'],
+    ['CO–CR shift', '< 2 mm', 0, 'No significant shift'],
+    ['Airway', 'Mouth breather', 1, 'Review vertical pattern and tongue posture']
+  ];
+
+  dentitionRows = [
+    ['Impacted', '13', 2, 'Palatal — needs 3D localisation'],
+    ['Missing', 'None', 0, 'Full permanent dentition'],
+    ['Supernumerary', 'None', 0, ''],
+    ['Third molars', 'Developing', 0, 'Monitor at review']
+  ];
+
+  state = {
+    tab: 'summary', open: {}, copied: false, snapped: false, mediaMode: 'composite',
+    share: false, toast: null,
+    shareInc: { medical: true, photos: true, measure: true, problems: true, grid: false, occlusion: true },
+    privacy: 'first',
+    opinion: ''
+  };
+
+  componentDidMount() {
+    if (!window.OrthoKnowledge) {
+      this._k = setInterval(() => { if (window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); } }, 60);
+    }
+  }
+  componentWillUnmount() { clearInterval(this._k); clearTimeout(this._t); clearTimeout(this._c); }
+
+  img(src, alt) {
+    return React.createElement('img', {
+      src: src, alt: alt || '', draggable: false,
+      style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
+    });
+  }
+
+  flash(title, body) {
+    clearTimeout(this._t);
+    this.setState({ toast: { title, body } });
+    this._t = setTimeout(() => this.setState({ toast: null }), 3600);
+  }
+
+  tone(t) {
+    return {
+      fg: t === 2 ? '#b91c1c' : t === 1 ? '#b45309' : '#047857',
+      bg: t === 2 ? '#fef2f2' : t === 1 ? '#fffbeb' : '#ecfdf5',
+      bd: t === 2 ? '#fecaca' : t === 1 ? '#fde68a' : '#a7f3d0',
+      dot: t === 2 ? '#dc2626' : t === 1 ? '#d97706' : '#059669'
+    };
+  }
+
+  /* the abnormal measurements, worst first */
+  abnormal() {
+    const M = this.K.measurements || {};
+    const out = [];
+    Object.keys(M).forEach(gk => M[gk].forEach((m, i) => {
+      const v = parseFloat(this.values[gk + '-' + i]);
+      if (isNaN(v)) return;
+      const sd = this.K.sdOf ? this.K.sdOf(m, v) : 0;
+      out.push({ gk, en: m[0], ar: m[1], value: v, unit: m[8], sd });
+    }));
+    return out.sort((a, b) => Math.abs(b.sd) - Math.abs(a.sd));
+  }
+
+  sect(key, en, ar, accent, tint, rows, line, flag, flagTone, problems) {
+    const open = !!this.state.open[key];
+    const t = this.tone(flagTone);
+    return {
+      en, ar, open, chev: open ? '−' : '+',
+      anchor: 'sect-' + key,
+      cardBd: this.state.pulse === key ? '#2563eb' : '#e8edf3',
+      headBg: open ? '#f6f8fb' : '#ffffff',
+      headBorder: open ? '1px solid #e8edf3' : 'none',
+      iconBg: tint, iconFg: accent,
+      line, lineFg: flagTone === 2 ? '#b91c1c' : flagTone === 1 ? '#b45309' : '#475569',
+      hasFlag: !!flag, flag: flag || '',
+      flagFg: t.fg, flagBg: t.bg, flagBd: t.bd,
+      rows, isEmpty: rows.length === 0 && !(problems || []).length, emptyText: 'No items recorded',
+      isProblems: !!problems, isTable: !problems,
+      problems: problems || [],
+      onToggle: () => this.setState(s => ({ open: Object.assign({}, s.open, { [key]: !s.open[key] }) }))
+    };
+  }
+
+  renderVals() {
+    const CS = this.K.caseSummary ? this.K.caseSummary(this.values, this.exam)
+      : { sentence: '', complications: [], cells: [], filled: 0, affected: 0, difficulty: { ar: '', tone: -1 } };
+    const PL = this.K.problemList ? this.K.problemList(this.values, this.exam) : [];
+    const abn = this.abnormal();
+    const outOfRange = abn.filter(a => Math.abs(a.sd) >= 1);
+
+    const complaint = 'I don\'t like how my teeth look, and my lower teeth stick out in front of the upper ones';
+    const headerName = this.props.overrideName || 'Ehab Mohammed Hosny';
+    const otherPatient = !!this.props.overrideName
+      && this.props.overrideName !== 'Ehab Mohammed Hosny' && this.props.overrideName !== 'إيهاب محمد حسني';
+    const headerId = this.props.overrideId || 'ORT-2026-0148';
+    const headerMeta = this.props.overrideMeta || '14y · Male · Spacing';
+    const headerFile = otherPatient ? '—' : '005025';
+    const headerRecords = otherPatient ? '— Not recorded' : '2026-07-31';
+    const shownComplaint = otherPatient ? 'Not recorded yet' : complaint;
+    const refName = this.state.privacy === 'full' ? headerName
+      : this.state.privacy === 'first' ? headerName.split(' ')[0] + ' — ' + headerId : 'patient — ' + headerId;
+
+    const byKind = k => this.mediaDefs.map((m, i) => ({ m, i })).filter(x => x.m[2] === k);
+    const mediaRow = (kind, en, ar) => ({
+      en, ar,
+      items: byKind(kind).map(x => ({
+        label: x.m[1], img: this.img(x.m[0], x.m[1]),
+        onClick: () => this.flash('Open image', x.m[1] + ' — Opens in the records editor.')
+      }))
+    });
+
+    const unitOf = m => m[8] === 'deg' ? '°' : m[8] === 'pct' ? '%' : ' ' + m[8];
+
+    const measureRows = groupKey => (this.K.measurements[groupKey] || []).map((m, i) => {
+      const v = parseFloat(this.values[groupKey + '-' + i]);
+      const sd = isNaN(v) ? 0 : (this.K.sdOf ? this.K.sdOf(m, v) : 0);
+      const a = Math.abs(sd);
+      const t = this.tone(a >= 2 ? 2 : a >= 1 ? 1 : 0);
+      const mid = (m[4] + m[5]) / 2, halfWidth = (m[5] - m[4]) / 2;
+      const pm = (this.K.problemMap || {})[m[0]];
+      const spec = pm ? (sd < 0 ? pm.low : pm.high) : null;
+      const finding = isNaN(v) ? 'Not recorded'
+        : a < 1 ? 'Within normal'
+        : spec ? spec[0]
+        : (sd > 0 ? 'Above normal' : 'Below normal');
+      return {
+        en: m[0], note: m[1], dot: t.dot,
+        value: isNaN(v) ? '—' : v + unitOf(m),
+        norm: String(mid).replace(/\.0$/, '') + ' ± ' + String(halfWidth).replace(/\.0$/, ''),
+        sd: isNaN(v) ? '—' : (sd > 0 ? '+' : '') + sd.toFixed(1),
+        finding: finding,
+        findFg: a < 1 ? '#94a3b8' : t.fg,
+        findFw: a < 1 ? 400 : 600,
+        hasBadge: a >= 1,
+        badge: a >= 3 ? 'Severe' : a >= 2 ? 'Moderate' : 'Mild',
+        valFg: t.fg, valBg: t.bg, valBd: t.bd
+      };
+    });
+
+    const plainRows = defs => defs.map(r => {
+      const t = this.tone(r[2]);
+      return {
+        en: r[0], note: '', dot: t.dot,
+        value: r[1], norm: '', sd: '',
+        finding: r[3] || '', findFg: r[2] ? t.fg : '#94a3b8', findFw: r[2] ? 600 : 400,
+        hasBadge: r[2] >= 1, badge: r[2] === 2 ? 'Significant' : 'Note',
+        valFg: t.fg, valBg: t.bg, valBd: t.bd
+      };
+    });
+
+    const grpLine = gk => {
+      const ip = this.K.interpret ? this.K.interpret(gk, this.values) : null;
+      return ip && ip.headline ? ip.headline : '—';
+    };
+    const grpTone = gk => {
+      const ip = this.K.interpret ? this.K.interpret(gk, this.values) : null;
+      return ip && ip.severity ? ip.severity.tone : 0;
+    };
+    const grpOdd = gk => (this.K.measurements[gk] || []).filter((m, i) => {
+      const v = parseFloat(this.values[gk + '-' + i]);
+      return !isNaN(v) && Math.abs(this.K.sdOf(m, v)) >= 1;
+    }).length;
+
+    const sections = ['ap', 'vert', 'dent', 'soft'].map(gk => {
+      const odd = grpOdd(gk);
+      return this.sect('m-' + gk, this.groupNames[gk], (this.K.measurements[gk] || []).length + ' measurements',
+        grpTone(gk) === 2 ? '#dc2626' : grpTone(gk) === 1 ? '#d97706' : '#059669',
+        grpTone(gk) === 2 ? '#fef2f2' : grpTone(gk) === 1 ? '#fffbeb' : '#ecfdf5',
+        measureRows(gk), grpLine(gk), odd ? odd + ' outside the range' : '', grpTone(gk));
+    }).concat([
+      this.sect('occ', 'Occlusion', 'Occlusion findings', '#2563eb', '#eff6ff', plainRows(this.occlusionRows),
+        'Class III incisor and molar relationship with reverse overjet', '4 outside the normal range', 2),
+      this.sect('dent2', 'Dentition', 'Dentition status', '#7c3aed', '#f5f3ff', plainRows(this.dentitionRows),
+        'Impacted 13 — palatal; full permanent dentition otherwise', '1 impacted', 2),
+      this.sect('grow', 'Growth & function', 'Growth and function', '#059669', '#ecfdf5', plainRows(this.growthRows),
+        'CS3 — growth peak now, functional appliance window open', 'CS3', 2),
+      this.sect('cons', 'Medical constraints', 'Medical constraints', '#d97706', '#fffbeb', plainRows(this.constraintRows),
+        'Nickel allergy limits appliance choice', '2 constraints', 2),
+      this.sect('probs', 'Problem list', 'Problems derived from the records', '#dc2626', '#fef2f2', [],
+        PL.length + ' problems derived from the records', PL.length + ' problems', 2,
+        PL.map(p => {
+          const t = this.tone(p.tone);
+          return {
+            text: p.text, dot: t.dot,
+            coord: p.row + ' / ' + p.col,
+            severity: p.severity,
+            sevFg: t.fg, sevBg: t.bg, sevBd: t.bd,
+            hasDesc: !!p.desc, desc: p.desc || '',
+            hasCite: !!p.cite, cite: p.cite || '',
+            value: p.cite ? p.value + (p.unit === 'deg' ? '°' : p.unit === 'pct' ? '%' : ' ' + p.unit) : '',
+            sd: p.sd !== null ? (p.sd > 0 ? '+' : '') + p.sd.toFixed(1) : ''
+          };
+        }))
+    ]);
+
+    const shareKeys = [
+      ['medical', 'Relevant medical history'],
+      ['photos', 'Photos and radiographs'],
+      ['measure', 'Cephalometric measurements'],
+      ['problems', 'Problem list'],
+      ['occlusion', 'Occlusion and function'],
+      ['grid', 'Problems grid']
+    ];
+
+    const qr = [];
+    for (let i = 0; i < 25; i++) qr.push({ c: [0, 1, 2, 4, 5, 6, 8, 11, 12, 14, 16, 18, 20, 22, 24].indexOf(i) >= 0 ? '#0f172a' : '#ffffff' });
+
+    return {
+      showAside: !this.props.embedded,
+      onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); else window.location.href = encodeURI('OrthoTrack Case Dashboard v2 EN.dc.html'); },
+      onBreadcrumbRecords: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('records'); else window.location.href = encodeURI('OrthoTrack Records Collection v3 EN.dc.html'); },
+      heroImg: this.img(this.props.overridePhoto || 'assets/p04.jpeg', headerName),
+      headerName,
+      headerId,
+      headerMeta,
+      headerFile,
+      headerRecords,
+      complaint: shownComplaint,
+      sentence: CS.sentence,
+      compsText: CS.complications.join(', '),
+      difficulty: CS.difficulty.ar,
+      diffFg: CS.difficulty.tone === 2 ? '#b91c1c' : CS.difficulty.tone === 1 ? '#b45309' : '#047857',
+      diffBg: CS.difficulty.tone === 2 ? '#fef2f2' : CS.difficulty.tone === 1 ? '#fffbeb' : '#ecfdf5',
+      diffBd: CS.difficulty.tone === 2 ? '#fecaca' : CS.difficulty.tone === 1 ? '#fde68a' : '#a7f3d0',
+
+      copyLabel: this.state.copied ? '✓ Copied' : 'Copy',
+      copyBg: this.state.copied ? '#ecfdf5' : '#ffffff',
+      copyFg: this.state.copied ? '#047857' : '#1d4ed8',
+      copyBd: this.state.copied ? '#a7f3d0' : '#bfdbfe',
+      onCopy: () => {
+        const txt = CS.sentence + (CS.complications.length ? '. Complicated by ' + CS.complications.join(', ') + '.' : '.');
+        if (navigator.clipboard) navigator.clipboard.writeText(txt);
+        this.setState({ copied: true });
+        clearTimeout(this._c);
+        this._c = setTimeout(() => this.setState({ copied: false }), 2000);
+      },
+
+      showStageTabs: !this.props.embedded,
+      tabs: [['overview', 'Overview'], ['records', 'Clinical records'], ['summary', 'Case summary'],             ['diagnosis', 'Diagnosis'], ['objectives', 'Objectives'], ['plan', 'Treatment plan'], ['visits', 'Visits']]
+        .map(t => ({
+          label: t[1],
+          bd: this.state.tab === t[0] ? '#2563eb' : 'transparent',
+          fg: this.state.tab === t[0] ? '#2563eb' : t[0] === 'diagnosis' || t[0] === 'records' ? '#64748b' : '#94a3b8',
+          fw: this.state.tab === t[0] ? 700 : 500,
+          onClick: () => {
+            if (t[0] === 'records' || t[0] === 'overview') {
+              if (this.props.onNavigate) this.props.onNavigate(t[0]);
+              else window.location.href = t[0] === 'records' ? 'OrthoTrack%20Records%20Collection%20v3.dc.html' : 'OrthoTrack%20Case%20Overview.dc.html';
+              return;
+            }
+            this.setState({ tab: t[0] });
+          }
+        })),
+
+      isComposite: this.state.mediaMode !== 'sheet',
+      isSheet: this.state.mediaMode === 'sheet',
+      mediaModes: [['composite', 'Composite'], ['sheet', 'All 16']].map(m => {
+        const on = (this.state.mediaMode || 'composite') === m[0];
+        return {
+          label: m[1],
+          bg: on ? '#ffffff' : 'transparent',
+          fg: on ? '#0f172a' : '#64748b',
+          fw: on ? 700 : 500,
+          sh: on ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+          onClick: () => this.setState({ mediaMode: m[0] })
+        };
+      }),
+
+      /* the standard orthodontic composite: occlusals stacked left,
+         three extraoral across the top, three intraoral across the bottom */
+      compTop: [
+        { label: 'Upper occlusal', idx: 9,  col: '1', row: '1', ratio: '4/3' },
+        { label: 'Lower occlusal', idx: 10, col: '1', row: '2', ratio: '4/3' },
+        { label: 'Profile',        idx: 4,  col: '2', row: '1 / 3', ratio: '3/4' },
+        { label: 'Frontal',        idx: 0,  col: '3', row: '1 / 3', ratio: '3/4' },
+        { label: 'Frontal smile',  idx: 1,  col: '4', row: '1 / 3', ratio: '3/4' }
+      ].map(c => ({
+        label: c.label, col: c.col, row: c.row, ratio: c.ratio,
+        img: this.img(this.mediaDefs[c.idx][0], c.label),
+        onClick: () => this.flash('Open image', this.mediaDefs[c.idx][1] + ' — Opens in the records editor.')
+      })),
+      compBottom: [
+        { label: 'Right buccal', idx: 11 },
+        { label: 'Frontal occlusion', idx: 7 },
+        { label: 'Left buccal', idx: 12 }
+      ].map(c => ({
+        label: c.label,
+        img: this.img(this.mediaDefs[c.idx][0], c.label),
+        onClick: () => this.flash('Open image', this.mediaDefs[c.idx][1] + ' — Opens in the records editor.')
+      })),
+      compRad: [
+        { label: 'Panoramic (OPG)', idx: 15 },
+        { label: 'Lateral cephalogram', idx: 14 }
+      ].map(c => ({
+        label: c.label,
+        img: this.img(this.mediaDefs[c.idx][0], c.label),
+        onClick: () => this.flash('Open image', this.mediaDefs[c.idx][1] + ' — Opens in the records editor.')
+      })),
+
+      mediaRows: [
+        mediaRow('extraoral', 'Extraoral', 'Extraoral'),
+        mediaRow('intraoral', 'Intraoral', 'Intraoral'),
+        mediaRow('radiograph', 'Radiographs', 'radiographs')
+      ],
+
+      sections,
+
+      gridCols: (this.K.gridCols || []).map(c => ({ short: c[1].slice(0, 4) })),
+      gridRows: (this.K.gridRows || []).map(r => ({
+        label: r[1].split(' ')[0],
+        cells: CS.cells.filter(c => c.row === r[0]).map(c => {
+          const t = c.tone;
+          return {
+            title: c.rowEn + ' / ' + c.colEn + (c.has ? ' — ' + c.label : ' — not assessed'),
+            mark: !c.has ? '—' : t === 2 ? '!!' : t === 1 ? '!' : '✓',
+            bg: !c.has ? '#f6f8fb' : t === 2 ? '#fef2f2' : t === 1 ? '#fffbeb' : '#ecfdf5',
+            bd: !c.has ? '#eef2f7' : t === 2 ? '#fecaca' : t === 1 ? '#fde68a' : '#a7f3d0',
+            fg: !c.has ? '#cbd5e1' : t === 2 ? '#b91c1c' : t === 1 ? '#b45309' : '#047857'
+          };
+        })
+      })),
+      gridNote: CS.affected + ' of ' + CS.filled + ' assessed cells contain a deviation — complexity ' + CS.difficulty.ar + '.',
+
+      problemCount: String(PL.length),
+      onProblems: () => {
+        this.setState(s => ({ open: Object.assign({}, s.open, { probs: true }), pulse: 'probs' }));
+        clearTimeout(this._p);
+        this._p = setTimeout(() => {
+          const el = document.getElementById('sect-probs');
+          if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 16, behavior: 'smooth' });
+        }, 60);
+        clearTimeout(this._pu);
+        this._pu = setTimeout(() => this.setState({ pulse: null }), 1600);
+      },
+      onDiagnose: () => {
+        if (this.props.onNavigate) this.props.onNavigate('diagnosis');
+        else window.location.href = encodeURI('OrthoTrack Diagnosis EN.dc.html');
+      },
+      onShare: () => this.setState({ share: true }),
+      onBack: () => this.flash('Back to step', 'All steps complete — nothing is missing.'),
+      snapLabel: this.state.snapped ? '✓ Snapshot taken' : 'An uneditable snapshot',
+      snapBg: this.state.snapped ? '#ecfdf5' : '#ffffff',
+      snapFg: this.state.snapped ? '#047857' : '#0f172a',
+      snapBd: this.state.snapped ? '#a7f3d0' : '#e8edf3',
+      onSnapshot: () => {
+        this.setState({ snapped: true });
+        this.flash('Case snapshot taken', 'The record exactly as it is now, with an identifier and fingerprint that do not change.');
+      },
+
+      shareOpen: this.state.share,
+      closeShare: () => this.setState({ share: false }),
+      onExport: () => { this.setState({ share: false }); this.flash('Preparing the letter', 'A print-ready PDF will open, ready to send.'); },
+      shareOpts: shareKeys.map(sk => {
+        const on = !!this.state.shareInc[sk[0]];
+        return {
+          label: sk[1], mark: on ? '✓' : '',
+          bd: on ? '#34d399' : 'rgba(255,255,255,0.28)',
+          bg: on ? '#34d399' : 'transparent',
+          fg: on ? '#e2e8f0' : '#94a3b8',
+          onClick: () => this.setState(s => ({ shareInc: Object.assign({}, s.shareInc, { [sk[0]]: !s.shareInc[sk[0]] }) }))
+        };
+      }),
+      privacyOpts: [['full', 'Full name'], ['first', 'First name and case number'], ['anon', 'Anonymised']].map(p => {
+        const on = this.state.privacy === p[0];
+        return {
+          label: p[1],
+          bd: on ? '#60a5fa' : 'rgba(255,255,255,0.28)',
+          dot: on ? '#60a5fa' : 'transparent',
+          fg: on ? '#e2e8f0' : '#94a3b8',
+          onClick: () => this.setState({ privacy: p[0] })
+        };
+      }),
+      shMedical: this.state.shareInc.medical,
+      shPhotos: this.state.shareInc.photos,
+      shMeasure: this.state.shareInc.measure,
+      shProblems: this.state.shareInc.problems,
+      refName,
+      refMedical: 'Nickel allergy — Avoid NiTi wires and stainless brackets. Mouth breathing recorded. No systemic disease and no regular medication.',
+      refPhotos: [0, 4, 7, 14, 15].map(i => ({ label: this.mediaDefs[i][1], img: this.img(this.mediaDefs[i][0], this.mediaDefs[i][1]) })),
+      shOcclusion: this.state.shareInc.occlusion,
+      refGroups: ['ap', 'vert', 'dent', 'soft'].map(gk => {
+        const t = this.tone(grpTone(gk));
+        return { en: this.groupNames[gk], line: grpLine(gk), fg: t.fg, rows: measureRows(gk).map(r => ({
+          en: r.en, value: r.value, norm: r.norm, sd: r.sd, finding: r.finding,
+          fg: r.valFg, findFg: r.findFg, fw: r.findFw
+        })) };
+      }),
+      refClinical: [
+        { en: 'Occlusion', rows: plainRows(this.occlusionRows) },
+        { en: 'Dentition', rows: plainRows(this.dentitionRows) },
+        { en: 'Growth & function', rows: plainRows(this.growthRows) },
+        { en: 'Medical constraints', rows: plainRows(this.constraintRows) }
+      ],
+      refMeasures: outOfRange.slice(0, 6).map(a => {
+        const t = this.tone(Math.abs(a.sd) >= 2 ? 2 : 1);
+        return {
+          en: a.en, value: a.value + (a.unit === 'deg' ? '°' : a.unit === 'pct' ? '%' : ''),
+          sd: (a.sd > 0 ? '+' : '') + a.sd.toFixed(1), fg: t.fg, bg: t.bg, bd: t.bd
+        };
+      }),
+      refProblems: PL.map(p => ({ text: p.text, coord: p.row + '/' + p.col, dot: this.tone(p.tone).dot })),
+      refOpinion: this.state.opinion,
+      onOpinion: e => this.setState({ opinion: e.target.value }),
+      qrCells: qr,
+
+      toastOpen: !!this.state.toast,
+      toastTitle: this.state.toast ? this.state.toast.title : '',
+      toastBody: this.state.toast ? this.state.toast.body : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,3 +1,6 @@
 # OrthoTrack demo
 
-Prototype with demo data only. Built from `phase-0-data` @ `b95fdd2`.
+Prototype with demo data only.
+
+- Latest: [open](./)
+- v0-original: [open](./versions/v0-original/)
