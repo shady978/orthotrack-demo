@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -30,7 +29,7 @@ button,input,select,textarea{font-family:inherit}
   <sc-if value="{{ showAside }}" hint-placeholder-val="{{ true }}">
   <aside style="width:68px;flex:none;position:sticky;top:0;height:100vh;align-self:flex-start;background:#ffffff;border-inline-end:1px solid #e8edf3;display:flex;flex-direction:column;padding:18px 12px;gap:5px;align-items:center">
     <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#2563eb;margin-bottom:14px"></div>
-    <a href="OrthoTrack%20Case%20Dashboard%20v2.dc.html" title="Case dashboard" style="display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;border-radius:12px;color:#64748b" style-hover="background:#f6f8fb;color:#0f172a">
+    <a role="button" tabindex="0" onClick="{{ onBreadcrumbDash }}" title="Case dashboard" style="display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;border-radius:12px;color:#64748b" style-hover="background:#f6f8fb;color:#0f172a">
       <svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg>
     </a>
     <a href="#" title="Patients" style="display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;border-radius:12px;color:#64748b" style-hover="background:#f6f8fb;color:#0f172a">
@@ -132,7 +131,7 @@ button,input,select,textarea{font-family:inherit}
                <span style="font-size:11.5px;font-weight:500;color:#94a3b8"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#475569">{{ mediaCount }}</span> files</span>
                <span style="display:inline-flex;padding:3px;gap:3px;background:#f1f5f9;border-radius:10px">
                   <sc-for list="{{ mediaModes }}" as="mm" hint-placeholder-count="2">
-                    <button type="button" onClick="{{ mm.onClick }}" style="min-height:28px;padding:0 11px;border-radius:8px;border:none;background:{{ mm.bg }};color:{{ mm.fg }};font-family:Inter,sans-serif;font-size:11px;font-weight:{{ mm.fw }};cursor:pointer;box-shadow:{{ mm.sh }};white-space:nowrap">{{ mm.label }}</button>
+                    <button type="button" onClick="{{ mm.onClick }}" aria-pressed="{{ mm.on }}" style="min-height:28px;padding:0 11px;border-radius:8px;border:none;background:{{ mm.bg }};color:{{ mm.fg }};font-family:Inter,sans-serif;font-size:11px;font-weight:{{ mm.fw }};cursor:pointer;box-shadow:{{ mm.sh }};white-space:nowrap">{{ mm.label }}</button>
                   </sc-for>
                 </span>
               </span>
@@ -360,7 +359,7 @@ button,input,select,textarea{font-family:inherit}
              <span style="width:16px;height:16px;border-radius:4px;background:#ffffff"></span>
             </div>
             <div style="display:grid;gap:2px;min-width:0;flex:1">
-             <span style="font-size:17px;font-weight:700;line-height:1.35">Al Zahrani Orthodontic Clinic</span>
+             <span style="font-size:17px;font-weight:700;line-height:1.35">Shady Orthodontic Clinic</span>
              <span style="font-size:12px;font-weight:400;color:#64748b">Cairo · Egypt — <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">+20 100 000 0000</span> · <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">clinic@alzahrani.example</span></span>
             </div>
             <div style="flex:none;display:grid;gap:3px;justify-items:end;text-align:end">
@@ -833,8 +832,8 @@ class Component extends DCLogic {
 
     return {
       showAside: !this.props.embedded,
-      onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); else window.location.href = encodeURI('OrthoTrack Case Dashboard v2 EN.dc.html'); },
-      onBreadcrumbRecords: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('records'); else window.location.href = encodeURI('OrthoTrack Records Collection v3 EN.dc.html'); },
+      onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); },
+      onBreadcrumbRecords: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('records'); },
       heroImg: this.tile(mAt(0), headerName) || this.placeholder(),
       headerName,
       headerId,
@@ -872,7 +871,6 @@ class Component extends DCLogic {
           onClick: () => {
             if (t[0] === 'records' || t[0] === 'overview') {
               if (this.props.onNavigate) this.props.onNavigate(t[0]);
-              else window.location.href = t[0] === 'records' ? 'OrthoTrack%20Records%20Collection%20v3.dc.html' : 'OrthoTrack%20Case%20Overview.dc.html';
               return;
             }
             this.setState({ tab: t[0] });
@@ -889,6 +887,7 @@ class Component extends DCLogic {
           fg: on ? '#0f172a' : '#64748b',
           fw: on ? 700 : 500,
           sh: on ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+          on: on,
           onClick: () => this.setState({ mediaMode: m[0] })
         };
       }),
@@ -968,7 +967,6 @@ class Component extends DCLogic {
       },
       onDiagnose: () => {
         if (this.props.onNavigate) this.props.onNavigate('diagnosis');
-        else window.location.href = encodeURI('OrthoTrack Diagnosis EN.dc.html');
       },
       onShare: () => this.setState({ share: true }),
       onBack: () => this.flash('Back to step', 'All steps complete — nothing is missing.'),

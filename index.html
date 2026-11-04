@@ -1129,7 +1129,8 @@
   };
 
   /* ---------- case stages: ONE list ----------
-     kind: path (in order) · end · side (growth watch, from consultation only) · exit (leaves the path)
+     kind: path (in order) · end · side (growth watch, from consultation only) · exit (leaves the path; exitFrom says from where.
+     paused and referred resume; no-treatment ends the case)
      tone: the design-system stage key (tokens.css --ot-stage-<tone>-*). Exits have no key of their own, so they use `exit`.
      gate: what must be true before a case enters the stage (HANDOVER section 3). null when there is none.
      sub: the short label of the old caseStages list. tint: colour name the Overview flow uses.
@@ -1285,31 +1286,43 @@
     active:    [['planApproved', 'Treatment plan not yet approved']],
     retention: [['debondDone', 'Debond not yet recorded']]
   };
+  /* A case registered mid-treatment (T10) skips every gate above, its own stage's included (DECISIONS_LOG, F11). */
 
-  /* default days between contacts, per phase. Adjustable from Settings. */
+  /* the stages each exit can be taken from (DECISIONS_LOG س٦ و س٧).
+     no-treatment: only before active starts. After active starts, a case can only be paused or referred.
+     paused and referred: from any running stage. Both resume to stageBeforePause (the same field) with a new date. */
+  var exitFrom = {
+    'no-treatment': ['consultation', 'growth-watch', 'records', 'diagnosis', 'plan'],
+    paused:         ['consultation', 'records', 'diagnosis', 'plan', 'active', 'retention', 'growth-watch'],
+    referred:       ['consultation', 'records', 'diagnosis', 'plan', 'active', 'retention', 'growth-watch']
+  };
+
+  /* default days between contacts, per phase. Adjustable from Settings.
+     growth-watch: 6 months by default (TUF s.2 l.65, DECISIONS_LOG F1). overdueBy() reads this entry. */
   var recallIntervals = {
     consultation: { days: 14, ar: 'Two weeks to book the records session' },
     records:      { days: 14, ar: 'Two weeks to complete records' },
     diagnosis:    { days: 10, ar: 'Ten days to approve the problem list' },
     plan:         { days: 10, ar: 'Ten days to approve the treatment plan' },
     active:       { days: 49, ar: '6–8 weeks between adjustment visits' },
-    retention:    { days: 182, ar: 'Six months between retention checks' }
+    retention:    { days: 182, ar: 'Six months between retention checks' },
+    'growth-watch': { days: 182, ar: 'Six months between growth reviews' }
   };
 
-  /* [key, en, note, default minutes, phase] */
+  /* [key, en, note, phase] */
   var visitTypes = [
-    ['consultation',  'Consultation',        'Initial exam and complaint',      40, 'consultation'],
-    ['records',       'Records session',     'photos · radiographs · scans',    30, 'records'],
-    ['bonding',       'Bonding / banding',   'Appliance placement',             60, 'active'],
-    ['wire',          'Arch wire change',    'Arch wire change',                20, 'active'],
-    ['adjustment',    'Adjustment',          'Routine visit',                   20, 'active'],
-    ['ipr',           'IPR',                 'Interproximal reduction',         25, 'active'],
-    ['elastics',      'Elastics check',      'Elastics and compliance review',  15, 'active'],
-    ['aligner',       'Aligner delivery',    'Aligner delivery or review',      20, 'active'],
-    ['progress',      'Progress records',    'Progress photos',                 20, 'active'],
-    ['debond',        'Debond',              'Appliance removal',               50, 'active'],
-    ['retainer',      'Retainer fit',        'Retainer fit or review',          25, 'retention'],
-    ['emergency',     'Emergency',           'Breakage or pain',                15, null]
+    ['consultation',  'Consultation',        'Initial exam and complaint', 'consultation'],
+    ['records',       'Records session',     'photos · radiographs · scans', 'records'],
+    ['bonding',       'Bonding / banding',   'Appliance placement', 'active'],
+    ['wire',          'Arch wire change',    'Arch wire change', 'active'],
+    ['adjustment',    'Adjustment',          'Routine visit', 'active'],
+    ['ipr',           'IPR',                 'Interproximal reduction', 'active'],
+    ['elastics',      'Elastics check',      'Elastics and compliance review', 'active'],
+    ['aligner',       'Aligner delivery',    'Aligner delivery or review', 'active'],
+    ['progress',      'Progress records',    'Progress photos', 'active'],
+    ['debond',        'Debond',              'Appliance removal', 'active'],
+    ['retainer',      'Retainer fit',        'Retainer fit or review', 'retention'],
+    ['emergency',     'Emergency',           'Breakage or pain', null]
   ];
 
   var archwires = [
@@ -1394,6 +1407,7 @@
   window.OrthoKnowledge = {
     caseStages: caseStages,
     stageGates: stageGates,
+    exitFrom: exitFrom,
     recallIntervals: recallIntervals,
     visitTypes: visitTypes,
     archwires: archwires,
@@ -1456,90 +1470,90 @@
   /* One record per case. last = the session that happened, next = the session to come;
      next.plan[0] IS the objective — it is never stored twice. */
   var seed = [
-    { id: '2026-0131', n: 'Sara Al-Qahtani', p: 12, meta: '12y · Female · Open bite', stage: 'consultation', mo: 0, f: [],
+    { id: '2026-0131', n: 'Sara Ahmed Hassan', p: 12, meta: '12y · Female · Open bite', stage: 'consultation', mo: 0, f: [],
       last: { d: 23, items: ['First consultation and esthetic complaint discussion'] },
-      next: { off: 0, t: '09:00', v: 'consultation', plan: ['Complete clinical exam', 'Upload photos and radiographs', 'Explain treatment options'] } },
-    { id: '2026-0155', n: 'Yousef Al-Zahrani', p: 1, meta: '9y · Male · Crossbite', stage: 'consultation', mo: 0, f: [],
+      next: { off: 0, v: 'consultation', plan: ['Complete clinical exam', 'Upload photos and radiographs', 'Explain treatment options'] } },
+    { id: '2026-0155', n: 'Youssef Karim Mansour', p: 1, meta: '9y · Male · Crossbite', stage: 'consultation', mo: 0, f: [],
       last: { d: 3, items: ['Initial exam — anterior crossbite on 21'] },
-      next: { off: 2, t: '10:00', v: 'records', plan: ['Intraoral and extraoral photos', 'OPG', 'Intraoral scan'] } },
-    { id: '2026-0156', n: 'Lama Al-Shehri', p: 3, meta: '15y · Female · Crowding', stage: 'consultation', mo: 0, f: [],
+      next: { off: 2, v: 'records', plan: ['Intraoral and extraoral photos', 'OPG', 'Intraoral scan'] } },
+    { id: '2026-0156', n: 'Malak Tarek Sadek', p: 3, meta: '15y · Female · Crowding', stage: 'consultation', mo: 0, f: [],
       last: { d: 1, items: ['First consultation — anterior crowding complaint'] },
-      next: { off: 5, t: '11:30', v: 'consultation', plan: ['Complete medical history', 'Preliminary space analysis', 'Discuss treatment options'] } },
-    { id: '2026-0154', n: 'Khaled bin Saeed', p: 5, meta: '31y · Male · Class III', stage: 'consultation', mo: 0, f: [],
+      next: { off: 5, v: 'consultation', plan: ['Complete medical history', 'Preliminary space analysis', 'Discuss treatment options'] } },
+    { id: '2026-0154', n: 'Khaled Hossam Zaki', p: 5, meta: '31y · Male · Class III', stage: 'consultation', mo: 0, f: [],
       last: { d: 19, items: ['First consultation — clear skeletal Class III', 'Discussed possible orthognathic surgery'] },
-      next: { off: -4, t: '09:30', v: 'records', plan: ['Lateral ceph', 'Full photo set', 'Maxillofacial referral'] } },
-    { id: '2026-0148', n: 'Ehab Mohammed Hosny', p: 4, meta: '14y · Male · Spacing', stage: 'records', mo: 0, f: [],
+      next: { off: -4, v: 'records', plan: ['Lateral ceph', 'Full photo set', 'Maxillofacial referral'] } },
+    { id: '2026-0148', n: 'Ehab Mohammed Hosny', p: 4, meta: '15y · Male · Spacing', stage: 'records', mo: 0, f: [],
       last: { d: 26, items: ['Intraoral and extraoral photos', 'Lateral ceph — some values not yet traced'] },
-      next: { off: -12, t: '13:00', v: 'records', plan: ['Trace U1-SN', 'Trace IMPA', 'Review tracing quality'] } },
-    { id: '2026-0150', n: 'Hind Al-Anazi', p: 6, meta: '13y · Female · Class II', stage: 'records', mo: 0, f: [],
+      next: { off: -12, v: 'records', plan: ['Trace U1-SN', 'Trace IMPA', 'Review tracing quality'] } },
+    { id: '2026-0150', n: 'Hana Samir Abdelaziz', p: 6, meta: '13y · Female · Class II', stage: 'records', mo: 0, f: [],
       last: { d: 5, items: ['Intraoral and extraoral photos'] },
-      next: { off: 0, t: '09:30', v: 'records', plan: ['Lateral ceph', 'OPG', 'Review photo quality before closing'] } },
-    { id: '2026-0149', n: 'Faisal Al-Mutairi', p: 7, meta: '16y · Male · Impacted canine', stage: 'records', mo: 0, f: [],
+      next: { off: 0, v: 'records', plan: ['Lateral ceph', 'OPG', 'Review photo quality before closing'] } },
+    { id: '2026-0149', n: 'Mostafa Ayman Gaber', p: 7, meta: '16y · Male · Impacted canine', stage: 'records', mo: 0, f: [],
       last: { d: 8, items: ['OPG showed impacted canine at 23'] },
-      next: { off: 1, t: '10:30', v: 'records', plan: ['CBCT to localise the impacted canine', 'Assess root resorption on 22', 'Follow-up photos'] } },
-    { id: '2026-0151', n: 'Jood Al-Ghamdi', p: 9, meta: '11y · Female · Deep bite', stage: 'records', mo: 0, f: [],
+      next: { off: 1, v: 'records', plan: ['CBCT to localise the impacted canine', 'Assess root resorption on 22', 'Follow-up photos'] } },
+    { id: '2026-0151', n: 'Jana Ashraf Nagy', p: 9, meta: '11y · Female · Deep bite', stage: 'records', mo: 0, f: [],
       last: { d: 6, items: ['Full photo set', 'Lateral ceph'] },
-      next: { off: 4, t: '12:00', v: 'records', plan: ['Intraoral scan of both arches', 'Bite registration'] } },
-    { id: '2026-0147', n: 'Majed Al-Dossari', p: 10, meta: '19y · Male · Crowding', stage: 'records', mo: 0, f: ['R'],
+      next: { off: 4, v: 'records', plan: ['Intraoral scan of both arches', 'Bite registration'] } },
+    { id: '2026-0147', n: 'Mahmoud Adel Ramadan', p: 10, meta: '19y · Male · Crowding', stage: 'records', mo: 0, f: ['R'],
       last: { d: 17, items: ['Photos and radiographs complete', 'Scan of both arches'] },
-      next: { off: -3, t: '11:00', v: 'records', plan: ['Review photo quality', 'Retake photos not aligned to Frankfort horizontal'] } },
-    { id: '2026-0142', n: 'Noura Al-Otaibi', p: 14, meta: '14y · Female · Class II', stage: 'diagnosis', mo: 0, f: ['R'],
+      next: { off: -3, v: 'records', plan: ['Review photo quality', 'Retake photos not aligned to Frankfort horizontal'] } },
+    { id: '2026-0142', n: 'Nour Hany Salem', p: 14, meta: '14y · Female · Class II', stage: 'diagnosis', mo: 0, f: ['R'],
       last: { d: 9, items: ['Cephalometric analysis review', 'ANB 7.4° · Wits 5.2mm'] },
-      next: { off: null, t: '', v: '', plan: ['Approve problem list', 'Prioritise by complaint', 'Write diagnostic statement'] } },
-    { id: '2026-0143', n: 'Abdulrahman Al-Harthi', p: 8, meta: '17y · Male · Class II div 2', stage: 'diagnosis', mo: 0, f: ['R'],
+      next: { off: null, v: '', plan: ['Approve problem list', 'Prioritise by complaint', 'Write diagnostic statement'] } },
+    { id: '2026-0143', n: 'Ali Sherif Kamel', p: 8, meta: '17y · Male · Class II div 2', stage: 'diagnosis', mo: 0, f: ['R'],
       last: { d: 4, items: ['Records completed', 'Tracing started'] },
-      next: { off: null, t: '', v: '', plan: ['Cephalometric analysis review', 'Assess incisor inclination', 'Approve problem list'] } },
-    { id: '2026-0144', n: 'Dana Al-Subaie', p: 11, meta: '12y · Female · Anterior crossbite', stage: 'diagnosis', mo: 0, f: ['R'],
+      next: { off: null, v: '', plan: ['Cephalometric analysis review', 'Assess incisor inclination', 'Approve problem list'] } },
+    { id: '2026-0144', n: 'Dana Tamer Shalaby', p: 11, meta: '12y · Female · Anterior crossbite', stage: 'diagnosis', mo: 0, f: ['R'],
       last: { d: 12, items: ['Records complete', 'CVM staging — CS3'] },
-      next: { off: null, t: '', v: '', plan: ['Approve problem list', 'Assess growth modification window'] } },
-    { id: '2026-0140', n: 'Turki Al-Rashid', p: 2, meta: '22y · Male · Class III', stage: 'diagnosis', mo: 0, f: ['R'],
+      next: { off: null, v: '', plan: ['Approve problem list', 'Assess growth modification window'] } },
+    { id: '2026-0140', n: 'Hazem Walid Eissa', p: 2, meta: '22y · Male · Class III', stage: 'diagnosis', mo: 0, f: ['R'],
       last: { d: 15, items: ['Ceph analysis — maxillary retrusion with mandibular protrusion', 'Growth complete'] },
-      next: { off: null, t: '', v: '', plan: ['Orthognathic surgery referral', 'Prepare decompensation plan', 'Discuss treatment timeline'] } },
-    { id: '2026-0126', n: 'Reem Al-Dossari', p: 13, meta: '16y · Female · Deep bite', stage: 'planning', mo: 0, f: ['R', 'P'],
+      next: { off: null, v: '', plan: ['Orthognathic surgery referral', 'Prepare decompensation plan', 'Discuss treatment timeline'] } },
+    { id: '2026-0126', n: 'Rawan Mahmoud Farouk', p: 13, meta: '16y · Female · Deep bite', stage: 'planning', mo: 0, f: ['R', 'P'],
       last: { d: 19, items: ['Problem list approved', 'Treatment objectives written'] },
-      next: { off: null, t: '', v: '', plan: ['Approve treatment plan v2', 'Decide bite opening mechanics', 'Review retention protocol'] } },
-    { id: '2026-0136', n: 'Badr Al-Qahtani', p: 7, meta: '15y · Male · Class II', stage: 'planning', mo: 0, f: ['R', 'P'],
+      next: { off: null, v: '', plan: ['Approve treatment plan v2', 'Decide bite opening mechanics', 'Review retention protocol'] } },
+    { id: '2026-0136', n: 'Adham Yasser Helmy', p: 7, meta: '15y · Male · Class II', stage: 'planning', mo: 0, f: ['R', 'P'],
       last: { d: 6, items: ['Problem list approved', 'Space analysis — 6mm crowding'] },
-      next: { off: null, t: '', v: '', plan: ['Extraction vs non-extraction decision', 'Assess anchorage requirement', 'Present plan to patient'] } },
-    { id: '2026-0137', n: 'Shahad Al-Malki', p: 3, meta: '14y · Female · Crowding', stage: 'planning', mo: 0, f: ['R', 'P', 'A'],
+      next: { off: null, v: '', plan: ['Extraction vs non-extraction decision', 'Assess anchorage requirement', 'Present plan to patient'] } },
+    { id: '2026-0137', n: 'Heba Essam Lotfy', p: 3, meta: '14y · Female · Crowding', stage: 'planning', mo: 0, f: ['R', 'P', 'A'],
       last: { d: 2, items: ['Treatment plan approved', 'Explained duration and cost'] },
-      next: { off: 3, t: '14:00', v: 'bonding', plan: ['Upper arch bonding', 'Place .014 NiTi'] } },
-    { id: '2026-0138', n: 'Mohammed Al-Harbi', p: 8, meta: '17y · Male · Crowding', stage: 'active', mo: 7, f: ['R', 'P', 'A'],
+      next: { off: 3, v: 'bonding', plan: ['Upper arch bonding', 'Place .014 NiTi'] } },
+    { id: '2026-0138', n: 'Mohamed Ezzat Metwally', p: 8, meta: '17y · Male · Crowding', stage: 'active', mo: 7, f: ['R', 'P', 'A'],
       last: { d: 44, u: '.017×.025 NiTi', l: '.017×.025 NiTi', items: ['Both arches to .017×.025 NiTi', 'Rebonded bracket 24 after debond', 'Oral hygiene instructions'] },
-      next: { off: 0, t: '10:00', v: 'wire', plan: ['Change arch wire to .019×.025 SS both arches', 'Check bracket 24', 'Assess rotation on 13'] } },
-    { id: '2026-0121', n: 'Lina Al-Buqami', p: 9, meta: '15y · Female · Class II', stage: 'active', mo: 11, f: ['R', 'P', 'A'],
+      next: { off: 0, v: 'wire', plan: ['Change arch wire to .019×.025 SS both arches', 'Check bracket 24', 'Assess rotation on 13'] } },
+    { id: '2026-0121', n: 'Yasmin Amr Atef', p: 9, meta: '15y · Female · Class II', stage: 'active', mo: 11, f: ['R', 'P', 'A'],
       last: { d: 51, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Started Class II elastics — 3/16" medium', 'Explained 20-hour wear protocol'] },
-      next: { off: 0, t: '10:30', v: 'elastics', plan: ['Assess elastics compliance', 'Measure overjet and compare with last session', 'Adjust prescription if needed'] } },
-    { id: '2026-0118', n: 'Salman Al-Omari', p: 10, meta: '16y · Male · Extraction case', stage: 'active', mo: 14, f: ['R', 'P', 'A'],
+      next: { off: 0, v: 'elastics', plan: ['Assess elastics compliance', 'Measure overjet and compare with last session', 'Adjust prescription if needed'] } },
+    { id: '2026-0118', n: 'Karim Hamdy Wahba', p: 10, meta: '16y · Male · Extraction case', stage: 'active', mo: 14, f: ['R', 'P', 'A'],
       last: { d: 46, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Started space closure with sliding mechanics', 'Activated NiTi coil spring'] },
-      next: { off: 0, t: '11:15', v: 'adjustment', plan: ['Measure remaining space', 'Reactivate mechanics', 'Check anchorage'] } },
-    { id: '2026-0129', n: 'Ghada Al-Shammari', p: 11, meta: '13y · Female · Aligners', stage: 'active', mo: 5, f: ['R', 'P', 'A'],
+      next: { off: 0, v: 'adjustment', plan: ['Measure remaining space', 'Reactivate mechanics', 'Check anchorage'] } },
+    { id: '2026-0129', n: 'Farida Sameh Negm', p: 11, meta: '13y · Female · Aligners', stage: 'active', mo: 5, f: ['R', 'P', 'A'],
       last: { d: 28, items: ['Delivered aligners 7–12', 'Attachments intact'] },
-      next: { off: 0, t: '12:00', v: 'aligner', plan: ['Review tracking on aligner 12', 'Deliver aligners 13–18', 'IPR if needed'] } },
-    { id: '2026-0115', n: 'Anas Al-Juhani', p: 1, meta: '18y · Male · Open bite', stage: 'active', mo: 17, f: ['R', 'P', 'A'],
+      next: { off: 0, v: 'aligner', plan: ['Review tracking on aligner 12', 'Deliver aligners 13–18', 'IPR if needed'] } },
+    { id: '2026-0115', n: 'Seif Khaled Radwan', p: 1, meta: '18y · Male · Open bite', stage: 'active', mo: 17, f: ['R', 'P', 'A'],
       last: { d: 58, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Anterior vertical elastics', 'Tongue habit follow-up'] },
-      next: { off: -9, t: '13:30', v: 'adjustment', plan: ['Assess open bite closure', 'Review elastics wear', 'Reschedule the missed visit'] } },
-    { id: '2026-0124', n: 'Rana Al-Khalidi', p: 2, meta: '14y · Female · Deep bite', stage: 'active', mo: 9, f: ['R', 'P', 'A'],
+      next: { off: -9, v: 'adjustment', plan: ['Assess open bite closure', 'Review elastics wear', 'Reschedule the missed visit'] } },
+    { id: '2026-0124', n: 'Menna Gamal Kassem', p: 2, meta: '14y · Female · Deep bite', stage: 'active', mo: 9, f: ['R', 'P', 'A'],
       last: { d: 40, u: '.019×.025 NiTi', l: '.019×.025 NiTi', items: ['Reverse curve of Spee lower arch', 'Assessed bite opening'] },
-      next: { off: 2, t: '09:00', v: 'ipr', plan: ['IPR 0.5mm between 13 and 23', 'Reassess overbite', 'Adjust arch form'] } },
-    { id: '2026-0112', n: 'Waleed Al-Fahad', p: 12, meta: '20y · Male · Crowding', stage: 'active', mo: 19, f: ['R', 'P', 'A'],
+      next: { off: 2, v: 'ipr', plan: ['IPR 0.5mm between 13 and 23', 'Reassess overbite', 'Adjust arch form'] } },
+    { id: '2026-0112', n: 'Omar Fathi Sabry', p: 12, meta: '20y · Male · Crowding', stage: 'active', mo: 19, f: ['R', 'P', 'A'],
       last: { d: 35, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Finishing bends upper arch', 'Midline check'] },
-      next: { off: 5, t: '10:00', v: 'progress', plan: ['Progress records at 6 months', 'Compare photos with baseline', 'Assess plan objectives reached'] } },
-    { id: '2026-0119', n: 'Mariam Al-Asiri', p: 13, meta: '16y · Female · Class II', stage: 'active', mo: 22, f: ['R', 'P', 'A'],
+      next: { off: 5, v: 'progress', plan: ['Progress records at 6 months', 'Compare photos with baseline', 'Assess plan objectives reached'] } },
+    { id: '2026-0119', n: 'Mariam Wael Abdel-Rahman', p: 13, meta: '16y · Female · Class II', stage: 'active', mo: 22, f: ['R', 'P', 'A'],
       last: { d: 47, u: '.019×.025 SS', l: '.019×.025 SS', items: ['Finishing bends', 'Settling elastics for two weeks'] },
-      next: { off: 0, t: '13:00', v: 'debond', plan: ['Full debond both arches', 'Clean residual composite', 'Scan for retainers'] } },
-    { id: '2026-0133', n: 'Yasser Al-Saedi', p: 4, meta: '15y · Male · Crossbite', stage: 'active', mo: 6, f: ['R', 'P', 'A'],
+      next: { off: 0, v: 'debond', plan: ['Full debond both arches', 'Clean residual composite', 'Scan for retainers'] } },
+    { id: '2026-0133', n: 'Ziad Mohamed Fawzy', p: 4, meta: '15y · Male · Crossbite', stage: 'active', mo: 6, f: ['R', 'P', 'A'],
       last: { d: 66, u: '.016 NiTi', l: '.016 NiTi', items: ['Posterior crossbite correction ongoing', 'Patient missed the last two visits'] },
-      next: { off: -16, t: '11:00', v: 'adjustment', plan: ['Contact patient and rebook', 'Check appliance after the gap', 'Assess impact of the gap on the plan'] } },
-    { id: '2025-0994', n: 'Abdullah Al-Shammari', p: 10, meta: '21y · Male · Class III', stage: 'retention', mo: 26, f: ['R', 'P', 'A', 'D'],
+      next: { off: -16, v: 'adjustment', plan: ['Contact patient and rebook', 'Check appliance after the gap', 'Assess impact of the gap on the plan'] } },
+    { id: '2025-0994', n: 'Hossam Ali Mekawy', p: 10, meta: '21y · Male · Class III', stage: 'retention', mo: 26, f: ['R', 'P', 'A', 'D'],
       last: { d: 172, items: ['Retention check — stable', 'Retainer cleaned'] },
-      next: { off: 0, t: '14:30', v: 'retainer', plan: ['Check stability', 'Check bonded retainer', 'Set next review date'] } },
-    { id: '2025-0981', n: 'Salma Al-Harbi', p: 6, meta: '19y · Female · Crowding', stage: 'retention', mo: 30, f: ['R', 'P', 'A', 'D'],
+      next: { off: 0, v: 'retainer', plan: ['Check stability', 'Check bonded retainer', 'Set next review date'] } },
+    { id: '2025-0981', n: 'Salma Ibrahim Gomaa', p: 6, meta: '19y · Female · Crowding', stage: 'retention', mo: 30, f: ['R', 'P', 'A', 'D'],
       last: { d: 120, items: ['Retention check — mild relapse on 31'] },
-      next: { off: 21, t: '09:30', v: 'retainer', plan: ['Assess relapse on 31', 'Check retainer fit', 'Discuss increasing wear hours'] } },
-    { id: '2025-0975', n: 'Nayef Al-Qarni', p: 5, meta: '23y · Male · Deep bite', stage: 'retention', mo: 33, f: ['R', 'P', 'A', 'D'],
+      next: { off: 21, v: 'retainer', plan: ['Assess relapse on 31', 'Check retainer fit', 'Discuss increasing wear hours'] } },
+    { id: '2025-0975', n: 'Tarek Nabil Sayed', p: 5, meta: '23y · Male · Deep bite', stage: 'retention', mo: 33, f: ['R', 'P', 'A', 'D'],
       last: { d: 205, items: ['Retention check', 'Patient reported a broken retainer'] },
-      next: { off: -20, t: '10:00', v: 'retainer', plan: ['Assess after the period without a retainer', 'Scan for a replacement retainer', 'Check current overbite'] } }
+      next: { off: -20, v: 'retainer', plan: ['Assess after the period without a retainer', 'Scan for a replacement retainer', 'Check current overbite'] } }
   ];
 
   /* records completeness per case whose workup is still open.
@@ -1737,9 +1751,9 @@
     var n = ch.sessions || 0;
     if (!n) return [];
     var missed = ch.missedAt || [];
-    var startD = ch.bonded ? new Date(ch.bonded + '-01') : new Date();
+    var startD = ch.bonded ? new Date(ch.bonded + '-01') : new Date(window.OT.DEMO_TODAY + 'T00:00:00');
     var lastGap = (c.seed.last && c.seed.last.d) || 0;
-    var endD = new Date(); endD.setDate(endD.getDate() - lastGap);
+    var endD = new Date(window.OT.DEMO_TODAY + 'T00:00:00'); endD.setDate(endD.getDate() - lastGap);
     var span = Math.max(1, endD - startD);
     var meas = ch.meas || {};
     var keys = Object.keys(meas).filter(function (k) {
@@ -1870,7 +1884,7 @@
         procs: procs,
         compliance: isMissed ? null : ((d.cmp || [])[0] || null),
         note: isMissed ? 'Patient did not attend — rebooked' : '',
-        by: isMissed ? '' : 'Dr. Mohammed Shady',
+        by: isMissed ? '' : 'Dr Mohamed Shady',
         deltas: deltas,
         _raw: raw
       };
@@ -2390,7 +2404,6 @@ button,input,select,textarea{font-family:inherit}
         <sc-if value="{{ isAuthLogin }}" hint-placeholder-val="{{ true }}">
           <div style="display:grid;gap:6px">
             <h1 style="margin:0;font-size:28px;font-weight:700;line-height:1.4">Sign in</h1>
-            <p style="margin:0;font-size:14px;font-weight:400;color:#64748b">A unified prototype bringing together every screen of <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">OrthoTrack</span> — <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">Dashboard</span>, new case, the <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:500">clinical records</span> and the case summary.</p>
           </div>
 
           <div style="display:flex;align-items:flex-start;gap:11px;padding:13px 15px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe">
@@ -2497,11 +2510,6 @@ button,input,select,textarea{font-family:inherit}
       </div>
       <div style="flex:1;min-width:0;padding:14px;display:grid;gap:10px">
        <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#0f172a">Dashboard</span>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px">
-          <div style="border:1px solid #e8edf3;border-radius:5px;padding:8px;display:grid;gap:2px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#0f172a">148</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:500;color:#64748b">Active</span></div>
-          <div style="border:1px solid #e8edf3;border-radius:5px;padding:8px;display:grid;gap:2px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#b45309">23</span><span style="font-size:10px;font-weight:400;color:#64748b">Needs action</span></div>
-          <div style="border:1px solid #e8edf3;border-radius:5px;padding:8px;display:grid;gap:2px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#7c3aed">63</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:500;color:#64748b">Retention</span></div>
-        </div>
       </div>
     </div>
   </div>
@@ -2518,7 +2526,7 @@ button,input,select,textarea{font-family:inherit}
     </div>
     <sc-if value="{{ isCaseNav }}" hint-placeholder-val="{{ false }}">
     <div style="display:grid;gap:5px">
-      <button type="button" sc-camel-on-click="{{ goDashboard }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 10px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;cursor:pointer;text-align:start;transition:transform .15s" style-hover="background:#f6f8fb;color:#0f172a;transform:translateX(-2px)">
+      <button type="button" sc-camel-on-click="{{ goAllCases }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 10px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;cursor:pointer;text-align:start;transition:transform .15s" style-hover="background:#f6f8fb;color:#0f172a;transform:translateX(-2px)">
        <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:16px;font-weight:500">›</span>
        <span style="font-size:13.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">All cases</span>
       </button>
@@ -2546,27 +2554,6 @@ button,input,select,textarea{font-family:inherit}
      <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" sc-camel-view-box="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
      <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13.5px;font-weight:{{ navDashFw }};letter-spacing:0.02em;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Dashboard</span>
     </button>
-    <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;background:transparent;color:#cbd5e1;cursor:not-allowed">
-     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" sc-camel-view-box="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.6" y="3.6" width="10.8" height="10.8" rx="2.4" transform="rotate(45 9 9)"></rect></svg></span>
-     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13.5px;font-weight:500;letter-spacing:0.02em;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Diagnosis queue</span>
-    </div>
-    </div>
-    <div style="padding:16px 10px 6px;opacity:{{ labelOp }};transition:opacity .2s">
-     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#cbd5e1;white-space:nowrap">Coming soon</span>
-    </div>
-    <div style="display:grid;gap:3px">
-      <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#cbd5e1;cursor:not-allowed">
-       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:13px;font-weight:600">◍</span>
-       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Patients</span>
-      </div>
-      <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#cbd5e1;cursor:not-allowed">
-       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:13px;font-weight:600">≡</span>
-       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Treatment plans</span>
-      </div>
-      <div title="Coming soon — not available in this demo" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#cbd5e1;cursor:not-allowed">
-       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:13px;font-weight:600">⚙</span>
-       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Settings</span>
-      </div>
     </div>
     </sc-if>
     <div style="flex:1"></div>
@@ -2593,7 +2580,7 @@ button,input,select,textarea{font-family:inherit}
   <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
     <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
-        <dc-import name="OrthoTrack Case Dashboard v2 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-lang="{{ onLang }}" open-id="{{ openDrawerId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+        <dc-import name="OrthoTrack Case Dashboard v2 EN" embedded="{{ true }}" on-navigate="{{ nav }}" open-id="{{ openDrawerId }}" start-tab="{{ dashTab }}" start-req="{{ dashReq }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
     <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
@@ -2660,7 +2647,7 @@ class Component extends DCLogic {
   state = {
     loggedIn: false, authScreen: 'login',
     id: '', pw: '', showPw: false, remember: true, err: null, touched: false,
-    screen: 'dashboard', collapsed: false, cases: [], activeCase: null,
+    screen: 'dashboard', dashTab: 'today', dashReq: 0, collapsed: false, cases: [], activeCase: null,
     caseTab: 'overview', stageKey: 'overview', openDrawerId: ''
   };
 
@@ -2691,16 +2678,6 @@ class Component extends DCLogic {
     } catch (e) { /* storage unavailable */ }
     /* cases come from window.OT.store (case-store.js); nothing to load here */
   }
-
-  switchLang = () => {
-    try {
-      const cases = window.localStorage.getItem('orthotrack.en.cases.v1');
-      const recents = window.localStorage.getItem('orthotrack.en.recents.v1');
-      if (cases) window.localStorage.setItem('orthotrack.cases.v1', cases);
-      if (recents) window.localStorage.setItem('orthotrack.recents.v1', recents);
-    } catch (e) { /* storage unavailable */ }
-    window.location.href = encodeURI('OrthoTrack Prototype.dc.html');
-  };
 
   /* Records and Diagnosis save a snapshot of their screen; it lives on the case until task 0.5 maps it */
   saveDraft(id, part) {
@@ -2800,6 +2777,8 @@ class Component extends DCLogic {
       isCaseFile: sc === 'casefile',
       caseTab: this.state.caseTab,
       openDrawerId: this.state.openDrawerId,
+      dashTab: this.state.dashTab,
+      dashReq: this.state.dashReq,
       isDiagnosis: sc === 'diagnosis',
       onDiagnosisChange: snap => {
         const a = this.state.activeCase;
@@ -2864,7 +2843,8 @@ class Component extends DCLogic {
       labelOp: this.state.collapsed ? 0 : 1,
       sideIcon: this.state.collapsed ? '›' : '‹',
       toggleSide: () => this.setState(s => ({ collapsed: !s.collapsed })),
-      goDashboard: () => this.setState({ screen: 'dashboard' }),
+      goDashboard: () => this.setState(s => ({ screen: 'dashboard', dashTab: 'today', dashReq: s.dashReq + 1 })),
+      goAllCases: () => this.setState(s => ({ screen: 'dashboard', dashTab: 'all', dashReq: s.dashReq + 1 })),
       navDashBg: dash ? '#eff6ff' : 'transparent',
       navDashFg: dash ? '#1d4ed8' : '#64748b',
       navDashFw: dash ? 700 : 500,
@@ -2892,7 +2872,6 @@ class Component extends DCLogic {
         patch.openDrawerId = '';
         return patch;
       }),
-      onLang: this.switchLang,
       /* the only case prop the screens get: the id. Name, photos and drafts are read from the store */
       overrideId: ac ? ac.id : '',
       /* the Create screen's save: the new case is the current one, and it is returned to the screen */

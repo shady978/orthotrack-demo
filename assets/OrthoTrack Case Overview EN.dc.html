@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -355,7 +354,7 @@ class Component extends DCLogic {
       consultation: ['Start records collection', 'The case is registered with no records — upload photos and radiographs to begin the measurements.', 'Start records collection', 'records'],
       records: ['Complete the clinical records', 'Cephalometric measurements are the basis of the problem list — the case cannot move to diagnosis before they are complete.', 'Complete the records', 'records'],
       diagnosis: ['Approve the problem list', 'The problems are derived from the measurements — review and approve them to begin setting objectives.', 'Open case summary', 'summary'],
-      plan: ['Build the treatment plan', 'Objectives approved — the planning screen is under construction.', 'Open case summary', 'summary'],
+      plan: ['Build the treatment plan', 'Objectives approved — the treatment plan comes next.', 'Open case summary', 'summary'],
       active: ['Follow up visits', 'Treatment is active — follow the visits and progress measurements.', 'Open case summary', 'summary'],
       retention: ['Retention follow-up', 'Follow the retainer and review appointments.', 'Open case summary', 'summary'],
       completed: ['Case complete', 'No action required — the record is archived and read-only.', 'Open case summary', 'summary']
@@ -404,7 +403,7 @@ class Component extends DCLogic {
       ['Records', 'Clinical records', 'Photos, radiographs and measurements', 'records', '#eff6ff', '#2563eb'],
       ['Summary', 'Case summary', 'The summary and the problem list', 'summary', '#ecfdf5', '#059669'],
       ['Diagnosis', 'Diagnosis', 'Problem list and dimensions', 'diagnosis', '#f5f3ff', '#7c3aed'],
-      ['Plan', 'Treatment plan', 'under construction', null, '#fffbeb', '#d97706']
+      ['Plan', 'Treatment plan', 'Objectives and plan', 'plan', '#fffbeb', '#d97706']
     ];
 
     return {
@@ -482,7 +481,7 @@ class Component extends DCLogic {
       showStageTabs: showStageTabs,
       tabs: tabDefs.map(t => ({
         label: t[0],
-        title: t[1] || (t[2] ? '' : 'under construction'),
+        title: t[1] || '',
         bd: t[2] ? '#2563eb' : 'transparent',
         fg: t[2] ? '#2563eb' : t[1] ? '#64748b' : '#cbd5e1',
         fw: t[2] ? 700 : 500,
@@ -496,7 +495,7 @@ class Component extends DCLogic {
         enFg: l[3] ? '#0f172a' : '#94a3b8',
         arFg: l[3] ? '#0f172a' : '#94a3b8',
         cursor: l[3] ? 'pointer' : 'default',
-        title: l[3] ? '' : 'under construction',
+        title: '',
         onClick: () => { if (l[3]) this.nav(l[3]); }
       }))
     };

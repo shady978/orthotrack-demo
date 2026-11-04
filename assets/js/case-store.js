@@ -12,6 +12,7 @@
    Helpers for the screens (task 0.5a), on window.OT:
      OT.current()        the open case (a copy), or null. Never a fallback to another case.
      OT.fmtDate(iso)     '4 Nov 2026' from '2026-11-04'; null or invalid gives ''
+     OT.fmtMonth(ym)     'Jul 2025' from '2025-07'; null or invalid gives ''
      OT.fmtRel(iso)      'today', '23 days ago', 'in 7 days' relative to OT.DEMO_TODAY; null or invalid gives ''
      OT.age(dob)         whole years at OT.DEMO_TODAY; null when dob is missing
      OT.empty(value)     the value when it is there, else OT.EMPTY ('Not recorded yet'). OT.empty() gives OT.EMPTY.
@@ -43,7 +44,7 @@
 
   var CASES_KEY = 'orthotrack.en.cases.v2';
   var CURRENT_KEY = 'orthotrack.en.current.v1';
-  var SEED_VERSION = 4;            // 2: Ehab's clinical data moved into his case, Dana's readings removed (task 0.4)
+  var SEED_VERSION = 5;            // 2: Ehab's clinical data moved into his case, Dana's readings removed (task 0.4). 5: Egyptian names, no visit times (tasks 0.6, 0.7)
   //                                  3: Ehab's guardian, city, file number, occlusion/growth/dentition rows and media (task 0.5a)
   //                                  4: Ehab's media has no radiographs (ceph.png, opg.png are not in assets/; 404s) (task 0.5 WP-D)
   var DEMO_TODAY = '2026-11-04';   // fixed demo day for seed dates
@@ -70,7 +71,6 @@
   function isoOfUTC(ms) { var d = new Date(ms); return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); }
   function addDays(iso, n) { return isoOfUTC(utcOf(iso) + n * DAY); }
   function daysBetween(from, to) { return Math.round((utcOf(to) - utcOf(from)) / DAY); }
-  function liveToday() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function ageAt(dob, today) {
     var y = +today.slice(0, 4) - +dob.slice(0, 4);
     if (today.slice(5) < dob.slice(5)) y--;
@@ -415,7 +415,6 @@
       last: { d: first ? daysBetween(first.date, today) : 0, items: first ? first.tasks.slice() : [] },
       next: {
         off: c.nextVisit ? daysBetween(today, c.nextVisit) : null,
-        t: '',
         v: c.nextKind || '',
         plan: c.nextTasks.slice(),
       },
@@ -472,7 +471,7 @@
     var i = indexOf(id);
     if (i < 0) return null;
     var c = cache[i];
-    var today = liveToday();
+    var today = DEMO_TODAY;
     return {
       seed: toSeedRow(c, today),
       id: c.id,
@@ -487,7 +486,7 @@
   }
 
   function forEachCase(fn) {
-    var today = liveToday();
+    var today = DEMO_TODAY;
     all().forEach(function (c) { fn(c, today); });
   }
 
@@ -547,6 +546,11 @@
     if (!realISO(iso)) return '';
     var p = iso.split('-');
     return (+p[2]) + ' ' + MONTHS[+p[1] - 1] + ' ' + p[0];
+  };
+  // 'Jul 2025' from '2025-07' (a month, for bonding and estimated end). null or invalid gives ''
+  window.OT.fmtMonth = function (ym) {
+    if (!/^\d{4}-\d{2}$/.test(ym || '') || +ym.slice(5) < 1 || +ym.slice(5) > 12) return '';
+    return MONTHS[+ym.slice(5) - 1] + ' ' + ym.slice(0, 4);
   };
   window.OT.fmtRel = function (iso) {
     if (!realISO(iso)) return '';

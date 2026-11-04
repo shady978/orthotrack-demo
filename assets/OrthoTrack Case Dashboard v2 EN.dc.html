@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -38,15 +37,6 @@ button,input,select,textarea{font-family:inherit}
       <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
       <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13.5px;font-weight:700;letter-spacing:0.02em;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Dashboard</span>
     </div>
-    <div style="padding:16px 10px 6px;opacity:{{ labelOp }};transition:opacity .2s">
-      <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#94a3b8;white-space:nowrap">Coming soon</span>
-    </div>
-    <sc-for list="{{ soonLinks }}" as="l" hint-placeholder-count="4">
-      <div title="Coming soon — not available in this preview" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#94a3b8;cursor:not-allowed">
-        <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Outfit,sans-serif;font-size:13px;font-weight:600">{{ l.mark }}</span>
-        <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">{{ l.en }}</span>
-      </div>
-    </sc-for>
     <div style="flex:1"></div>
     <button type="button" onClick="{{ toggleSide }}" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;border:none;background:transparent;color:#64748b;cursor:pointer;text-align:start" style-hover="background:#f6f8fb;color:#0f172a">
       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Outfit,sans-serif;font-size:17px;font-weight:500">{{ sideIcon }}</span>
@@ -55,7 +45,7 @@ button,input,select,textarea{font-family:inherit}
     <div style="display:flex;align-items:center;gap:11px;padding:12px 8px 2px;border-top:1px solid #e8edf3;margin-top:5px">
       <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">MS</div>
       <div style="display:grid;gap:0;min-width:0;opacity:{{ labelOp }};transition:opacity .2s">
-        <span style="font-size:13.5px;font-weight:500;white-space:nowrap">Dr. Mohammed Shady</span>
+        <span style="font-size:13.5px;font-weight:500;white-space:nowrap">Dr Mohamed Shady</span>
         <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:500;color:#94a3b8;white-space:nowrap">Orthodontist</span>
       </div>
     </div>
@@ -76,10 +66,6 @@ button,input,select,textarea{font-family:inherit}
         <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#b45309">Demo data</span>
       </span>
       <div style="margin-inline-start:auto;display:flex;align-items:center;gap:10px">
-        <div style="display:inline-flex;padding:4px;gap:3px;background:#f6f8fb;border-radius:12px">
-          <span style="min-height:34px;padding:0 13px;display:inline-flex;align-items:center;border-radius:9px;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;box-shadow:0 1px 2px rgba(15,23,42,0.09)">EN</span>
-          <button type="button" onClick="{{ onLang }}" title="Switch to the Arabic version" style="min-height:34px;padding:0 13px;display:inline-flex;align-items:center;border-radius:9px;border:none;background:transparent;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#64748b;cursor:pointer" style-hover="background:#ffffff;color:#0f172a">AR</button>
-        </div>
         <button type="button" onClick="{{ onNewCase }}" style="min-height:46px;padding:0 20px;border-radius:12px;background:#2563eb;color:#ffffff;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .15s" style-hover="background:#1d4ed8;transform:translateY(-1px)">
           <span style="font-family:Outfit,sans-serif;font-size:17px;font-weight:500">+</span>New case
         </button>
@@ -157,10 +143,6 @@ button,input,select,textarea{font-family:inherit}
         </div>
         <sc-for list="{{ visits }}" as="v" hint-placeholder-count="6">
           <div onClick="{{ v.onRow }}" onKeyDown="{{ v.onKey }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid #f8fafc;background:{{ v.rowBg }};opacity:{{ v.op }};cursor:pointer" style-hover="background:#f6f8fb">
-            <div style="width:64px;flex:none;display:grid;gap:2px">
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:15px;font-weight:600;color:{{ v.timeFg }};font-variant-numeric:tabular-nums">{{ v.time }}</span>
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:500;color:#94a3b8">{{ v.dur }}</span>
-            </div>
             <span style="width:3px;flex:none;align-self:stretch;border-radius:999px;background:{{ v.bar }}"></span>
             <img data-src="{{ v.photo }}" data-fb="{{ v.fallback }}" alt="{{ v.name }}" style="width:38px;height:38px;flex:none;border-radius:50%;object-fit:cover;object-position:center 22%;background:#f1f5f9">
             <div style="flex:1;min-width:0;display:grid;gap:1px">
@@ -471,6 +453,9 @@ button,input,select,textarea{font-family:inherit}
                       <sc-if value="{{ m.notEditing }}" hint-placeholder-val="{{ true }}">
                         <button type="button" onClick="{{ m.onEdit }}" style="min-height:30px;padding:0 8px;border-radius:8px;border:1px solid {{ m.curBd }};background:{{ m.curBg }};color:{{ m.curFg }};font-family:Outfit,sans-serif;font-size:12.5px;font-weight:{{ m.curFw }};cursor:pointer;text-align:center" style-hover="border-color:#2563eb">{{ m.cur }}</button>
                       </sc-if>
+                        <sc-if value="{{ m.readOnly }}" hint-placeholder-val="{{ false }}">
+                          <span style="min-height:30px;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:{{ m.curFw }};color:{{ m.curFg }}">{{ m.cur }}</span>
+                        </sc-if>
                       <span style="font-size:11.5px;font-weight:500;color:#94a3b8;text-align:right">{{ m.goal }}</span>
                     </div>
                   </sc-for>
@@ -619,18 +604,11 @@ button,input,select,textarea{font-family:inherit}
               </div>
             </div>
 
-            <sc-if value="{{ dShowReview }}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{ toggleReview }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:11px;border:1px solid {{ dReviewBd }};background:{{ dReviewBg }};color:{{ dReviewFg }};cursor:pointer;text-align:start">
-              <span style="width:18px;height:18px;flex:none;border-radius:6px;border:1.5px solid {{ dReviewBd }};background:{{ dReviewBg }};display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700">{{ dReviewMark }}</span>
-              <span style="flex:1;font-size:13.5px;font-weight:600">Flag for end-of-day review</span>
-              <span style="font-size:11.5px;font-weight:300;opacity:.75">Appears in the evening review list</span>
-            </button>
-            </sc-if>
 
             <div style="display:grid;gap:8px">
               <div style="display:flex;gap:5px;flex-wrap:wrap">
                 <sc-for list="{{ dNoteTabs }}" as="t" hint-placeholder-count="3">
-                  <button type="button" onClick="{{ t.onClick }}" style="min-height:32px;padding:0 12px;border-radius:9px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px">{{ t.label }}<sc-if value="{{ t.dot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:#2563eb"></span></sc-if></button>
+                  <button type="button" onClick="{{ t.onClick }}" aria-selected="{{ t.on }}" style="min-height:32px;padding:0 12px;border-radius:9px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px">{{ t.label }}<sc-if value="{{ t.dot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:#2563eb"></span></sc-if></button>
                 </sc-for>
               </div>
               <textarea value="{{ dNoteValue }}" onChange="{{ onNote }}" placeholder="{{ dNotePlaceholder }}" rows="2" style="width:100%;min-height:56px;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#f6f8fb;font-size:13px;font-weight:500;color:#0f172a;resize:vertical;outline:none;line-height:1.6" style-focus="border-color:#2563eb;background:#ffffff"></textarea>
@@ -642,9 +620,6 @@ button,input,select,textarea{font-family:inherit}
 
       <div style="flex:none;padding:14px 20px;background:#ffffff;border-top:1px solid #e8edf3;display:flex;gap:10px;flex-wrap:wrap">
         <button type="button" onClick="{{ dPrimaryAct }}" style="flex:1;min-height:48px;padding:0 18px;border-radius:12px;border:1px solid {{ dPrimaryBd }};background:{{ dPrimaryBg }};color:{{ dPrimaryFg }};font-size:14.5px;font-weight:700;cursor:pointer">{{ dPrimary }}</button>
-        <sc-if value="{{ dShowFull }}" hint-placeholder-val="{{ false }}">
-          <button type="button" onClick="{{ dOpenFull }}" title="For complex visits — bonding, debond, records" style="flex:none;min-height:48px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb">Full session</button>
-        </sc-if>
         <sc-if value="{{ dShowNext }}" hint-placeholder-val="{{ false }}">
           <button type="button" onClick="{{ dOpenCase }}" style="flex:none;min-height:48px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb">Case file</button>
         </sc-if>
@@ -686,7 +661,8 @@ button,input,select,textarea{font-family:inherit}
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
   &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: any) =&gt; void&quot;},
-  &quot;onLang&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;() =&gt; void&quot;},
+  &quot;startTab&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;startReq&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;number&quot;},
   &quot;openId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;}
 }">
 class Component extends DCLogic {
@@ -695,11 +671,6 @@ class Component extends DCLogic {
             sess: {}, lastOpen: false, addOpen: false, addText: '', freeText: '', noteTab: 'clinical',
             collapsed: false, narrow: false, sumOpen: true, measEdit: null, measDraft: '', gallery: null,
             snoozed: [] };
-
-  soonLinks = [
-    { mark: '◍', en: 'Patients' }, { mark: '≡', en: 'Treatment plans' },
-    { mark: '◷', en: 'Schedule' }, { mark: '⚙', en: 'Settings' }
-  ];
 
   /* gate flag codes → knowledge keys. Unknown codes are reported, not swallowed. */
   flagMap = { R: 'recordsComplete', P: 'problemListApproved', A: 'planApproved', D: 'debondDone' };
@@ -816,7 +787,7 @@ class Component extends DCLogic {
 
   visitDef(key) {
     const f = (this.K().visitTypes || []).filter(v => v[0] === key)[0];
-    return f ? { en: f[1], ar: f[2], mins: f[3] } : { en: '—', ar: '', mins: 20 };
+    return f ? { en: f[1], ar: f[2] } : { en: '—', ar: '' };
   }
 
   stageInfo(key) {
@@ -858,14 +829,13 @@ class Component extends DCLogic {
       const bk = (this.state.sess[o.id] || {}).booked;
       if (bk !== null && bk !== undefined) {
         const bp = (this.state.sess[o.id] || {}).procs;
-        o.next = Object.assign({}, o.next || {}, { off: bk, t: o.next && o.next.t ? o.next.t : '10:00', v: o.next && o.next.v ? o.next.v : 'progress' });
+        o.next = Object.assign({}, o.next || {}, { off: bk, v: o.next && o.next.v ? o.next.v : 'progress' });
         if (bp && bp.length) o.next.plan = bp;
       }
       const l = this.lateness(o);
       o.late = l.days; o.lateKind = l.kind;
       o.objective = (o.next && o.next.plan && o.next.plan[0]) || '—';
       o.offset = o.next ? o.next.off : null;
-      o.time = o.next ? o.next.t : '';
       o.visitType = o.next ? o.next.v : '';
       const d = this.detail[o.id] || {};
       o.cc = d.cc || '';
@@ -893,17 +863,8 @@ class Component extends DCLogic {
     /* the case being opened is the store's current case: the other screens read it from there */
     if (window.OT.store) window.OT.store.setCurrent(o.id);
     const info = { name: o.name, id: o.id, meta: o.meta, photo: o.photo, stage: this.stageInfo(o.stage).en };
-    /* a complex visit has no dedicated screen yet — the case file's log is the closest thing */
-    if (screen === 'session') { info.notice = 'The full Session screen is coming soon — this is the case file'; info.tab = 'log'; }
-    if (this.props.onNavigate) { this.props.onNavigate(screen === 'overview' ? 'casefile' : screen, info); return; }
-    if (screen === 'records') {
-      window.location.href = encodeURI('OrthoTrack Records Collection v3 EN.dc.html');
-      return;
-    }
-    /* standalone: hand the case over to the Overview screen through the hash */
-    const q = 'name=' + encodeURIComponent(o.name) + '&id=' + encodeURIComponent(o.id) + '&meta=' + encodeURIComponent(o.meta || '')
-      + '&stage=' + encodeURIComponent(info.stage || '') + '&photo=' + encodeURIComponent(o.photo || '');
-    window.location.href = encodeURI('OrthoTrack Case File EN.dc.html') + '#' + q;
+    if (screen === 'session') info.tab = 'log';   // the session screen is not built yet (hidden, PHASE_0.md)
+    if (this.props.onNavigate) this.props.onNavigate(screen === 'overview' ? 'casefile' : screen, info);
   }
 
   componentDidMount() {
@@ -947,11 +908,14 @@ class Component extends DCLogic {
     /* returning from the case file with #open=<id> reopens that session drawer */
     const back = (window.location.hash || '').match(/open=([^&]+)/);
     const want = this.props.openId || (back ? decodeURIComponent(back[1]) : null);
-    this.setState({ tab: want ? 'all' : (new Date().getHours() < 14 ? 'today' : 'all'), openId: want });
+    this.setState({ tab: want ? 'all' : (this.props.startTab || 'today'), openId: want });
   }
   componentDidUpdate(prev) {
     /* the host can ask for a specific drawer (e.g. Start session from the case file) */
     if (this.props.openId && this.props.openId !== prev.openId) this.setState({ openId: this.props.openId });
+    /* the sidebar asks for the All cases tab or for Today; the same mounted dashboard switches. The shell counts the
+       requests (startReq): its startTab alone does not change when the tab was switched here (the tab buttons). */
+    if (this.props.startReq !== prev.startReq && this.props.startTab) this.setState({ tab: this.props.startTab });
   }
 
   componentWillUnmount() {
@@ -1141,11 +1105,11 @@ class Component extends DCLogic {
       ticks[norm(text)] = true;
       return { extra: extra, logKeys: keys, ticks: ticks };
     };
-    const mm = ch.bonded ? ch.bonded.slice(5) + '/' + ch.bonded.slice(0, 4) : '';
+    const mm = window.OT.fmtMonth(ch.bonded);
     let estEnd = '';
     if (ch.bonded && o.est) {
       const d = new Date(ch.bonded + '-01'); d.setMonth(d.getMonth() + o.est);
-      estEnd = (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '/' + d.getFullYear();
+      estEnd = window.OT.fmtMonth(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'));
     }
     const nS = ch.sessions || 0;
     const missedAt = ch.missedAt || [];
@@ -1226,7 +1190,7 @@ class Component extends DCLogic {
           cur: cur ? cur + unit : (live ? 'Record' : '—'),
           curFg: cur ? '#0f172a' : '#2563eb', curFw: cur ? 700 : 500,
           curBg: live ? '#ffffff' : 'transparent', curBd: live ? '#e2e8f0' : 'transparent',
-          editing: editing, notEditing: !editing, draft: this.state.measDraft,
+          editing: editing, notEditing: !editing && live, readOnly: !live, draft: this.state.measDraft,
           onEdit: () => { if (live) this.setState({ measEdit: k, measDraft: cur || '' }); },
           onDraft: ev => this.setState({ measDraft: ev.target.value }),
           onKey: ev => { if (ev.key === 'Enter') commit(); if (ev.key === 'Escape') this.setState({ measEdit: null, measDraft: '' }); },
@@ -1267,7 +1231,7 @@ class Component extends DCLogic {
       dTodayHead: !isToday ? (o.offset === null ? 'Next session' : o.offset < 0 ? 'Missed session' : 'Next session')
                  : S.closed ? 'Session closed' : 'Today\u2019s session',
       dTodayWhen: !isToday ? (o.offset === null ? 'Not booked yet — the items below are what is needed' : o.offset < 0 ? 'Appointment missed — needs rebooking' : this.shortDate(o.offset) + ' · ' + vd.en)
-                 : [o.time, vd.en, vd.mins + ' min'].filter(Boolean).join(' · '),
+                 : vd.en,
       dPlanCount: isToday ? doneN + ' / ' + plan.length : plan.length + ' items',
       dReadOnly: !live,
       dReadOnlyNote: !isToday
@@ -1324,7 +1288,7 @@ class Component extends DCLogic {
       dNoteTabs: noteTabs.map(t => {
         const on = this.state.noteTab === t[0];
         const filled = !!(notes[t[0]] || '').trim();
-        return { label: t[1], dot: filled, bg: on ? '#0f172a' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#0f172a' : '#e2e8f0',
+        return { label: t[1], dot: filled, on: on, bg: on ? '#0f172a' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#0f172a' : '#e2e8f0',
                  onClick: () => this.setState({ noteTab: t[0] }) };
       }),
       dNoteValue: notes[this.state.noteTab] || '',
@@ -1371,9 +1335,6 @@ class Component extends DCLogic {
   renderVals() {
     const rows = this.build();
     const tab = this.state.tab || 'today';
-    const now = new Date();
-    const hour = now.getHours();
-    const nowMin = hour * 60 + now.getMinutes();
     const q = this.state.query.trim().toLowerCase();
     const match = o => !q || [o.name, o.id, o.meta].join(' ').toLowerCase().indexOf(q) >= 0;
 
@@ -1442,7 +1403,7 @@ class Component extends DCLogic {
     const inScope = rows
       .filter(o => o.offset !== null && o.offset >= scopeRange[0] && o.offset <= scopeRange[1])
       .filter(match)
-      .sort((a, b) => (a.offset - b.offset) || (a.time < b.time ? -1 : 1));
+      .sort((a, b) => a.offset - b.offset);
     const vf = this.state.visitFilter, sf = this.state.stageFilter;
     const visitRows = inScope.filter(o => {
       if (vf && o.visitType !== vf) return false;
@@ -1479,20 +1440,15 @@ class Component extends DCLogic {
 
     return {
       showAside: !this.props.embedded,
-      soonLinks: this.soonLinks,
       sideW: this.state.collapsed ? '76px' : '244px',
       labelOp: this.state.collapsed ? 0 : 1,
       sideIcon: this.state.collapsed ? '›' : '‹',
       toggleSide: () => this.setState(st => ({ collapsed: !st.collapsed })),
       onNewCase: () => { if (this.props.onNavigate) this.props.onNavigate('newcase'); },
-      onLang: () => {
-        if (this.props.onLang) { this.props.onLang(); return; }
-        window.location.href = encodeURI('OrthoTrack Case Dashboard v2.dc.html');
-      },
       query: this.state.query,
       onQuery: ev => this.setState({ query: ev.target.value }),
 
-      greeting: (hour < 12 ? 'Good morning' : 'Good afternoon') + ', Dr. Mohammed',
+      greeting: 'Welcome, Dr Mohamed Shady',
       subline: remaining
         ? remaining + ' visits left today, and ' + overdue.length + ' cases are overdue.'
         : 'Today\'s schedule is done — ' + overdue.length + ' overdue cases are waiting on you.',
@@ -1532,12 +1488,11 @@ class Component extends DCLogic {
         const tn = this.tones[this.visitTone[o.visitType] || 'slate'];
         const done = isDone(o);
         return {
-          time: o.time, dur: vd.mins + ' min', name: o.name, id: o.id,
+          name: o.name, id: o.id,
           photo: o.photo, fallback: o.fallback,
           type: vd.en, typeBg: tn[0], typeFg: tn[1], bar: tn[2],
           objective: o.objective, done: done, pending: !done,
           rowBg: done ? '#fbfcfe' : '#ffffff', op: done ? 0.62 : 1,
-          timeFg: done ? '#94a3b8' : '#2563eb',
           onRow: () => this.setState({ openId: o.id }),
           onKey: ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); this.setState({ openId: o.id }); } },
           onOpen: ev => { ev.stopPropagation(); this.setState({ openId: o.id }); }

@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -821,9 +820,9 @@ class Component extends DCLogic {
 
     return {
       showAside: !this.props.embedded,
-      onBreadcrumb: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); else window.location.href = 'OrthoTrack Case Dashboard v2.dc.html'; },
+      onBreadcrumb: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); },
       /* the shell already has the saved case open (onCaseCreated), so the overview just opens on it */
-      onOpenRecords: () => { if (this.props.onNavigate) this.props.onNavigate('overview'); else window.location.href = 'OrthoTrack Records Collection v3.dc.html'; },
+      onOpenRecords: () => { if (this.props.onNavigate) this.props.onNavigate('overview'); },
       sideW: this.state.collapsed ? '76px' : '244px',
       labelOp: this.state.collapsed ? 0 : 1,
       sideIcon: this.state.collapsed ? '›' : '‹',

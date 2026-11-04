@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -30,7 +29,7 @@ button,input,select,textarea{font-family:inherit}
   <header style="background:#ffffff;border-bottom:1px solid #e8edf3;padding:16px 28px 0;display:grid;gap:14px">
     <sc-if value="{{ showCrumbs }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#94a3b8">
-        <a href="{{ backHref }}" onClick="{{ onBack }}" style="color:#64748b">Dashboard</a>
+        <a href="#" onClick="{{ onBack }}" style="color:#64748b">Dashboard</a>
         <span>›</span>
         <span style="color:#0f172a;font-weight:600">Case file</span>
       </div>
@@ -95,7 +94,7 @@ button,input,select,textarea{font-family:inherit}
       <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:44px 26px;display:grid;gap:10px;justify-items:center;text-align:center;max-width:520px">
         <span style="font-size:16px;font-weight:700">No case open</span>
         <span style="font-size:13.5px;font-weight:300;color:#64748b;line-height:1.6">Pick a patient on the dashboard — the arrow at the end of each row opens their full case file.</span>
-        <a href="{{ backHref }}" style="margin-top:6px;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;border-radius:12px;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;text-decoration:none">Go to the dashboard</a>
+        <a href="#" onClick="{{ onBack }}" style="margin-top:6px;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;border-radius:12px;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;text-decoration:none">Go to the dashboard</a>
       </div>
     </sc-if>
 
@@ -266,7 +265,7 @@ button,input,select,textarea{font-family:inherit}
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:14px;border-top:1px solid #f1f5f9">
               <button type="button" onClick="{{ proposeChange }}" style="min-height:42px;padding:0 16px;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;color:#1d4ed8;font-size:13px;font-weight:700;cursor:pointer" style-hover="background:#eff6ff">Propose a change</button>
-              <a href="{{ historyHref }}" style="font-size:13px;font-weight:600">Version history</a>
+              <a href="#" onClick="{{ onHistory }}" style="font-size:13px;font-weight:600">Version history</a>
               <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Plan decisions need approval — they are not edited inline</span>
             </div>
             <sc-if value="{{ proposeOpen }}" hint-placeholder-val="{{ false }}">
@@ -595,19 +594,18 @@ class Component extends DCLogic {
   }
   fmt(d) { return window.OT.fmtDate(this.iso(d)); }
   fmtLong(d) {
-    const p = n => (n < 10 ? '0' + n : '' + n);
-    return p(d.getMonth() + 1) + '/' + d.getFullYear();
+    return window.OT.fmtMonth(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'));
   }
 
   /* an edit made outside a live session becomes a dated amendment */
   amend(text) {
-    const d = new Date();
+    const d = new Date(window.OT.DEMO_TODAY + 'T00:00:00');
     this.setState(st => ({ amendments: st.amendments.concat([{ text: text, when: this.fmt(d) }]) }));
   }
 
   visitDef(key) {
     const f = (this.K().visitTypes || []).filter(v => v[0] === key)[0];
-    return f ? { en: f[1], mins: f[3] } : { en: '—', mins: 20 };
+    return f ? { en: f[1] } : { en: '—' };
   }
 
   statementOf(c, open) {
@@ -650,8 +648,7 @@ class Component extends DCLogic {
       showCrumbs: !this.props.embedded,
       onBack: ev => { if (this.props.onNavigate) { ev.preventDefault(); this.props.onNavigate('dashboard'); } },
       isLog: tab === 'log', isProgress: tab === 'progress', isAppliance: tab === 'appliance',
-      backHref: 'OrthoTrack Case Dashboard v2 EN.dc.html',
-      historyHref: 'OrthoTrack Case Summary EN.dc.html',
+      onHistory: ev => { if (this.props.onNavigate) { ev.preventDefault(); this.props.onNavigate('summary'); } },
       hasCase: true, showTabs: true, isEmpty: false,
       viewerOpen: false, flags: [], dx: [], alerts: [], phases: [], wireLine: [], nextPlan: [],
       problems: [], dxGroups: [], baseRows: [], planRows: [], objectives: [], log: [],
@@ -666,8 +663,7 @@ class Component extends DCLogic {
         photo: this.initialsAvatar('?'), fallback: this.initialsAvatar('?'),
         hasFlags: false, noFlags: true, updatedNote: '', statement: 'Open a case from the dashboard.',
         startSession: () => {
-          if (this.props.onNavigate) { this.props.onNavigate('dashboard'); return; }
-          window.location.href = encodeURI('OrthoTrack Case Dashboard v2 EN.dc.html');
+          if (this.props.onNavigate) this.props.onNavigate('dashboard');
         }
       });
     }
@@ -836,8 +832,7 @@ class Component extends DCLogic {
         ? this.state.amendments.length + ' amendment' + (this.state.amendments.length > 1 ? 's' : '') + ' today'
         : (lastVisit ? 'Last updated ' + OT.fmtDate(lastVisit) : ''),
       startSession: () => {
-        if (this.props.onNavigate) { this.props.onNavigate('dashboard', { openId: c.id }); return; }
-        window.location.href = encodeURI('OrthoTrack Case Dashboard v2 EN.dc.html') + '#open=' + encodeURIComponent(c.id);
+        if (this.props.onNavigate) this.props.onNavigate('dashboard', { openId: c.id });
       },
 
       statement: this.statementOf(c, open),

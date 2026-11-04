@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -126,11 +125,6 @@ button,input,select,textarea{font-family:inherit}
       <sc-if value="{{ showStageTabs }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;gap:4px;margin-top:14px;overflow-x:auto">
         <button type="button" onClick="{{ onOpenOverview }}" style="flex:none;min-height:42px;padding:0 14px;border:none;border-bottom:2px solid transparent;background:transparent;color:#64748b;font-size:14px;font-weight:500;cursor:pointer" style-hover="color:#0f172a">Overview</button>
-        <button type="button" style="flex:none;min-height:42px;padding:0 14px;border:none;border-bottom:2px solid #2563eb;background:transparent;color:#2563eb;font-size:14px;font-weight:700;cursor:pointer">Clinical records</button>
-        <button type="button" style="flex:none;min-height:42px;padding:0 14px;border:none;border-bottom:2px solid transparent;background:transparent;color:#94a3b8;font-size:14px;font-weight:500;cursor:pointer">Diagnosis</button>
-        <button type="button" style="flex:none;min-height:42px;padding:0 14px;border:none;border-bottom:2px solid transparent;background:transparent;color:#94a3b8;font-size:14px;font-weight:500;cursor:pointer">Objectives</button>
-        <button type="button" style="flex:none;min-height:42px;padding:0 14px;border:none;border-bottom:2px solid transparent;background:transparent;color:#94a3b8;font-size:14px;font-weight:500;cursor:pointer">Treatment plan</button>
-        <button type="button" style="flex:none;min-height:42px;padding:0 14px;border:none;border-bottom:2px solid transparent;background:transparent;color:#94a3b8;font-size:14px;font-weight:500;cursor:pointer">Visits</button>
       </div>
       </sc-if>
     </div>
@@ -138,7 +132,7 @@ button,input,select,textarea{font-family:inherit}
     <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:14px 24px 16px">
       <div style="display:flex;align-items:stretch;gap:10px;overflow-x:auto;padding-bottom:2px">
         <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
-          <button type="button" onClick="{{ s.onClick }}" title="{{ s.title }}" style="flex:none;width:146px;display:grid;gap:8px;padding:0;border:none;background:transparent;cursor:pointer;text-align:start;overflow:hidden">
+          <button type="button" onClick="{{ s.onClick }}" aria-current="{{ s.current }}" title="{{ s.title }}" style="flex:none;width:146px;display:grid;gap:8px;padding:0;border:none;background:transparent;cursor:pointer;text-align:start;overflow:hidden">
             <div style="display:flex;align-items:center;gap:9px;min-width:0;overflow:hidden">
              <span style="width:24px;height:24px;flex:none;border-radius:50%;background:{{ s.numBg }};border:1.5px solid {{ s.numBd }};color:{{ s.numFg }};font-family:Inter,sans-serif;font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;justify-content:center">{{ s.num }}</span>
               <div style="display:grid;gap:0;min-width:0;overflow:hidden">
@@ -168,9 +162,6 @@ button,input,select,textarea{font-family:inherit}
              <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#f6f8fb;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#94a3b8"></span></span>
              <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Demographics</span>
              <span style="margin-inline-start:auto;font-size:11.5px;font-weight:400;color:#94a3b8;white-space:nowrap">{{ demoSourceNote }}</span>
-              <sc-if value="{{ showDemoFill }}" hint-placeholder-val="{{ false }}">
-                <button type="button" onClick="{{ onDemoFill }}" title="Fill every field from the uploaded demo case" style="flex:none;min-height:30px;padding:0 12px;border-radius:10px;border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:700;cursor:pointer" style-hover="background:#dbeafe">{{ demoFillLabel }}</button>
-              </sc-if>
               <sc-if value="{{ showDemoEdit }}" hint-placeholder-val="{{ true }}">
                 <button type="button" onClick="{{ onDemoEdit }}" style="flex:none;min-height:30px;padding:0 12px;border-radius:10px;border:1px solid {{ demoEditBd }};background:{{ demoEditBg }};color:{{ demoEditFg }};font-size:12px;font-weight:500;cursor:pointer" style-hover="border-color:#cbd5e1">{{ demoEditLabel }}</button>
               </sc-if>
@@ -827,10 +818,10 @@ button,input,select,textarea{font-family:inherit}
                              <span style="font-size:11px;font-weight:400;color:#94a3b8">{{ sd.ar }}</span>
                             </div>
                             <sc-if value="{{ sd.hasPhoto }}" hint-placeholder-val="{{ false }}">
-                              <button type="button" data-index="{{ sd.mediaIdx }}" style="width:100%;aspect-ratio:4/3;padding:0;border:1px solid #e8edf3;border-radius:12px;overflow:hidden;background:#0f172a;cursor:pointer;display:block;position:relative">
+                              <div data-index="{{ sd.mediaIdx }}" style="width:100%;aspect-ratio:4/3;padding:0;border:1px solid #e8edf3;border-radius:12px;overflow:hidden;background:#0f172a;display:block;position:relative">
                                 {{ sd.img }}
                                <span style="position:absolute;bottom:6px;inset-inline-start:6px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#ffffff;background:rgba(9,14,26,0.7);border-radius:6px;padding:2px 7px">{{ sd.viewLabel }}</span>
-                              </button>
+                              </div>
                               <div style="display:flex;gap:5px">
                                 <button type="button" onClick="{{ sd.onWide }}" title="Crop the image in the editor" style="flex:none;min-height:30px;padding:0 10px;border-radius:9px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;cursor:pointer" style-hover="border-color:#2563eb;color:#1d4ed8">{{ sd.wideLabel }}</button>
                                 <button type="button" onClick="{{ sd.onPick }}" style="flex:1;min-height:30px;border-radius:9px;border:1px dashed #cbd5e1;background:#ffffff;color:#64748b;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;cursor:pointer" style-hover="border-color:#2563eb;color:#1d4ed8;border-style:solid">Change photo</button>
@@ -1005,10 +996,10 @@ button,input,select,textarea{font-family:inherit}
                           <sc-for list="{{ sc.photos }}" as="ph" hint-placeholder-count="2">
                             <div style="flex:1;min-width:150px;display:grid;gap:7px">
                               <sc-if value="{{ ph.hasPhoto }}" hint-placeholder-val="{{ false }}">
-                                <button type="button" data-index="{{ ph.mediaIdx }}" style="width:100%;aspect-ratio:4/3;padding:0;border:1px solid #e8edf3;border-radius:12px;overflow:hidden;background:#0f172a;cursor:pointer;display:block;position:relative">
+                                <div data-index="{{ ph.mediaIdx }}" style="width:100%;aspect-ratio:4/3;padding:0;border:1px solid #e8edf3;border-radius:12px;overflow:hidden;background:#0f172a;display:block;position:relative">
                                   {{ ph.img }}
                                  <span style="position:absolute;bottom:6px;inset-inline-start:6px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#ffffff;background:rgba(9,14,26,0.7);border-radius:6px;padding:2px 7px">{{ ph.label }}</span>
-                                </button>
+                                </div>
                                 <div style="display:flex;gap:5px">
                                 <button type="button" onClick="{{ ph.onWide }}" title="Crop the image in the editor" style="flex:none;min-height:30px;padding:0 10px;border-radius:9px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;cursor:pointer" style-hover="border-color:#2563eb;color:#1d4ed8">{{ ph.wideLabel }}</button>
                                 <button type="button" onClick="{{ ph.onPick }}" style="flex:1;min-height:30px;border-radius:9px;border:1px dashed #cbd5e1;background:#ffffff;color:#64748b;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;cursor:pointer" style-hover="border-color:#2563eb;color:#1d4ed8;border-style:solid">Change photo</button>
@@ -1193,10 +1184,10 @@ button,input,select,textarea{font-family:inherit}
                         <sc-for list="{{ sc.photos }}" as="ph" hint-placeholder-count="1">
                           <div style="flex:1;min-width:140px;max-width:210px">
                             <sc-if value="{{ ph.hasPhoto }}" hint-placeholder-val="{{ false }}">
-                              <button type="button" data-index="{{ ph.mediaIdx }}" style="width:100%;aspect-ratio:4/3;padding:0;border:1px solid #e8edf3;border-radius:12px;overflow:hidden;background:#0f172a;cursor:pointer;display:block;position:relative">
+                              <div data-index="{{ ph.mediaIdx }}" style="width:100%;aspect-ratio:4/3;padding:0;border:1px solid #e8edf3;border-radius:12px;overflow:hidden;background:#0f172a;display:block;position:relative">
                                 {{ ph.img }}
                                <span style="position:absolute;bottom:6px;inset-inline-start:6px;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#ffffff;background:rgba(9,14,26,0.7);border-radius:6px;padding:2px 7px">{{ ph.label }}</span>
-                              </button>
+                              </div>
                             </sc-if>
                           </div>
                         </sc-for>
@@ -1632,7 +1623,6 @@ class Component extends DCLogic {
 
   state = {
     reports: [],   /* the case's records.files, set on mount (seedFromCase) */
-    demoFilled: false,
     activeReport: 0, repDrag: false, reportSrc: { 0: 'ceph', 1: 'cbct' },
     radMag: {}, radChecks: {}, radOpen: null,
     radFiles: { ceph: 0, opg: 0, cbct: 0, pa: 0, handwrist: 0, tmj: 0 },
@@ -2531,8 +2521,6 @@ class Component extends DCLogic {
       readOnlyDemo: !editing,
       demoSourceNote: isNew ? 'New entry' : (editing ? 'Edit mode' : 'From the patient file'),
       showDemoEdit: !isNew,
-      showDemoFill: false,
-      demoFillLabel: this.state.demoFilled ? 'Demo case loaded' : 'Fill with demo case',
       demoEditLabel: editing ? 'Done' : 'Edit',
       demoEditBg: editing ? '#2563eb' : '#ffffff',
       demoEditFg: editing ? '#ffffff' : '#64748b',
@@ -2643,7 +2631,7 @@ class Component extends DCLogic {
     } : null;
     return Object.assign(base, {
       showAside: !this.props.embedded,
-      onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); else window.location.href = 'OrthoTrack Case Dashboard v2.dc.html'; },
+      onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); },
       onBreadcrumbSummary: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('summary'); },
       onOpenOverview: () => { if (this.props.onNavigate) this.props.onNavigate('overview'); },
       headerName: isNew ? (savedNew ? OT.empty(savedNew.patient.name) : (ni.name.trim() || 'New case')) : OT.empty(P.name),
@@ -2838,6 +2826,7 @@ class Component extends DCLogic {
           barBg: cur ? '#2563eb' : ok ? '#a7f3d0' : '#e8edf3',
           hasTag: true,
           title: s[0] + ' — ' + s[1],
+          current: cur ? 'step' : 'false',
           tag: ok ? '✓' : 'missing',
           tagFg: ok ? '#047857' : '#b45309',
           tagBg: ok ? '#ecfdf5' : '#fffbeb',
@@ -3518,7 +3507,6 @@ class Component extends DCLogic {
           /* the case is the store's current one (the shell set it); the summary reads it from there */
           const info = { id: this.props.overrideId || '' };
           if (this.props.onNavigate) this.props.onNavigate('summary', info);
-          else window.location.href = encodeURI('OrthoTrack Case Summary EN.dc.html');
           return;
         }
         this.setState(s => ({ step: Math.min(this.stepDefs.length - 1, s.step + 1) }));
