@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
 <link rel="stylesheet" href="assets/vendor/css/google-inter-300-700-400-600.css">
-<script src="ortho-knowledge-en.js"></script>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -145,17 +144,6 @@ button,input,select,textarea{font-family:inherit}
                 <div style="display:grid;gap:7px">
                   <label style="font-size:12.5px;font-weight:700;color:#475569">Full name <span style="color:#dc2626">*</span></label>
                   <input type="text" value="{{ fName }}" onChange="{{ onName }}" placeholder="First, father's and family name" style="width:100%;min-height:58px;padding:0 18px;border-radius:14px;border:1px solid {{ nameBd }};background:#ffffff;font-size:21px;font-weight:700;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
-                  <sc-if value="{{ dupOpen }}" hint-placeholder-val="{{ false }}">
-                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a;flex-wrap:wrap;animation:otIn .18s ease-out">
-                     <span style="width:22px;height:22px;flex:none;border-radius:7px;background:#ffffff;color:#d97706;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">!</span>
-                      <div style="display:grid;gap:0;min-width:0;flex:1">
-                       <span style="font-size:12.5px;font-weight:700;color:#0f172a"><span dir="rtl" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',sans-serif;font-weight:500;line-height:1.7">A similar file exists — إيهاب محمد حسني</span></span>
-                       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11.5px;font-weight:500;color:#b45309">2011-04-18 · file 005025 · 1 active case</span>
-                      </div>
-                      <button type="button" style="flex:none;min-height:36px;padding:0 13px;border-radius:10px;border:1px solid #fde68a;background:#ffffff;font-size:12.5px;font-weight:700;color:#b45309;cursor:pointer" style-hover="background:#fef3c7">Use the file</button>
-                      <button type="button" onClick="{{ dismissDup }}" style="flex:none;min-height:36px;padding:0 13px;border-radius:10px;border:1px solid transparent;background:transparent;font-size:12.5px;font-weight:500;color:#64748b;cursor:pointer" style-hover="background:#ffffff">A different patient</button>
-                    </div>
-                  </sc-if>
                 </div>
                 <div style="display:grid;grid-template-columns:210px 240px 1fr;gap:14px;align-items:end">
                   <div style="display:grid;gap:7px">
@@ -192,7 +180,7 @@ button,input,select,textarea{font-family:inherit}
                 </div>
                 <div style="display:grid;gap:7px">
                   <label style="font-size:12.5px;font-weight:700;color:#475569">City · country</label>
-                  <input type="text" value="{{ fCity }}" onChange="{{ onCity }}" placeholder="Cairo · Egypt" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                  <input type="text" value="{{ fCity }}" onChange="{{ onCity }}" placeholder="City · country" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
                 </div>
               </div>
 
@@ -205,7 +193,7 @@ button,input,select,textarea{font-family:inherit}
               <div style="padding:0 20px 20px;display:grid;grid-template-columns:210px 1fr;gap:14px">
                 <div style="display:grid;gap:7px">
                   <label style="font-size:12.5px;font-weight:700;color:#475569">External file number</label>
-                  <input type="text" dir="ltr" value="{{ fExt }}" onChange="{{ onExt }}" placeholder="005025" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;font-family:Inter,sans-serif;text-align:left;font-variant-numeric:tabular-nums;" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                  <input type="text" dir="ltr" value="{{ fExt }}" onChange="{{ onExt }}" placeholder="File number" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;font-family:Inter,sans-serif;text-align:left;font-variant-numeric:tabular-nums;" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
                 </div>
                 <div style="display:grid;gap:7px">
                   <label style="font-size:12.5px;font-weight:700;color:#475569">Referring dentist</label>
@@ -650,7 +638,7 @@ class Component extends DCLogic {
   get slotDefs() { return (this.K.attachments || []).map(function (a) { return [a[0], a[1]]; }); }
 
   state = {
-    collapsed: false, step: 0, f: {}, gender: null, triage: 'Normal', attach: {}, dupDismissed: false, saved: false,
+    collapsed: false, step: 0, f: {}, gender: null, triage: 'Normal', attach: {}, dupDismissed: false, saved: false, savedId: '',
     savedNote: 'Draft — saved automatically',
     clean: null, yn: {}, detail: {}, qsOpen: true, fieldVals: {},
     q: '', picked: [], customs: [], notes: {},
@@ -672,14 +660,13 @@ class Component extends DCLogic {
 
   age() {
     const d = this.fld('dob');
-    if (!d) return null;
-    const b = new Date(d);
-    if (isNaN(b.getTime())) return null;
-    const now = new Date('2026-08-26');
-    let y = now.getFullYear() - b.getFullYear();
-    let m = now.getMonth() - b.getMonth();
-    if (now.getDate() < b.getDate()) m--;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return null;
+    const b = d.split('-').map(Number), now = window.OT.DEMO_TODAY.split('-').map(Number);
+    let y = now[0] - b[0];
+    let m = now[1] - b[1];
+    if (now[2] < b[2]) m--;
     if (m < 0) { y--; m += 12; }
+    if (y < 0) return null;
     return { y, m };
   }
 
@@ -835,9 +822,8 @@ class Component extends DCLogic {
     return {
       showAside: !this.props.embedded,
       onBreadcrumb: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); else window.location.href = 'OrthoTrack Case Dashboard v2.dc.html'; },
-      onOpenRecords: () => { if (this.props.onNavigate) this.props.onNavigate('overview', { name: hasName ? name : 'New patient', id: 'ORT-2026-0149',
-        meta: (a ? a.y + 'y' : '') + (this.state.gender ? ' · ' + this.state.gender : '') + (finalComplaint ? ' · ' + finalComplaint : ''),
-        photo: 'assets/p02.jpeg', stage: anyAttach ? 'Records' : 'Consultation', priority: this.state.triage }); else window.location.href = 'OrthoTrack Records Collection v3.dc.html'; },
+      /* the shell already has the saved case open (onCaseCreated), so the overview just opens on it */
+      onOpenRecords: () => { if (this.props.onNavigate) this.props.onNavigate('overview'); else window.location.href = 'OrthoTrack Records Collection v3.dc.html'; },
       sideW: this.state.collapsed ? '76px' : '244px',
       labelOp: this.state.collapsed ? 0 : 1,
       sideIcon: this.state.collapsed ? '›' : '‹',
@@ -850,7 +836,7 @@ class Component extends DCLogic {
       avFg: hasName ? '#1d4ed8' : '#cbd5e1',
       hdrName: hasName ? name : 'New patient',
       hdrFg: hasName ? '#0f172a' : '#cbd5e1',
-      hdrId: this.state.saved ? 'ORT-2026-0149' : 'Case number after saving',
+      hdrId: this.state.saved ? this.state.savedId : 'Case number after saving',
       hdrAge: a === null ? 'Age not set' : a.y + ' years' + (this.state.gender ? ' · ' + this.state.gender : ''),
       showMinor: minor,
       showFlags: blockers > 0 || yesQs > 0,
@@ -912,8 +898,6 @@ class Component extends DCLogic {
       fGRelOther: this.fld('grelOther'), onGRelOther: e => this.set('grelOther', e.target.value),
       fGPhone: this.fld('gphone'), onGPhone: e => this.set('gphone', e.target.value),
 
-      dupOpen: hasName && name.indexOf('إيهاب') === 0 && !this.state.dupDismissed,
-      dismissDup: () => this.setState({ dupDismissed: true }),
 
       cleanYBg2: this.state.clean === true ? '#ffffff' : 'transparent',
       cleanYSh: this.state.clean === true ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
@@ -1037,7 +1021,7 @@ class Component extends DCLogic {
       }),
 
       saved: this.state.saved,
-      caseId: 'ORT-2026-0149',
+      caseId: this.state.savedId,
       initialStage: anyAttach ? 'Records' : 'Consultation',
       hasImpacts: impactRows.length > 0,
       impacts: impactRows,
@@ -1085,13 +1069,13 @@ class Component extends DCLogic {
       nextStep: () => {
         if (st === 3) {
           if (!this.state.saved) {
-            this.setState({ saved: true, savedNote: 'Saved · ORT-2026-0149' });
+            let created = null;
             if (this.props.onCaseCreated) {
-              this.props.onCaseCreated([
-                hasName ? name : 'New patient', 'assets/p02.jpeg',
+              created = this.props.onCaseCreated([
+                hasName ? name : 'New patient', '',
                 (a ? a.y + 'y' : '') + (this.state.gender ? ' · ' + this.state.gender : '') + (finalComplaint ? ' · ' + finalComplaint : ''),
-                'ORT-2026-0149', anyAttach ? 'Records' : 'Consultation', 'slate',
-                anyAttach ? 'Complete the uploaded records' : 'Upload photos and radiographs', 1, '2026-08-27', this.state.triage,
+                '', anyAttach ? 'Records' : 'Consultation', 'slate',
+                anyAttach ? 'Complete the uploaded records' : 'Upload photos and radiographs', 1, window.OT.DEMO_TODAY, this.state.triage,
                 {
                   dob: this.fld('dob'), gender: this.state.gender || '',
                   ageText: a ? (a.y + ' years ' + a.m + ' months') : '',
@@ -1105,6 +1089,8 @@ class Component extends DCLogic {
                 }
               ]);
             }
+            const id = created ? created.id : '';
+            this.setState({ saved: true, savedId: id, savedNote: id ? 'Saved · ' + id : 'Saved' });
           }
           return;
         }

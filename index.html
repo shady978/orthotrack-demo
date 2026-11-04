@@ -2593,12 +2593,12 @@ button,input,select,textarea{font-family:inherit}
   <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
     <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
-        <dc-import name="OrthoTrack Case Dashboard v2 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-reset="{{ onReset }}" on-lang="{{ onLang }}" extra-cases="{{ extraCases }}" open-id="{{ openDrawerId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+        <dc-import name="OrthoTrack Case Dashboard v2 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-lang="{{ onLang }}" open-id="{{ openDrawerId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
     <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
-        <dc-import name="OrthoTrack Case Overview EN" embedded="{{ true }}" on-navigate="{{ nav }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" override-stage="{{ overrideStage }}" override-priority="{{ overridePriority }}" override-notice="{{ overrideNotice }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+        <dc-import name="OrthoTrack Case Overview EN" embedded="{{ true }}" on-navigate="{{ nav }}" override-id="{{ overrideId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
     <sc-if value="{{ isCreate }}" hint-placeholder-val="{{ false }}">
@@ -2608,17 +2608,17 @@ button,input,select,textarea{font-family:inherit}
     </sc-if>
     <sc-if value="{{ isNewCase }}" hint-placeholder-val="{{ false }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
-        <dc-import name="OrthoTrack Records Collection v3 EN" embedded="{{ true }}" new-case="{{ true }}" on-navigate="{{ nav }}" on-case-created="{{ onIntakeCreated }}" on-record-change="{{ onRecordChange }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+        <dc-import name="OrthoTrack Records Collection v3 EN" embedded="{{ true }}" new-case="{{ true }}" on-navigate="{{ nav }}" on-case-created="{{ onIntakeCreated }}" on-record-change="{{ onRecordChange }}" override-id="{{ overrideId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
     <sc-if value="{{ isRecords }}" hint-placeholder-val="{{ false }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
-        <dc-import name="OrthoTrack Records Collection v3 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-record-change="{{ onRecordChange }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+        <dc-import name="OrthoTrack Records Collection v3 EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-record-change="{{ onRecordChange }}" override-id="{{ overrideId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
     <sc-if value="{{ isDiagnosis }}" hint-placeholder-val="{{ false }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
-        <dc-import name="OrthoTrack Diagnosis EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-diagnosis-change="{{ onDiagnosisChange }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+        <dc-import name="OrthoTrack Diagnosis EN" embedded="{{ true }}" on-navigate="{{ nav }}" on-diagnosis-change="{{ onDiagnosisChange }}" override-id="{{ overrideId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
     <sc-if value="{{ isCaseFile }}" hint-placeholder-val="{{ false }}">
@@ -2647,7 +2647,7 @@ button,input,select,textarea{font-family:inherit}
     </sc-if>
     <sc-if value="{{ isSummary }}" hint-placeholder-val="{{ false }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
-        <dc-import name="OrthoTrack Case Summary EN" embedded="{{ true }}" on-navigate="{{ nav }}" override-name="{{ overrideName }}" override-id="{{ overrideId }}" override-meta="{{ overrideMeta }}" override-photo="{{ overridePhoto }}" override-record="{{ overrideRecord }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
+        <dc-import name="OrthoTrack Case Summary EN" embedded="{{ true }}" on-navigate="{{ nav }}" override-id="{{ overrideId }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
   </div>
@@ -2684,7 +2684,6 @@ class Component extends DCLogic {
   };
 
   SKEY = 'orthotrack.session.v1';
-  RKEY = 'orthotrack.en.recents.v1';
 
   componentDidMount() {
     try {
@@ -2701,14 +2700,6 @@ class Component extends DCLogic {
       if (recents) window.localStorage.setItem('orthotrack.recents.v1', recents);
     } catch (e) { /* storage unavailable */ }
     window.location.href = encodeURI('OrthoTrack Prototype.dc.html');
-  };
-
-  resetDemo = () => {
-    try {
-      window.OT.store.reset();
-      window.localStorage.removeItem(this.RKEY);
-    } catch (e) { /* ignore */ }
-    this.setState({ activeCase: null, screen: 'dashboard' });
   };
 
   /* Records and Diagnosis save a snapshot of their screen; it lives on the case until task 0.5 maps it */
@@ -2763,6 +2754,8 @@ class Component extends DCLogic {
   caseFileTabs = { casefile: 'overview', plan: 'plan', treatment: 'log', retention: 'appliance', progress: 'progress' };
 
   go = screen => {
+    /* a stage or tab of the open case: the store's current case is that case */
+    if (this.state.activeCase) window.OT.store.setCurrent(this.state.activeCase.id);
     const tab = this.caseFileTabs[screen];
     if (tab) { this.setState({ screen: 'casefile', caseTab: tab, stageKey: screen }); return; }
     this.setState({ screen: screen, stageKey: screen });
@@ -2772,14 +2765,21 @@ class Component extends DCLogic {
     const bad = this.state.touched && this.state.err;
     const dash = this.state.screen === 'dashboard';
     const sc = this.state.screen;
-    const ac = this.state.activeCase;
+    /* the open case: its id is in state, everything shown is read from the store (never copied into state) */
+    const acId = this.state.activeCase ? this.state.activeCase.id : null;
+    const acCase = acId && window.OT && window.OT.store ? window.OT.store.get(acId) : null;
+    const ac = acCase ? {
+      id: acCase.id,
+      name: acCase.patient.name,
+      photo: (acCase.records.media[0] && acCase.records.media[0].src) || '',
+      hasRecords: !!acCase.screenDraft.records,
+    } : null;
     const caseScreens = ['create', 'overview', 'casefile', 'records', 'newcase', 'summary', 'diagnosis', 'plan', 'treatment', 'retention'];
     const inCase = sc === 'create' || sc === 'newcase' || (!!ac && caseScreens.indexOf(sc) > -1);
     const stubDef = this.stageDefs.filter(d => d[0] === sc && !d[3])[0];
-    const photo = ac ? (ac.photo || '') : '';
-    const rec = ac ? ac.record : null;
-    // Overview counts as done once the case exists; Records once a record is attached.
-    const doneIdx = rec ? 1 : 0;
+    const photo = ac ? ac.photo : '';
+    // Overview counts as done once the case exists; Records once the Records screen has a saved draft.
+    const doneIdx = ac && ac.hasRecords ? 1 : 0;
     return {
       hasCasePhoto: true,
       caseAvatar: photo ? React.createElement('img', {
@@ -2803,29 +2803,18 @@ class Component extends DCLogic {
       isDiagnosis: sc === 'diagnosis',
       onDiagnosisChange: snap => {
         const a = this.state.activeCase;
-        if (!a) return;
-        this.saveDraft(a.id, { diagnosis: snap });
-        this.setState(s => {
-          if (!s.activeCase) return null;
-          const record = Object.assign({}, s.activeCase.record || {}, { diagnosis: snap });
-          return { activeCase: Object.assign({}, s.activeCase, { record: record }) };
-        });
+        if (a) this.saveDraft(a.id, { diagnosis: snap });
       },
       onRecordChange: progress => {
         const a = this.state.activeCase;
-        if (!a) return;
-        this.saveDraft(a.id, { records: progress });
-        this.setState(s => {
-          if (!s.activeCase) return null;
-          const record = Object.assign({}, s.activeCase.record || {}, { progress: progress });
-          return { activeCase: Object.assign({}, s.activeCase, { record: record }) };
-        });
+        if (a) this.saveDraft(a.id, { records: progress });
       },
+      /* a new case from the Records intake: it is the current case and the one the shell shows */
       onIntakeCreated: info => {
         const c = window.OT.store.createFromIntake(info, 'records');
-        const yrs = (info.ageText || '').match(/\d+/);
-        const meta = [yrs ? yrs[0] + 'y' : '', info.gender, info.complaint].filter(Boolean).join(' · ');
-        this.setState({ activeCase: { name: c.patient.name, id: c.id, meta: meta, photo: '', stage: 'Records', priority: 'Normal', record: info } });
+        window.OT.store.setCurrent(c.id);
+        this.setState({ activeCase: { id: c.id } });
+        return c;
       },
       stages: this.stageDefs.map((d, i) => {
         const cur = d[0] === (sc === 'casefile' ? this.state.stageKey : sc) || (d[0] === 'records' && sc === 'newcase');
@@ -2894,39 +2883,25 @@ class Component extends DCLogic {
         const target = tab ? 'casefile' : screen;
         const patch = { screen: target, stageKey: tab ? (screen === 'casefile' ? 'casefile' : screen) : screen };
         if (tab) patch.caseTab = tab;
-        if (!caseInfo) return patch;
+        /* no case in the call: the open case stays open, and the store's current case is set to it again */
+        if (!caseInfo) { if (s.activeCase) window.OT.store.setCurrent(s.activeCase.id); return patch; }
         /* {openId} is a request to open a drawer, not a case — keep the active case intact */
         if (caseInfo.openId && !caseInfo.name) { patch.openDrawerId = caseInfo.openId; return patch; }
-        const prev = s.activeCase;
-        const merged = Object.assign({}, caseInfo);
-        /* a saved Records or Diagnosis snapshot on the case wins over the payload the dashboard built */
-        const saved = caseInfo.id ? window.OT.store.get(caseInfo.id) : null;
-        if (saved && (saved.screenDraft.records || saved.screenDraft.diagnosis)) {
-          merged.record = { progress: saved.screenDraft.records, diagnosis: saved.screenDraft.diagnosis };
-        }
-        if (!merged.record && prev && prev.record && prev.id === caseInfo.id) merged.record = prev.record;
-        patch.activeCase = merged;
+        /* a screen that opens a case: the store's current case is set first, so every screen reads that case */
+        patch.activeCase = caseInfo.id && window.OT.store.setCurrent(caseInfo.id) ? { id: caseInfo.id } : null;
         patch.openDrawerId = '';
         return patch;
       }),
-      extraCases: [],
-      onReset: this.resetDemo,
       onLang: this.switchLang,
-      overrideName: this.state.activeCase ? this.state.activeCase.name : '',
-      overrideId: this.state.activeCase ? (this.state.activeCase.id || '') : '',
-      overrideMeta: this.state.activeCase ? (this.state.activeCase.meta || '') : '',
-      overridePhoto: this.state.activeCase ? (this.state.activeCase.photo || '') : '',
-      overrideStage: this.state.activeCase ? (this.state.activeCase.stage || '') : '',
-      overridePriority: this.state.activeCase ? (this.state.activeCase.priority || '') : '',
-      overrideRecord: this.state.activeCase ? (this.state.activeCase.record || null) : null,
-      overrideNotice: this.state.activeCase ? (this.state.activeCase.notice || '') : '',
+      /* the only case prop the screens get: the id. Name, photos and drafts are read from the store */
+      overrideId: ac ? ac.id : '',
+      /* the Create screen's save: the new case is the current one, and it is returned to the screen */
       onCaseCreated: tuple => {
         const info = Object.assign({}, tuple[10] || {}, { name: tuple[0] });
         const c = window.OT.store.createFromIntake(info, tuple[4]);
-        this.setState({
-          screen: 'records',
-          activeCase: { name: c.patient.name, id: c.id, meta: tuple[2], photo: tuple[1], stage: tuple[4], priority: tuple[9] || 'Normal', record: tuple[10] || null }
-        });
+        window.OT.store.setCurrent(c.id);
+        this.setState({ screen: 'records', activeCase: { id: c.id } });
+        return c;
       }
     };
   }

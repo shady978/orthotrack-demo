@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
 <link rel="stylesheet" href="assets/vendor/css/google-inter-300-700.css">
-<script src="ortho-knowledge-en.js"></script>
 <style>
 html,body{margin:0;padding:0}
 body{background:#f6f8fb;color:#0f172a;font-family:Inter,'Thmanyah Sans',system-ui,sans-serif;font-weight:500;line-height:1.7;-webkit-font-smoothing:antialiased}
@@ -215,12 +214,7 @@ button,input,select,textarea{font-family:inherit}
   &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 940},
   &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
   &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string) =&gt; void&quot;},
-  &quot;onDiagnosisChange&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(snap: any) =&gt; void&quot;},
-  &quot;overrideName&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overrideId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overrideMeta&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overridePhoto&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overrideRecord&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;any&quot;}
+  &quot;onDiagnosisChange&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(snap: any) =&gt; void&quot;}
 }">
 class Component extends DCLogic {
   get K() { return window.OrthoKnowledge || {}; }
@@ -235,8 +229,17 @@ class Component extends DCLogic {
 
   componentWillUnmount() { clearInterval(this._k); clearTimeout(this._saveT); }
 
-  get rec() { return this.props.overrideRecord || {}; }
-  get progress() { return this.rec.progress || {}; }
+  /* the open case from the store (a copy), or null. Values, exam and the saved draft are read from it. */
+  get cur() { return window.OT && window.OT.current ? window.OT.current() : null; }
+  get progress() {
+    const c = this.cur;
+    const values = {};
+    Object.keys((c && c.measurements) || {}).forEach(k => {
+      const v = c.measurements[k].current;
+      if (v !== null && v !== undefined && v !== '') values[k] = v;
+    });
+    return { values: values, exam: (c && c.records && c.records.exam) || {} };
+  }
 
   /* generated problems, plus the doctor\'s manual additions, in the saved order */
   computed() {
@@ -286,11 +289,13 @@ class Component extends DCLogic {
     ][t] || { bg: '#f1f5f9', bd: '#e8edf3', fg: '#64748b' };
   }
 
+  /* the saved draft of the open case (screenDraft.diagnosis); read again when the open case changes */
   hydrate() {
-    if (this._hydrated) return;
-    const d = this.rec.diagnosis;
-    if (!d) return;
-    this._hydrated = true;
+    const c = this.cur;
+    const id = c ? c.id : null;
+    if (this._hydratedFor === id) return;
+    this._hydratedFor = id;
+    const d = (c && c.screenDraft && c.screenDraft.diagnosis) || {};
     setTimeout(() => this.setState({
       status: d.status || {}, order: d.order || null,
       manual: d.manual || {}, cplCat: d.cplCat || null
@@ -313,10 +318,14 @@ class Component extends DCLogic {
     const acceptedItems = list.filter(p => st[p.id] === 'ok');
     const blocking = acceptedItems.filter(p => blockDefs.indexOf(p.text) > -1).map(p => ({ label: p.text }));
 
-    const name = this.props.overrideName || 'إيهاب محمد حسني';
-    const photo = this.props.overridePhoto || '';
-    const complaint = this.rec.complaint || (this.props.overrideMeta || '').split(' · ').pop() || 'Spacing';
-    const cplText = this.rec.complaintText || '';
+    const OT = window.OT;
+    const c = this.cur;
+    const name = c ? c.patient.name : null;
+    const photo = c && c.records.media[0] ? c.records.media[0].src : '';
+    const age = c ? OT.age(c.patient.dob) : null;
+    const meta = c ? [age === null ? '' : age + 'y', c.patient.sex || ''].filter(Boolean).join(' · ') : '';
+    const complaint = c ? c.complaint.chip : null;
+    const cplText = c ? c.complaint.words || '' : '';
 
     const cells = [];
     rows.forEach(r => {
@@ -334,9 +343,9 @@ class Component extends DCLogic {
     });
 
     return {
-      pName: name,
-      pId: this.props.overrideId || 'ORT-2026-0148',
-      pMeta: this.props.overrideMeta || '14y · Male',
+      pName: OT.empty(name),
+      pId: OT.empty(c ? c.id : null),
+      pMeta: OT.empty(meta),
       pPhoto: photo,
       hasPhoto: !!photo,
       noPhoto: !photo,
@@ -347,7 +356,7 @@ class Component extends DCLogic {
       goOverview: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('overview'); },
       goRecords: () => { if (this.props.onNavigate) this.props.onNavigate('records'); },
 
-      complaint: complaint,
+      complaint: OT.empty(complaint),
       cplText: cplText,
       hasCplText: !!cplText,
       noCplText: !cplText,

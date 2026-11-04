@@ -4,13 +4,21 @@
      list()            every case (v2 shape), in seed order
      get(id)           one case, or null (no fallback to another case)
      update(id, patch) shallow merge: each top-level field in `patch` replaces the stored one. Null for an unknown id.
-     create(data)      new case, id = ORT-<this year>-<max existing number + 1>. Returns the case.
-     createFromIntake(info, stage)  the same, from the intake forms (Records and Case create screens).
+     create(data)      new case, id = ORT-<year of DEMO_TODAY>-<max NNNN among that year's ids + 1>, 4 digits. Returns the case.
+     createFromIntake(info, stage)  the same, from the intake forms (Records and Case create screens). Keeps info.dob (ISO) when typed.
      currentId() / setCurrent(id)   the case that is open (null / false when unknown)
      reset()           back to the seed (for the demo)
 
+   Helpers for the screens (task 0.5a), on window.OT:
+     OT.current()        the open case (a copy), or null. Never a fallback to another case.
+     OT.fmtDate(iso)     '4 Nov 2026' from '2026-11-04'; null or invalid gives ''
+     OT.fmtRel(iso)      'today', '23 days ago', 'in 7 days' relative to OT.DEMO_TODAY; null or invalid gives ''
+     OT.age(dob)         whole years at OT.DEMO_TODAY; null when dob is missing
+     OT.empty(value)     the value when it is there, else OT.EMPTY ('Not recorded yet'). OT.empty() gives OT.EMPTY.
+     OT.EMPTY, OT.DEMO_TODAY    the strings above, and the fixed demo day ('2026-11-04')
+
    Storage (localStorage, write-through on every change):
-     orthotrack.en.cases.v2    { seedVersion: 2, cases: [ ...v2 cases ] }
+     orthotrack.en.cases.v2    { seedVersion: 4, cases: [ ...v2 cases ] }
      orthotrack.en.current.v1  current case id
    If the cases key is absent, unreadable, or has another seedVersion (an old browser: a bare array, or an older
    seed) the store is seeded from the demo data in the knowledge block. Bump SEED_VERSION when the seed changes.
@@ -20,13 +28,24 @@
    replaced here by views computed from the store, with the same shapes as before. Old exports stay the
    same shape until task 0.5 moves each screen to the store.
 
+   How a screen reads the current case (screens run in the page window, see dc-runtime.js evalDcLogic,
+   so window.OT is there without props):
+     var c = window.OT.current();                  // the open case, or null
+     var name = c ? c.patient.name : null;          // null when no case is open
+     var shown = window.OT.empty(name);             // 'Not recorded yet' when missing
+     var when = window.OT.fmtDate(c && c.nextVisit); // '' when no next visit
+     // a screen with no case open shows the empty state; it never shows another case's data.
+   The store is read on each render (store.get returns a copy). Writes: window.OT.store.update(id, patch).
+
    Must load after the OT-DATA block (window.OrthoKnowledge and window.OrthoCases) in index.html. */
 (function () {
   'use strict';
 
   var CASES_KEY = 'orthotrack.en.cases.v2';
   var CURRENT_KEY = 'orthotrack.en.current.v1';
-  var SEED_VERSION = 2;            // 2: Ehab's clinical data moved into his case, Dana's readings removed (task 0.4)
+  var SEED_VERSION = 4;            // 2: Ehab's clinical data moved into his case, Dana's readings removed (task 0.4)
+  //                                  3: Ehab's guardian, city, file number, occlusion/growth/dentition rows and media (task 0.5a)
+  //                                  4: Ehab's media has no radiographs (ceph.png, opg.png are not in assets/; 404s) (task 0.5 WP-D)
   var DEMO_TODAY = '2026-11-04';   // fixed demo day for seed dates
   var DEMO_YEAR = 2026;            // dob = 1 Jan of (DEMO_YEAR - age)
   var DAY = 86400000;
@@ -69,7 +88,7 @@
   }
   function medicalEntry(name) {
     var cond = (K.conditions || []).filter(function (c) { return c[0] === name; })[0];
-    return { key: slug(name), label: name, constraint: cond && cond[3] ? cond[3] : null };
+    return { key: slug(name), label: name, constraint: cond && cond[3] ? cond[3] : null, status: null, severity: null };
   }
   // "12y · Female · Open bite" → { age: 12, sex: 'Female', chip: 'Open bite' }
   function parseMeta(meta) {
@@ -86,7 +105,7 @@
   function blankCase(cid) {
     return {
       id: cid || null,
-      patient: { name: null, phone: null, dob: null, sex: null },
+      patient: { name: null, phone: null, dob: null, sex: null, guardian: null, city: null, fileNo: null },
       stage: null,
       stageBeforePause: null,
       pause: null,                       // { reason, note, since } or null
@@ -99,6 +118,9 @@
       complaint: { chip: null, words: null },
       measurements: {},                  // key → { baseline, current }
       problems: [],                      // HANDOVER section 5 shape (+ status: pending|progress|resolved)
+      occlusion: [],                     // [{ label, value, severity: 0|1|2, note }] (the Summary's occlusion rows)
+      growth: [],                        // [{ label, value, severity, note }] (growth and function rows)
+      dentition: [],                     // [{ label, value, severity, note }] (dentition status rows)
       plan: null,                        // { extraction, appliance, mechanics, anchorage, ... } or null
       wire: null,                        // current upper archwire text or null
       appliance: [],                     // [[label, value]] (from the old detail.ap)
@@ -107,7 +129,8 @@
       findings: [],                      // [{ text, tone }] (from the old chart.dx)
       treatment: { months: 0, estMonths: null, bonded: null, sessions: null, missedAt: [], phase: null },
       visits: [],                        // [{ date, kind, note, tasks }], newest first
-      records: { photos: null, xray: { status: null }, exam: null, history: null, done: null, total: null, missing: [], files: [] },
+      records: { photos: null, xray: { status: null }, exam: null, history: null, done: null, total: null, missing: [], files: [],
+                 media: [] },              // [{ src, label, group }] photos and radiographs; media[0] is the hero photo
       midTreatment: false,
       screenDraft: { records: null, diagnosis: null },  // raw snapshots from Records and Diagnosis until task 0.5
     };
@@ -116,10 +139,10 @@
   // Fills missing fields, migrates an old stage key, and drops a bad nextVisit. Every read and write goes through it.
   function normalize(raw) {
     var src = clone(raw) || {};
-    var base = blankCase(src.id);
-    var c = Object.assign(base, src);
+    var defaults = blankCase(src.id);            // a fresh copy: Object.assign below replaces nested objects
+    var c = Object.assign(blankCase(src.id), src);
     ['patient', 'complaint', 'treatment', 'records', 'screenDraft'].forEach(function (k) {
-      c[k] = Object.assign({}, base[k], src[k] || {});
+      c[k] = Object.assign({}, defaults[k], src[k] || {});
     });
     c.stage = stageOf(src.stage);
     c.stageBeforePause = stageOf(src.stageBeforePause);
@@ -140,11 +163,52 @@
     'soft-0': 77.4, 'soft-1': 1.0
   };
 
+  // Ehab's rows, copied from the Summary (task 0.5a). Values are the Summary's; the screens read them from here.
+  var EHAB_OCCLUSION = [
+    { label: 'Incisor relationship', value: 'Class III', severity: 1, note: 'Reverse incisor relationship' },
+    { label: 'Molar — right', value: 'Class III ½ unit', severity: 1, note: 'Mesial molar relationship' },
+    { label: 'Molar — left', value: 'Class III ½ unit', severity: 1, note: 'Mesial molar relationship — symmetric' },
+    { label: 'Overjet', value: '-2.5 mm', severity: 2, note: 'Reverse overjet' },
+    { label: 'Overbite', value: '1.5 mm', severity: 1, note: 'Reduced overbite' },
+    { label: 'Crowding — upper', value: '+2.0 mm', severity: 1, note: 'Upper arch spacing' },
+    { label: 'Crowding — lower', value: '-1.0 mm', severity: 0, note: 'Minimal lower crowding' }
+  ];
+  var EHAB_GROWTH = [
+    { label: 'CVM stage', value: 'CS3', severity: 2, note: 'Growth peak now — functional window open' },
+    { label: 'TMJ status', value: 'WNL', severity: 0, note: 'No joint limitation' },
+    { label: 'CO–CR shift', value: '< 2 mm', severity: 0, note: 'No significant shift' },
+    { label: 'Airway', value: 'Mouth breather', severity: 1, note: 'Review vertical pattern and tongue posture' }
+  ];
+  var EHAB_DENTITION = [
+    { label: 'Impacted', value: '13', severity: 2, note: 'Palatal — needs 3D localisation' },
+    { label: 'Missing', value: 'None', severity: 0, note: 'Full permanent dentition' },
+    { label: 'Supernumerary', value: 'None', severity: 0, note: '' },
+    { label: 'Third molars', value: 'Developing', severity: 0, note: 'Monitor at review' }
+  ];
+  var EHAB_MEDIA = [
+    ['assets/p04.jpeg', 'Frontal repose', 'extraoral'], ['assets/p06.jpeg', 'Frontal smile', 'extraoral'],
+    ['assets/p12.jpeg', 'Oblique repose', 'extraoral'], ['assets/p14.jpeg', 'Oblique smile', 'extraoral'],
+    ['assets/p08.jpeg', 'Profile repose', 'extraoral'], ['assets/p10.jpeg', 'Profile smile', 'extraoral'],
+    ['assets/p02.jpeg', 'Lips at rest', 'extraoral'], ['assets/p07.jpeg', 'Frontal occlusion', 'intraoral'],
+    ['assets/p05.jpeg', 'Frontal open', 'intraoral'], ['assets/p03.jpeg', 'Upper occlusal', 'intraoral'],
+    ['assets/p01.jpeg', 'Lower occlusal', 'intraoral'], ['assets/p09.jpeg', 'Right buccal', 'intraoral'],
+    ['assets/p11.jpeg', 'Left buccal', 'intraoral'], ['assets/p13.jpeg', 'Buccal detail', 'intraoral'],
+  ].map(function (m) { return { src: m[0], label: m[1], group: m[2] }; });
+
   function applyClinicalSeed(c) {
     if (c.id === EHAB_ID) {
       c.patient.dob = '2011-04-18';
       c.patient.phone = '+20 100 442 8817';
+      c.patient.guardian = 'Mohammed Hosny';
+      c.patient.city = 'Cairo · Egypt';
+      c.patient.fileNo = '005025';
       c.medical = ['Nickel allergy', 'Mouth breathing'].map(medicalEntry);
+      c.medical[0].status = 'Confirmed'; c.medical[0].severity = 2;
+      c.medical[1].status = 'Present'; c.medical[1].severity = 1;
+      c.occlusion = EHAB_OCCLUSION.map(function (r) { return Object.assign({}, r); });
+      c.growth = EHAB_GROWTH.map(function (r) { return Object.assign({}, r); });
+      c.dentition = EHAB_DENTITION.map(function (r) { return Object.assign({}, r); });
+      c.records.media = EHAB_MEDIA.map(function (m) { return Object.assign({}, m); });
       // captured at records time: no later reading yet, so baseline and current are the same value
       Object.keys(EHAB_MEASUREMENTS).forEach(function (k) {
         c.measurements[k] = { baseline: EHAB_MEASUREMENTS[k], current: EHAB_MEASUREMENTS[k] };
@@ -247,13 +311,15 @@
     for (var i = 0; i < list.length; i++) if (list[i].id === key) return i;
     return -1;
   }
+  // per-year sequence: the year is DEMO_TODAY's (never the clock), and only that year's ids count
   function nextId() {
+    var year = DEMO_TODAY.slice(0, 4);
     var max = 0;
     all().forEach(function (c) {
       var m = CASE_NUM_RE.exec(c.id || '');
-      if (m && +m[1] > max) max = +m[1];
+      if (m && m[0].slice(4, 8) === year && +m[1] > max) max = +m[1];
     });
-    return 'ORT-' + new Date().getFullYear() + '-' + ('000' + (max + 1)).slice(-4);
+    return 'ORT-' + year + '-' + ('000' + (max + 1)).slice(-4);
   }
 
   /* ---------- the intake forms → a new case ---------- */
@@ -265,7 +331,8 @@
       patient: {
         name: orNull(info2.name) || 'New patient',
         phone: orNull(info2.phone || info2.guardianPhone),
-        dob: dobFromAge(age ? +age[1] : null),
+        // the typed date when it is a real ISO day; the age (1 Jan of DEMO_YEAR - age) only when none was typed
+        dob: isISO(info2.dob) && realISO(info2.dob) ? info2.dob : dobFromAge(age ? +age[1] : null),
         sex: orNull(info2.gender),
       },
       stage: stageOf(String(stage || 'consultation').toLowerCase()),
@@ -450,6 +517,49 @@
     applianceLog: legacy.applianceLog,
   };
 
+  /* ---------- helpers for the screens (task 0.5a) ---------- */
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var EMPTY = 'Not recorded yet';
+  // a real calendar day in YYYY-MM-DD (2026-02-30 is not)
+  function realISO(v) {
+    if (!isISO(v)) return false;
+    var p = v.split('-');
+    var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]));
+    return d.getUTCFullYear() === +p[0] && d.getUTCMonth() === +p[1] - 1 && d.getUTCDate() === +p[2];
+  }
+  function isPresent(v) {
+    if (v === null || v === undefined) return false;
+    if (typeof v === 'string') return v.trim() !== '';
+    if (typeof v === 'number') return !isNaN(v);
+    if (Array.isArray(v)) return v.length > 0;
+    return true;
+  }
+
   window.OT = window.OT || {};
   window.OT.store = store;
+  window.OT.EMPTY = EMPTY;
+  window.OT.DEMO_TODAY = DEMO_TODAY;
+  window.OT.current = function () {
+    var id = store.currentId();
+    return id ? store.get(id) : null;
+  };
+  window.OT.fmtDate = function (iso) {
+    if (!realISO(iso)) return '';
+    var p = iso.split('-');
+    return (+p[2]) + ' ' + MONTHS[+p[1] - 1] + ' ' + p[0];
+  };
+  window.OT.fmtRel = function (iso) {
+    if (!realISO(iso)) return '';
+    var d = daysBetween(DEMO_TODAY, iso);
+    if (d === 0) return 'today';
+    var n = Math.abs(d);
+    var unit = n === 1 ? 'day' : 'days';
+    return d < 0 ? n + ' ' + unit + ' ago' : 'in ' + n + ' ' + unit;
+  };
+  window.OT.age = function (dob) {
+    return realISO(dob) ? ageAt(dob, DEMO_TODAY) : null;
+  };
+  window.OT.empty = function (value) {
+    return isPresent(value) ? value : EMPTY;
+  };
 })();

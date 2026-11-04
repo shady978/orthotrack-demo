@@ -14,7 +14,6 @@
 <link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
 <link rel="stylesheet" href="assets/vendor/css/google-inter-300-700-400-600.css">
-<script src="ortho-knowledge-en.js"></script>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -69,7 +68,7 @@ button,input,select,textarea{font-family:inherit}
     <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:16px 24px 0">
       <div style="display:flex;align-items:center;gap:13px;min-width:0">
         <div style="width:42px;height:42px;flex:none;border-radius:50%;overflow:hidden;border:1px solid #e8edf3;background:#f1f5f9">
-          <img src="{{ headerPhoto }}" alt="{{ headerName }}" style="width:100%;height:100%;object-fit:cover;object-position:center 25%">
+          {{ headerPhotoEl }}
         </div>
         <div style="display:grid;gap:2px;min-width:0">
           <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
@@ -100,6 +99,10 @@ button,input,select,textarea{font-family:inherit}
     </div>
 
     <main style="flex:1;min-width:0;padding:20px 24px 40px;display:grid;gap:14px;align-content:start;max-width:1180px">
+      <sc-if value="{{ noCase }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:40px 18px;text-align:center;font-size:14px;font-weight:500;color:#64748b">No case open</div>
+      </sc-if>
+      <sc-if value="{{ hasCase }}" hint-placeholder-val="{{ true }}">
 
       <sc-if value="{{ showStageTabs }}" hint-placeholder-val="{{ true }}">
       <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;animation:otIn .22s ease-out">
@@ -245,6 +248,7 @@ button,input,select,textarea{font-family:inherit}
         </sc-for>
       </div>
 
+      </sc-if>
     </main>
   </div>
 </div>
@@ -254,14 +258,7 @@ button,input,select,textarea{font-family:inherit}
   &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900},
   &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
   &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: object) =&gt; void&quot;},
-  &quot;overrideName&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overrideId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overrideMeta&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overridePhoto&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overrideStage&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overridePriority&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;overrideRecord&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;object&quot;},
-  &quot;overrideNotice&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;}
+  &quot;overrideId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;}
 }">
 class Component extends DCLogic {
   get K() { return window.OrthoKnowledge || {}; }
@@ -269,27 +266,21 @@ class Component extends DCLogic {
   /* the seven stages a case passes through, in order (growth watch and the exits are not in the flow) */
   flowKeys = ['consultation', 'records', 'diagnosis', 'plan', 'active', 'retention', 'completed'];
 
-  state = { hash: null };
+  state = {};
 
   componentDidMount() {
     if (!window.OrthoKnowledge) {
       this._k = setInterval(() => { if (window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); } }, 60);
     }
-    /* standalone entry from the dashboard: #name=…&id=…&meta=… */
-    const raw = (window.location.hash || '').replace(/^#/, '');
-    if (raw.indexOf('=') > 0) {
-      const q = {};
-      raw.split('&').forEach(p => { const kv = p.split('='); if (kv[0]) q[kv[0]] = decodeURIComponent((kv[1] || '').replace(/\+/g, ' ')); });
-      if (q.name) this.setState({ hash: q });
-    }
   }
   componentWillUnmount() { clearInterval(this._k); }
 
-  ext(key) { return this.props['override' + key.charAt(0).toUpperCase() + key.slice(1)] || (this.state.hash || {})[key] || ''; }
-
-  isOther() {
-    const n = this.ext('name');
-    return !!n && n !== 'Ehab Mohammed Hosny' && n !== 'إيهاب محمد حسني';
+  /* the open case, or the one the shell names by id ('' = the open case). Null when there is none. */
+  caseNow() {
+    const OT = window.OT;
+    if (!OT) return null;
+    const id = this.props.overrideId || '';
+    return id ? OT.store.get(id) : OT.current();
   }
 
   stageRows() {
@@ -297,11 +288,11 @@ class Component extends DCLogic {
     return this.flowKeys.map(k => all.filter(s => s[0] === k)[0]).filter(Boolean);
   }
 
+  /* the position of the case's own stage in the flow (the first one when the case has no stage in it) */
   currentIdx() {
     const rows = this.stageRows();
-    const label = this.ext('stage') || 'Records';
-    let idx = -1;
-    rows.forEach((s, i) => { if (s[2] === label || s[1] === label) idx = i; });
+    const c = this.caseNow();
+    const idx = rows.findIndex(s => c && s[0] === c.stage);
     return idx < 0 ? 0 : idx;
   }
 
@@ -314,22 +305,42 @@ class Component extends DCLogic {
     };
   }
 
-  /* constraint names carried from the history step — impact text comes from the knowledge base */
-  constraintNames() {
-    const r = this.props.overrideRecord;
-    if (r) return r.conditions || [];
-    return this.isOther() ? [] : ['Nickel allergy', 'Mouth breathing'];
-  }
-
   nav(screen) { if (this.props.onNavigate) this.props.onNavigate(screen); }
 
+  /* a case photo, or nothing. Radiographs are not drawn until their files are in assets/ (ceph.png, opg.png are not). */
+  tile(m, alt) {
+    if (!m || m.group === 'radiograph') return null;
+    return React.createElement('img', {
+      src: m.src, alt: alt || '', draggable: false,
+      style: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%', display: 'block' }
+    });
+  }
+
   renderVals() {
+    const OT = window.OT;
+    const c = this.caseNow();
     const showStageTabs = !this.props.embedded;
-    const other = this.isOther();
-    const rec = this.props.overrideRecord || null;
+    const media = c ? c.records.media : [];
+    // the old 'other' flag: no case, or a case with no records yet
+    const other = !c || !media.length;
     const rows = this.stageRows();
     const cur = this.currentIdx();
     const curStage = rows[cur] || ['records', 'Records', 'Records', 'blue'];
+
+    /* header: the open case's own fields, or the empty state */
+    const name = c ? c.patient.name : null;
+    const age = c ? OT.age(c.patient.dob) : null;
+    const headerName = c ? OT.empty(name) : 'No case open';
+    const headerId = c ? c.id : '—';
+    const headerMeta = c ? OT.empty([age === null ? null : age + 'y', c.patient.sex, c.complaint.chip].filter(Boolean).join(' · ') || null) : '—';
+    const lastVisit = c && c.visits[0] ? c.visits[0].date : null;
+    const updatedNote = c ? (lastVisit ? 'Last visit ' + OT.fmtDate(lastVisit) : OT.EMPTY) : '';
+    const stageRow = c && c.stage ? (this.K.stages || []).filter(s => s[0] === c.stage)[0] : null;
+    const stageLabel = stageRow ? stageRow[1] : OT.EMPTY;
+    const complaintWords = c ? c.complaint.words : null;
+    const complaint = OT.empty(complaintWords);
+    const complaintFg = complaintWords ? '#0f172a' : '#cbd5e1';
+    const classification = c ? OT.empty(c.complaint.chip) : OT.EMPTY;
 
     const stageTint = {
       slate: ['#f1f5f9', '#cbd5e1', '#475569', '#94a3b8'],
@@ -351,25 +362,32 @@ class Component extends DCLogic {
     };
     const act = actions[curStage[0]] || actions.records;
 
-    const blockers = other ? [
-      { title: 'No records uploaded yet', detail: 'Photos · Radiographs · Measurements', tone: 1 }
-    ] : [
-      { title: 'Two missing cephalometric values block the diagnosis', detail: 'U1-SN · IMPA', tone: 2 },
-      { title: 'A long time with no movement', detail: '26 days idle', tone: 1 }
-    ];
+    /* blockers: the case's own missing items, and no records yet */
+    const missing = c ? c.records.missing : [];
+    const blockers = [];
+    if (c && !media.length) blockers.push({ title: 'No records uploaded yet', detail: 'Photos · Radiographs · Measurements', tone: 1 });
+    if (missing.length) blockers.push({
+      title: missing.length + (missing.length === 1 ? ' record item missing' : ' record items missing'),
+      detail: missing.join(' · '), tone: 2
+    });
 
-    const recDefs = other
-      ? [['Photos', 'Clinical photos', 0, 14, '#2563eb'], ['Radiographs', 'Radiographs', 0, 2, '#7c3aed'], ['Measurements', 'Cephalometric measurements', 0, 17, '#059669']]
-      : [['Photos', 'Clinical photos', 14, 14, '#2563eb'], ['Radiographs', 'Radiographs', 2, 2, '#7c3aed'], ['Measurements', 'Cephalometric measurements', 15, 17, '#059669']];
+    /* the Records card: the case's own counts. The standard set is 14 photos and 2 radiographs (the Records screen);
+       the measurements are the 17 of the knowledge base. */
+    const measuredCount = c ? Object.keys(c.measurements).filter(k => c.measurements[k] && c.measurements[k].current !== null && c.measurements[k].current !== undefined).length : 0;
+    const measureTotal = Object.keys(this.K.measurements || {}).reduce((a, g) => a + (this.K.measurements[g] || []).length, 0);
+    const recDefs = [
+      ['Photos', 'Clinical photos', media.filter(m => m.group !== 'radiograph').length, 14, '#2563eb'],
+      ['Radiographs', 'Radiographs', media.filter(m => m.group === 'radiograph').length, 2, '#7c3aed'],
+      ['Measurements', 'Cephalometric measurements', measuredCount, measureTotal, '#059669']
+    ];
     const recDone = recDefs.reduce((a, r) => a + r[2], 0);
     const recAll = recDefs.reduce((a, r) => a + r[3], 0);
     const recPct = Math.round(recDone / recAll * 100);
 
-    const conds = this.K.conditions || [];
-    const constraints = this.constraintNames().map(en => {
-      const row = conds.filter(c => c[0] === en)[0];
-      const t = this.toneOf(row ? row[4] : 0);
-      return { en, impact: row ? row[3] : '', mark: t.mark, bg: t.bg, bd: t.bd, fg: t.fg };
+    /* constraints: the case's own medical list (the impact text is the KB's) */
+    const constraints = (c ? c.medical : []).map(m => {
+      const t = this.toneOf(m.severity || 0);
+      return { en: m.label, impact: m.constraint || '', mark: t.mark, bg: t.bg, bd: t.bd, fg: t.fg };
     });
 
     const tabDefs = [
@@ -393,20 +411,22 @@ class Component extends DCLogic {
       showAside: !this.props.embedded,
       onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); this.nav('dashboard'); },
 
-      headerName: this.ext('name') || 'Ehab Mohammed Hosny',
-      headerId: this.ext('id') || 'ORT-2026-0148',
-      headerMeta: this.ext('meta') || '14y · Male · Spacing',
-      headerPhoto: this.ext('photo') || 'assets/p04.jpeg',
-      updatedNote: other && !this.ext('stage') ? 'New case — created today' : 'Last updated 2026-07-31',
+      headerName,
+      headerId,
+      headerMeta,
+      headerPhotoEl: this.tile(media[0], headerName),
+      updatedNote,
+      hasCase: !!c,
+      noCase: !c,
 
-      stageLabel: curStage[2],
-      notice: this.props.overrideNotice || '',
-      hasNotice: !!this.props.overrideNotice,
+      stageLabel,
+      notice: '',
+      hasNotice: false,
       stageBg: stageTint[0], stageBd: stageTint[1], stageFg: stageTint[2], stageDot: stageTint[3],
-      priority: this.props.overridePriority || 'Normal',
-      prioBg: (this.props.overridePriority === 'Urgent') ? '#fef2f2' : (this.props.overridePriority === 'Monitor') ? '#fffbeb' : '#f6f8fb',
-      prioBd: (this.props.overridePriority === 'Urgent') ? '#fecaca' : (this.props.overridePriority === 'Monitor') ? '#fde68a' : '#e8edf3',
-      prioFg: (this.props.overridePriority === 'Urgent') ? '#b91c1c' : (this.props.overridePriority === 'Monitor') ? '#b45309' : '#64748b',
+      priority: OT.EMPTY,
+      prioBg: '#f6f8fb',
+      prioBd: '#e8edf3',
+      prioFg: '#64748b',
 
       stageProgressNote: 'Stage ' + (cur + 1) + ' of ' + rows.length,
       timeline: rows.map((s, i) => {
@@ -454,12 +474,11 @@ class Component extends DCLogic {
       hasConstraints: constraints.length > 0,
       noConstraints: constraints.length === 0,
       constraints,
-      constraintsEmpty: (rec && rec.clean) ? 'Healthy — no medical or dental history' : other ? 'No medical history affecting treatment was recorded' : 'No constraints',
+      constraintsEmpty: OT.EMPTY,
 
-      complaint: rec ? (rec.complaintText || 'Not recorded in the patient\'s words') : (other ? 'Not recorded yet' : 'I don\'t like how my teeth look, and my lower teeth stick out in front of the upper ones'),
-      complaintFg: (rec && !rec.complaintText) || (other && !rec) ? '#cbd5e1' : '#0f172a',
-      classification: rec ? (rec.type || rec.complaint || '—') : (this.props.overrideMeta || '14y · Male · Spacing').split(' · ').pop(),
-
+      complaint,
+      complaintFg,
+      classification,
       showStageTabs: showStageTabs,
       tabs: tabDefs.map(t => ({
         label: t[0],

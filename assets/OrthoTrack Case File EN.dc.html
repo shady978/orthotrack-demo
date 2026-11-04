@@ -12,8 +12,6 @@
 <title>OrthoTrack — Case file</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
 <link rel="stylesheet" href="assets/vendor/css/google-outfit-300-900.css">
-<script src="./ortho-knowledge-en.js"></script>
-<script src="./ortho-cases.js"></script>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -516,7 +514,6 @@ button,input,select,textarea{font-family:inherit}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 980},
-  &quot;caseId&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Case&quot;},
   &quot;tab&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;overview&quot;, &quot;diagnosis&quot;, &quot;plan&quot;, &quot;log&quot;, &quot;progress&quot;, &quot;appliance&quot;], &quot;default&quot;: &quot;overview&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Case&quot;},
   &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
   &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: any) =&gt; void&quot;}
@@ -525,7 +522,7 @@ class Component extends DCLogic {
   state = { tab: null, openSession: null, measEdit: null, measDraft: '',
             applEdit: null, applDraft: '', probs: {}, objs: {}, meas: {}, appl: {},
             proposeOpen: false, proposeText: '', amendments: [],
-            viewer: null, viewerMode: 'side', slider: 50, hash: null };
+            viewer: null, viewerMode: 'side', slider: 50 };
 
   tabDefs = [['overview', 'Overview'], ['diagnosis', 'Diagnosis & analysis'], ['plan', 'Treatment plan'],
              ['log', 'Treatment log'], ['progress', 'Progress & measurements'], ['appliance', 'Appliance']];
@@ -533,12 +530,6 @@ class Component extends DCLogic {
   componentDidMount() {
     if (!window.OrthoCases || !window.OrthoKnowledge) {
       this._k = setInterval(() => { if (window.OrthoCases && window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); } }, 60);
-    }
-    const raw = (window.location.hash || '').replace(/^#/, '');
-    if (raw.indexOf('=') > 0) {
-      const q = {};
-      raw.split('&').forEach(p => { const kv = p.split('='); if (kv[0]) q[kv[0]] = decodeURIComponent((kv[1] || '').replace(/\+/g, ' ')); });
-      this.setState({ hash: q });
     }
     this._syncImgs = () => {
       document.querySelectorAll('img[data-src]').forEach(el => {
@@ -570,13 +561,8 @@ class Component extends DCLogic {
   K() { return window.OrthoKnowledge || {}; }
   C() { return window.OrthoCases || {}; }
 
-  caseId() {
-    /* the hash wins: it is the standalone entry from the dashboard and it names a
-       real patient, while a prop can carry an editor default. No silent fallback —
-       an unspecified case must show the empty state, never someone else. */
-    const q = this.state.hash || {};
-    return q.id || this.props.caseId || null;
-  }
+  /* the open case from the store (a copy), or null. Nothing else (hash, prop) picks the case. */
+  cur() { return window.OT && window.OT.current ? window.OT.current() : null; }
 
   initials(name) {
     const strip = t => {
@@ -602,17 +588,15 @@ class Component extends DCLogic {
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   }
 
-  fmt(d) {
+  /* a local Date as YYYY-MM-DD, then shown through OT.fmtDate ('4 Nov 2026') */
+  iso(d) {
     const p = n => (n < 10 ? '0' + n : '' + n);
-    return p(d.getDate()) + '/' + p(d.getMonth() + 1);
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
   }
+  fmt(d) { return window.OT.fmtDate(this.iso(d)); }
   fmtLong(d) {
     const p = n => (n < 10 ? '0' + n : '' + n);
     return p(d.getMonth() + 1) + '/' + d.getFullYear();
-  }
-  shortDate(off) {
-    const d = new Date(); d.setDate(d.getDate() + off);
-    return this.fmt(d);
   }
 
   /* an edit made outside a live session becomes a dated amendment */
@@ -626,15 +610,16 @@ class Component extends DCLogic {
     return f ? { en: f[1], mins: f[3] } : { en: '—', mins: 20 };
   }
 
-  statementOf(c) {
+  statementOf(c, open) {
     const ch = c.chart || {};
     const dx = ch.dx || [];
     if (!dx.length) return 'Diagnosis not yet recorded — findings are approved on the Diagnosis screen.';
     const primary = dx[0][0];
     const rest = dx.slice(1).map(d => d[0]);
-    const age = (c.meta || '').split('·')[0].trim();
-    const sex = (c.meta || '').indexOf('Female') >= 0 ? 'female' : 'male';
-    let s = age + ' ' + sex + ' presenting with ' + primary;
+    const years = open ? window.OT.age(open.patient.dob) : null;
+    const age = years === null ? '' : years + 'y';
+    const sex = open && open.patient.sex ? open.patient.sex.toLowerCase() : '';
+    let s = (([age, sex].filter(Boolean).join(' ')) || 'Patient') + ' presenting with ' + primary;
     if (rest.length) s += ', on a background of ' + rest.slice(0, 3).join(', ');
     const d = c.detail || {};
     if (d.cc) s += '. The patient’s own complaint is ' + d.cc.charAt(0).toLowerCase() + d.cc.slice(1);
@@ -643,7 +628,17 @@ class Component extends DCLogic {
 
   renderVals() {
     const K = this.K(), C = this.C();
-    const c = (C.byId || (() => null))(this.caseId());
+    const OT = window.OT;
+    const open = this.cur();
+    const c = open ? (C.byId || (() => null))(open.id) : null;
+    const hero = open && open.records.media[0] ? open.records.media[0].src : '';
+    const lastVisit = open && open.visits[0] ? open.visits[0].date : null;
+    const nextIso = open && open.nextVisit ? open.nextVisit : null;
+    const dayDiff = (from, to) => {
+      const p = iso => { const q = iso.split('-'); return Date.UTC(+q[0], +q[1] - 1, +q[2]); };
+      return Math.round((p(to) - p(from)) / 86400000);
+    };
+    const nextOff = nextIso ? dayDiff(OT.DEMO_TODAY, nextIso) : null;
     const tab = this.state.tab || this.props.tab || 'overview';
     const base = {
       tabs: this.tabDefs.map(t => {
@@ -808,18 +803,16 @@ class Component extends DCLogic {
       };
     });
 
-    /* records comparison — the library stands in for the real record sets */
-    const face = (c.meta || '').indexOf('Female') >= 0 ? 'assets/face-f.jpeg' : 'assets/face-m.jpeg';
+    /* records comparison: the case's own media (first five, media[0] is the hero). No second capture yet,
+       so the current side shows the empty image. No media: one empty tile. */
     const noRecord = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#f6f8fb"/>'
       + '<text x="60" y="56" font-family="Outfit, system-ui, sans-serif" font-size="10" font-weight="600" fill="#94a3b8"'
       + ' text-anchor="middle">No current</text><text x="60" y="70" font-family="Outfit, system-ui, sans-serif" font-size="10"'
       + ' font-weight="600" fill="#94a3b8" text-anchor="middle">record</text></svg>');
-    const viewDefs = [['Frontal', face, noRecord],
-                      ['Intraoral frontal', 'assets/p07.jpeg', 'assets/p08.jpeg'],
-                      ['Upper occlusal', 'assets/p02.jpeg', 'assets/p03.jpeg'],
-                      ['Lower occlusal', 'assets/p01.jpeg', 'assets/p04.jpeg'],
-                      ['Right buccal', 'assets/p05.jpeg', 'assets/p06.jpeg']];
+    const media = open ? open.records.media : [];
+    const viewDefs = media.length ? media.slice(0, 5).map(m => [m.label, m.src, noRecord])
+      : [[OT.EMPTY, noRecord, noRecord]];
     const v = this.state.viewer;
     const viewerDef = v !== null && v !== undefined ? viewDefs[v] : null;
 
@@ -827,28 +820,27 @@ class Component extends DCLogic {
     const objectiveSource = (ch.problems || []).length ? (ch.problems || []).slice()
       : ((s.next && s.next.plan) || []).map(t => [t, 'progress']);
 
-    const nextOff = s.next ? s.next.off : null;
     const vd = this.visitDef(s.next ? s.next.v : '');
     const planPairs = ch.plan ? [['Extraction', ch.plan.ex], ['Appliance', ch.plan.appl], ['Mechanics', ch.plan.mech],
                                 ['Anchorage', ch.plan.anch], ['Est. duration', est ? est + ' months' : '']].filter(p => p[1]) : [];
 
     return Object.assign(base, {
-      name: c.name, meta: c.meta, caseId: c.id,
+      name: OT.empty(c.name), meta: OT.empty(c.meta), caseId: OT.empty(c.id),
       hasCC: !!d.cc, cc: d.cc || '',
-      photo: (this.state.hash || {}).photo || this.initialsAvatar(c.name),
+      photo: hero || this.initialsAvatar(c.name),
       fallback: this.initialsAvatar(c.name),
       stage: st.en, stageBg: st.bg, stageFg: st.fg, stageDot: st.dot,
       hasFlags: flags.length > 0, noFlags: flags.length === 0,
       flags: flags.map(f => ({ label: f.en, bg: toneBg(f.tone), fg: toneFg(f.tone), title: f.impact })),
       updatedNote: this.state.amendments.length
         ? this.state.amendments.length + ' amendment' + (this.state.amendments.length > 1 ? 's' : '') + ' today'
-        : (s.last ? 'Last updated ' + this.shortDate(-s.last.d) : ''),
+        : (lastVisit ? 'Last updated ' + OT.fmtDate(lastVisit) : ''),
       startSession: () => {
         if (this.props.onNavigate) { this.props.onNavigate('dashboard', { openId: c.id }); return; }
         window.location.href = encodeURI('OrthoTrack Case Dashboard v2 EN.dc.html') + '#open=' + encodeURIComponent(c.id);
       },
 
-      statement: this.statementOf(c),
+      statement: this.statementOf(c, open),
       dx: (ch.dx || []).map(x => ({ label: x[0], bg: toneBg(x[1]), fg: toneFg(x[1]) })),
       dxGroups: groups,
       baseRows: tracked.map(k => {
@@ -885,10 +877,10 @@ class Component extends DCLogic {
         fg: i === wires.length - 1 ? '#6d28d9' : '#64748b'
       })),
 
-      nextDate: nextOff === null ? '—' : this.shortDate(nextOff),
+      nextDate: nextIso ? OT.fmtDate(nextIso) : '—',
       nextType: vd.en,
       nextFg: nextOff === null ? '#94a3b8' : nextOff < 0 ? '#b91c1c' : nextOff === 0 ? '#1d4ed8' : '#0f172a',
-      nextWhen: nextOff === null ? 'Not booked yet' : nextOff < 0 ? Math.abs(nextOff) + ' days overdue' : nextOff === 0 ? 'Today at ' + s.next.t : 'In ' + nextOff + ' days · ' + s.next.t,
+      nextWhen: nextIso ? OT.fmtRel(nextIso) : 'Not booked yet',
       nextPlan: ((s.next && s.next.plan) || []).map(t => ({ text: t })),
 
       hasProblems: problemList.length > 0, noProblems: problemList.length === 0,
@@ -930,7 +922,6 @@ class Component extends DCLogic {
       logCount: history.length + ' sessions',
       log: history.map(h => {
         const open = this.state.openSession === h.index;
-        const days = Math.round((new Date() - h.date) / 86400000);
         const tint = h.missed ? ['#fef2f2', '#b91c1c']
           : (h.type === 'Bonding' || h.type === 'Debond' || h.type === 'Aligner start') ? ['#f5f3ff', '#6d28d9']
           : h.type === 'Progress records' ? ['#eff6ff', '#1d4ed8']
@@ -938,7 +929,7 @@ class Component extends DCLogic {
           : ['#ecfdf5', '#047857'];
         const dl = h.deltas[0];
         return {
-          date: this.fmt(h.date), ago: days + 'd ago',
+          date: this.fmt(h.date), ago: OT.fmtRel(this.iso(h.date)),
           dateFg: h.missed ? '#b91c1c' : '#0f172a',
           type: h.missed ? 'Missed' : h.type,
           typeBg: tint[0], typeFg: tint[1],

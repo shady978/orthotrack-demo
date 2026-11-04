@@ -13,8 +13,6 @@
 <link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
 <link rel="stylesheet" href="assets/vendor/css/google-outfit-400-700.css">
-<script src="./ortho-knowledge-en.js"></script>
-<script src="./ortho-cases.js"></script>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -77,9 +75,6 @@ button,input,select,textarea{font-family:inherit}
         <span style="width:6px;height:6px;border-radius:50%;background:#d97706"></span>
         <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#b45309">Demo data</span>
       </span>
-      <sc-if value="{{ hasExtras }}" hint-placeholder-val="{{ false }}">
-        <button type="button" onClick="{{ onResetDemo }}" title="Remove the saved test cases and show the demo set only" style="min-height:30px;padding:0 11px;border-radius:9px;border:1px solid #e8edf3;background:#ffffff;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#64748b;cursor:pointer" style-hover="background:#fef2f2;border-color:#fecaca;color:#b91c1c">Clear {{ extraCount }} saved</button>
-      </sc-if>
       <div style="margin-inline-start:auto;display:flex;align-items:center;gap:10px">
         <div style="display:inline-flex;padding:4px;gap:3px;background:#f6f8fb;border-radius:12px">
           <span style="min-height:34px;padding:0 13px;display:inline-flex;align-items:center;border-radius:9px;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;box-shadow:0 1px 2px rgba(15,23,42,0.09)">EN</span>
@@ -691,11 +686,8 @@ button,input,select,textarea{font-family:inherit}
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
   &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: any) =&gt; void&quot;},
-  &quot;onReset&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;() =&gt; void&quot;},
   &quot;onLang&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;() =&gt; void&quot;},
-  &quot;openId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
-  &quot;extraCase&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;any[]&quot;},
-  &quot;extraCases&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;any[][]&quot;}
+  &quot;openId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;}
 }">
 class Component extends DCLogic {
   state = { tab: null, scope: 'today', query: '', view: 'all', sort: 'visit',
@@ -755,30 +747,6 @@ class Component extends DCLogic {
 
   get records() { return (window.OrthoCases || {}).records || {}; }
 
-  /* the Records screen resumes from an overrideRecord.progress patch, so translate
-     the case's completeness into the shape that screen already understands */
-  recordPayload(o) {
-    if (!o.seeded) return o.record || null;
-    const rc = this.records[o.id];
-    if (!rc) return null;
-    const slots = ['exo-0', 'exo-1', 'exo-2', 'exo-3', 'exo-4', 'exo-5', 'exo-6',
-                   'intra-0', 'intra-1', 'intra-2', 'intra-3', 'intra-4', 'intra-5', 'intra-6'];
-    const uploads = {};
-    slots.slice(0, rc.done).forEach((k, i) => {
-      uploads[k] = { src: k.indexOf('exo') === 0 ? (o.photo || 'assets/face-m.jpeg') : this.localPhoto((i % 14) + 1),
-                     name: k + '.jpeg' };
-    });
-    const bits = String(o.meta || '').split('·').map(t => t.trim());
-    const age = (bits[0] || '').replace(/[^0-9]/g, '');
-    return {
-      progress: {
-        uploads: uploads,
-        newInfo: { name: o.name, gender: bits[1] || '', age: age, complaint: bits[2] || '' },
-        complaint: bits[2] || ''
-      }
-    };
-  }
-
   /* a plan item's recorder is inferred from its wording — the item IS the action IS the log */
   recorderFor(text) {
     const t = text.toLowerCase();
@@ -801,8 +769,6 @@ class Component extends DCLogic {
   };
 
   K() { return window.OrthoKnowledge || {}; }
-
-  localPhoto(n) { return 'assets/p' + (n < 10 ? '0' + n : n) + '.jpeg'; }
 
   initials(name) {
     const strip = t => {
@@ -833,23 +799,20 @@ class Component extends DCLogic {
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   }
 
-  realPhotos = { '2026-0131': 'assets/face-f.jpeg', '2026-0148': 'assets/face-m.jpeg' };
-
-  avatar(id, name) {
-    return this.realPhotos[id] || this.initialsAvatar(name);
+  /* the case's hero photo (records.media[0]) from the store, or initials when it has none */
+  heroOf(id, name) {
+    const sc = window.OT.store.get(id);
+    const m = sc && sc.records.media[0];
+    return m ? m.src : this.initialsAvatar(name);
   }
 
+  /* a day offset from the demo day (OT.DEMO_TODAY), as YYYY-MM-DD: the store's date format */
   dayISO(off) {
-    const d = new Date(); d.setDate(d.getDate() + off);
-    const p = n => (n < 10 ? '0' + n : '' + n);
-    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+    const q = window.OT.DEMO_TODAY.split('-');
+    return new Date(Date.UTC(+q[0], +q[1] - 1, +q[2]) + off * 86400000).toISOString().slice(0, 10);
   }
 
-  shortDate(off) {
-    const d = new Date(); d.setDate(d.getDate() + off);
-    const p = n => (n < 10 ? '0' + n : '' + n);
-    return p(d.getDate()) + '/' + p(d.getMonth() + 1);
-  }
+  shortDate(off) { return window.OT.fmtDate(this.dayISO(off)); }
 
   visitDef(key) {
     const f = (this.K().visitTypes || []).filter(v => v[0] === key)[0];
@@ -884,20 +847,12 @@ class Component extends DCLogic {
   }
 
   build() {
-    const extras = (this.props.extraCases || (this.props.extraCase ? [this.props.extraCase] : []))
-      .slice().reverse().map((c, i) => ({
-        seeded: false, record: c[10] || null,
-        id: c[3] || 'ORT-2026-NEW' + i, name: c[0] || 'New case',
-        photo: c[1] || this.initialsAvatar(c[0] || 'New case'), fallback: this.initialsAvatar(c[0] || 'New case'), meta: c[2] || '',
-        stage: 'consultation', mo: 0, flags: {},
-        last: { d: 0, items: ['Case created in this preview'] },
-        next: { off: null, t: '', v: '', plan: ['Complete records'] }
-      }));
-    const rows = extras.concat(this.seed.map((c, i) => ({
+    /* every row is a case of the store (OrthoCases.seed is a view of it); no ids are made up here */
+    const rows = this.seed.map(c => ({
       seeded: true, id: 'ORT-' + c.id, name: c.n, meta: c.meta, stage: (this.K().stageKey || (k => k))(c.stage), mo: c.mo,
-      photo: this.avatar(c.id, c.n), fallback: this.initialsAvatar(c.n),
+      photo: this.heroOf('ORT-' + c.id, c.n), fallback: this.initialsAvatar(c.n),
       flags: this.expandFlags(c.f), last: c.last, next: c.next
-    })));
+    }));
     rows.forEach(o => {
       /* a booking made from the drawer overrides the seeded appointment */
       const bk = (this.state.sess[o.id] || {}).booked;
@@ -935,8 +890,9 @@ class Component extends DCLogic {
   }
 
   go(o, screen) {
+    /* the case being opened is the store's current case: the other screens read it from there */
+    if (window.OT.store) window.OT.store.setCurrent(o.id);
     const info = { name: o.name, id: o.id, meta: o.meta, photo: o.photo, stage: this.stageInfo(o.stage).en };
-    if (screen === 'records') info.record = this.recordPayload(o);
     /* a complex visit has no dedicated screen yet — the case file's log is the closest thing */
     if (screen === 'session') { info.notice = 'The full Session screen is coming soon — this is the case file'; info.tab = 'log'; }
     if (this.props.onNavigate) { this.props.onNavigate(screen === 'overview' ? 'casefile' : screen, info); return; }
@@ -1046,8 +1002,8 @@ class Component extends DCLogic {
     const applianceLine = appliance.map(a => a[0].charAt(0) + a[0].slice(1).toLowerCase() + ' ' + a[1]).join(' · ');
 
     /* photo gallery: pick from the case library or upload */
-    const library = [{ src: 'assets/face-f.jpeg', label: 'Frontal' }, { src: 'assets/face-m.jpeg', label: 'Frontal' }]
-      .concat(Array.from({ length: 14 }, (_, i) => ({ src: 'assets/p' + (i < 9 ? '0' : '') + (i + 1) + '.jpeg', label: 'Intraoral' })))
+    const caseRec = window.OT.store.get(o.id);
+    const library = ((caseRec && caseRec.records.media) || []).map(m => ({ src: m.src, label: m.label }))
       .concat((S.uploads || []).map(u => ({ src: u, label: 'Uploaded' })));
     const gSlot = this.state.gallery;
     const openGallery = v => { if (live) this.setState({ gallery: v }); };
@@ -1127,7 +1083,7 @@ class Component extends DCLogic {
     const nextDays = custom ? S.customOff : chosen * unitDays;
     const onNextDate = ev => {
       if (!editable || !ev.target.value) return;
-      const t = new Date(); t.setHours(0, 0, 0, 0);
+      const t = new Date(window.OT.DEMO_TODAY + 'T00:00:00');
       const d = new Date(ev.target.value + 'T00:00:00');
       const diff = Math.round((d - t) / 86400000);
       if (diff >= 0) this.patchSess(o.id, { customOff: diff, interval: null });
@@ -1295,7 +1251,7 @@ class Component extends DCLogic {
       dApplianceLine: applianceLine,
       dAppliance: appliance.map(a => ({ arch: a[0], value: a[1] })),
 
-      dLastWhen: o.last.d + ' days ago · ' + this.shortDate(-o.last.d),
+      dLastWhen: window.OT.fmtRel(this.dayISO(-o.last.d)) + ' · ' + this.shortDate(-o.last.d),
       dLastFirst: lastFirst,
       dLastMore: (o.last.items || []).length > 1 ? '+' + ((o.last.items || []).length - 1) : '',
       dHasComp: !!compChip,
@@ -1523,9 +1479,6 @@ class Component extends DCLogic {
 
     return {
       showAside: !this.props.embedded,
-      hasExtras: (this.props.extraCases || []).length > 0 && !!this.props.onReset,
-      extraCount: String((this.props.extraCases || []).length),
-      onResetDemo: () => { if (this.props.onReset) this.props.onReset(); },
       soonLinks: this.soonLinks,
       sideW: this.state.collapsed ? '76px' : '244px',
       labelOp: this.state.collapsed ? 0 : 1,
@@ -1543,7 +1496,7 @@ class Component extends DCLogic {
       subline: remaining
         ? remaining + ' visits left today, and ' + overdue.length + ' cases are overdue.'
         : 'Today\'s schedule is done — ' + overdue.length + ' overdue cases are waiting on you.',
-      todayLong: this.dayISO(0),
+      todayLong: window.OT.fmtDate(this.dayISO(0)),
 
       metricsPrimary: primaryDefs.map(m => ({
         label: m[1], n: m[2], sub: m[3], fg: m[4], tint: m[5], title: m[6], onClick: m[7],

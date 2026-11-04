@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
 <link rel="stylesheet" href="assets/vendor/css/google-inter-300-700-400-600.css">
-<script src="ortho-knowledge-en.js"></script>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -210,11 +209,11 @@ button,input,select,textarea{font-family:inherit}
                 <div style="display:grid;grid-template-columns:{{ pairCols }};gap:12px">
                   <div style="display:grid;gap:6px;min-width:0">
                    <span style="font-size:12.5px;font-weight:500;color:#64748b">City · country</span>
-                    <input value="{{ niCity }}" onInput="{{ setNiCity }}" placeholder="Cairo · Egypt" style="width:100%;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)" />
+                    <input value="{{ niCity }}" onInput="{{ setNiCity }}" placeholder="City · country" style="width:100%;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)" />
                   </div>
                   <div style="display:grid;gap:6px">
                    <span style="font-size:12.5px;font-weight:500;color:#64748b">External file number</span>
-                    <input value="{{ niExt }}" onInput="{{ setNiExt }}" dir="ltr" placeholder="005025" style="width:100%;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-family:Inter,sans-serif;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)" />
+                    <input value="{{ niExt }}" onInput="{{ setNiExt }}" dir="ltr" placeholder="File number" style="width:100%;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-family:Inter,sans-serif;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)" />
                   </div>
                 </div>
                 <sc-if value="{{ niAgeShown }}" hint-placeholder-val="{{ false }}">
@@ -343,13 +342,20 @@ button,input,select,textarea{font-family:inherit}
             </div>
             <sc-if value="{{ hasPhotos }}" hint-placeholder-val="{{ true }}">
             <div style="padding:14px 18px;display:grid;grid-template-columns:repeat(7,1fr);gap:10px">
-              <button type="button" data-index="0" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p04.jpeg" alt="Frontal repose" style="width:100%;height:112px;object-fit:cover;transform:{{ tf0 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Frontal repose</span></button>
-              <button type="button" data-index="1" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p06.jpeg" alt="Frontal smile" style="width:100%;height:112px;object-fit:cover;transform:{{ tf1 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Frontal smile</span></button>
-              <button type="button" data-index="2" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p12.jpeg" alt="Oblique repose" style="width:100%;height:112px;object-fit:cover;transform:{{ tf2 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Oblique repose</span></button>
-              <button type="button" data-index="3" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p14.jpeg" alt="Oblique smile" style="width:100%;height:112px;object-fit:cover;transform:{{ tf3 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Oblique smile</span></button>
-              <button type="button" data-index="4" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p08.jpeg" alt="Profile repose" style="width:100%;height:112px;object-fit:cover;transform:{{ tf4 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Profile repose</span></button>
-              <button type="button" data-index="5" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p10.jpeg" alt="Profile smile" style="width:100%;height:112px;object-fit:cover;transform:{{ tf5 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Profile smile</span></button>
-              <button type="button" data-index="6" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p02.jpeg" alt="Lips at rest" style="width:100%;height:112px;object-fit:cover;transform:{{ tf6 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Lips at rest</span></button>
+              <sc-for list="{{ exoViews }}" as="sl" hint-placeholder-count="7">
+                <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
+                  <button type="button" data-index="{{ sl.mediaIdx }}" style="position:relative;padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid;height:141px" style-hover="border-color:#2563eb">
+                    <img src="{{ sl.src }}" alt="{{ sl.label }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:{{ sl.tf }}" />
+                    <span dir="ltr" style="position:absolute;inset-inline:0;bottom:0;padding:5px 7px;background:linear-gradient(to top,rgba(15,23,42,.82),rgba(15,23,42,0));color:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;text-align:center">{{ sl.label }}</span>
+                  </button>
+                </sc-if>
+                <sc-if value="{{ sl.empty }}" hint-placeholder-val="{{ true }}">
+                  <div style="position:relative;border:1px dashed #cbd5e1;border-radius:16px;background:#f6f8fb;display:grid;align-content:center;justify-items:center;gap:6px;height:141px;padding:8px">
+                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#94a3b8;text-align:center;line-height:1.4">{{ sl.label }}</span>
+                    <span style="font-size:9.5px;font-weight:400;color:#cbd5e1">Not recorded yet</span>
+                  </div>
+                </sc-if>
+              </sc-for>
             </div>
             </sc-if>
             <sc-if value="{{ noPhotos }}" hint-placeholder-val="{{ false }}">
@@ -387,13 +393,20 @@ button,input,select,textarea{font-family:inherit}
             </div>
             <sc-if value="{{ hasPhotos }}" hint-placeholder-val="{{ true }}">
             <div style="padding:14px 18px;display:grid;grid-template-columns:repeat(7,1fr);gap:10px">
-              <button type="button" data-index="7" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p07.jpeg" alt="Frontal occlusion" style="width:100%;height:112px;object-fit:cover;transform:{{ tf7 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Frontal occlusion</span></button>
-              <button type="button" data-index="8" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p05.jpeg" alt="Frontal open" style="width:100%;height:112px;object-fit:cover;transform:{{ tf8 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Frontal open</span></button>
-              <button type="button" data-index="9" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p03.jpeg" alt="Upper occlusal" style="width:100%;height:112px;object-fit:cover;transform:{{ tf9 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Upper occlusal</span></button>
-              <button type="button" data-index="10" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p01.jpeg" alt="Lower occlusal" style="width:100%;height:112px;object-fit:cover;transform:{{ tf10 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Lower occlusal</span></button>
-              <button type="button" data-index="11" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p09.jpeg" alt="Right buccal" style="width:100%;height:112px;object-fit:cover;transform:{{ tf11 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Right buccal</span></button>
-              <button type="button" data-index="12" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p11.jpeg" alt="Left buccal" style="width:100%;height:112px;object-fit:cover;transform:{{ tf12 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Left buccal</span></button>
-              <button type="button" data-index="13" style="padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid" style-hover="border-color:#2563eb"><img src="assets/p13.jpeg" alt="Buccal detail" style="width:100%;height:112px;object-fit:cover;transform:{{ tf13 }};transform-origin:center"><span dir="ltr" style="unicode-bidi:isolate;padding:6px;background:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Buccal detail</span></button>
+              <sc-for list="{{ intraViews }}" as="sl" hint-placeholder-count="7">
+                <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
+                  <button type="button" data-index="{{ sl.mediaIdx }}" style="position:relative;padding:0;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;background:#0f172a;cursor:pointer;display:grid;height:141px" style-hover="border-color:#2563eb">
+                    <img src="{{ sl.src }}" alt="{{ sl.label }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:{{ sl.tf }}" />
+                    <span dir="ltr" style="position:absolute;inset-inline:0;bottom:0;padding:5px 7px;background:linear-gradient(to top,rgba(15,23,42,.82),rgba(15,23,42,0));color:#ffffff;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;text-align:center">{{ sl.label }}</span>
+                  </button>
+                </sc-if>
+                <sc-if value="{{ sl.empty }}" hint-placeholder-val="{{ true }}">
+                  <div style="position:relative;border:1px dashed #cbd5e1;border-radius:16px;background:#f6f8fb;display:grid;align-content:center;justify-items:center;gap:6px;height:141px;padding:8px">
+                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:9.5px;font-weight:600;color:#94a3b8;text-align:center;line-height:1.4">{{ sl.label }}</span>
+                    <span style="font-size:9.5px;font-weight:400;color:#cbd5e1">Not recorded yet</span>
+                  </div>
+                </sc-if>
+              </sc-for>
             </div>
             </sc-if>
             <sc-if value="{{ noPhotos }}" hint-placeholder-val="{{ false }}">
@@ -1583,49 +1596,54 @@ class Component extends DCLogic {
      uploaded, keeping each slot\'s English view label and photoViews key so the
      gallery, viewer and editor all work unchanged. */
   get mediaDefs() {
-    if (!this.props.newCase) return this.mediaDefsAll;
+    if (!this.props.newCase) {
+      /* an existing case: its own photos and radiographs (records.media), in the order the store keeps them */
+      const c = this.caseNow();
+      return ((c && c.records.media) || []).map(m => {
+        const slot = this.mediaDefsAll.find(s => s[1] === m.label);
+        return [m.src, m.label, slot ? slot[2] : m.label, slot ? slot[3] : m.group];
+      });
+    }
     const up = this.state.uploads || {};
     return this.slotOrder
       .map((k, i) => (up[k] ? [up[k].src, this.mediaDefsAll[i][1], this.mediaDefsAll[i][2], this.mediaDefsAll[i][3], k] : null))
       .filter(Boolean);
   }
 
+  /* label, long label and view key per photo slot. No file path here: the src is the case's own (records.media). */
   mediaDefsAll = [
-    ['assets/p04.jpeg', 'Frontal repose', 'Frontal — repose', 'frontal'],
-    ['assets/p06.jpeg', 'Frontal smile', 'Frontal — smile', 'frontal'],
-    ['assets/p12.jpeg', 'Oblique repose', 'Oblique — repose', 'oblique'],
-    ['assets/p14.jpeg', 'Oblique smile', 'Oblique — smile', 'oblique'],
-    ['assets/p08.jpeg', 'Profile repose', 'Profile — repose', 'profile'],
-    ['assets/p10.jpeg', 'Profile smile', 'Profile — smile', 'profile'],
-    ['assets/p02.jpeg', 'Lips at rest', 'Lips at rest', 'lips'],
-    ['assets/p07.jpeg', 'Frontal occlusion', 'Intraoral frontal — in occlusion', 'ioFrontal'],
-    ['assets/p05.jpeg', 'Frontal open', 'Intraoral frontal — open', 'ioFrontal'],
-    ['assets/p03.jpeg', 'Upper occlusal', 'Upper occlusal', 'ioOcclusal'],
-    ['assets/p01.jpeg', 'Lower occlusal', 'Lower occlusal', 'ioOcclusal'],
-    ['assets/p09.jpeg', 'Right buccal', 'Right buccal', 'ioBuccal'],
-    ['assets/p11.jpeg', 'Left buccal', 'Left buccal', 'ioBuccal'],
-    ['assets/p13.jpeg', 'Buccal detail', 'Buccal detail', 'ioBuccal'],
-    ['assets/ceph.png', 'Lateral cephalogram', 'Lateral cephalogram', 'radiograph'],
-    ['assets/opg.png', 'Panoramic (OPG)', 'Panoramic — OPG', 'radiograph']
+    ['', 'Frontal repose', 'Frontal — repose', 'frontal'],
+    ['', 'Frontal smile', 'Frontal — smile', 'frontal'],
+    ['', 'Oblique repose', 'Oblique — repose', 'oblique'],
+    ['', 'Oblique smile', 'Oblique — smile', 'oblique'],
+    ['', 'Profile repose', 'Profile — repose', 'profile'],
+    ['', 'Profile smile', 'Profile — smile', 'profile'],
+    ['', 'Lips at rest', 'Lips at rest', 'lips'],
+    ['', 'Frontal occlusion', 'Intraoral frontal — in occlusion', 'ioFrontal'],
+    ['', 'Frontal open', 'Intraoral frontal — open', 'ioFrontal'],
+    ['', 'Upper occlusal', 'Upper occlusal', 'ioOcclusal'],
+    ['', 'Lower occlusal', 'Lower occlusal', 'ioOcclusal'],
+    ['', 'Right buccal', 'Right buccal', 'ioBuccal'],
+    ['', 'Left buccal', 'Left buccal', 'ioBuccal'],
+    ['', 'Buccal detail', 'Buccal detail', 'ioBuccal'],
+    ['', 'Lateral cephalogram', 'Lateral cephalogram', 'radiograph'],
+    ['', 'Panoramic (OPG)', 'Panoramic — OPG', 'radiograph']
   ];
 
   state = {
-    reports: [
-      ['Most important cephalometric readings.pdf', 'PDF', 'Asnan Scan', '2026-07-31', '820 KB'],
-      ['Ehab Mohammed Hosny — CBCT.pdf', 'PDF', 'Asnan Scan', '2026-07-31', '1.4 MB']
-    ],
+    reports: [],   /* the case's records.files, set on mount (seedFromCase) */
     demoFilled: false,
     activeReport: 0, repDrag: false, reportSrc: { 0: 'ceph', 1: 'cbct' },
     radMag: {}, radChecks: {}, radOpen: null,
-    radFiles: { ceph: 1, opg: 1, cbct: 0, pa: 0, handwrist: 0, tmj: 0 },
+    radFiles: { ceph: 0, opg: 0, cbct: 0, pa: 0, handwrist: 0, tmj: 0 },
     win: { b: 100, c: 100, invert: false },
     toasts: [], held: false, tSeq: 0, openGroup: 'ap', picOpen: true, copied: false, panelTab: 'summary', pStatus: {}, openSection: 'occ-incisor', helpClosed: {}, viewPick: {}, gallery: null, teeth: {}, toothMode: {},
-    prevValues: { 'ap-2': '-2.8', 'ap-3': '-5.1', 'dent-0': '116.2', 'vert-1': '26.4' },
+    prevValues: {},
     edits: {}, ed: null, dragging: false, edSaved: '', pickMode: false, picks: [], mirror: false, checksDone: {}, cvm: {},
     hist: [], histAt: -1, checksOpen: false,
     collapsed: false, step: 0, phase: 'idle', filled: 0, values: {}, reviewed: {}, info: {}, confirmed: false,
     exam: {}, findings: {}, med: null, alg: null, allergens: {}, habits: {},
-    viewer: null, saved: 'Saved automatically 14:32'
+    viewer: null, saved: 'Saved automatically'
   };
 
   DEF = { rot: 0, zoom: 100, x: 0, y: 0, ratio: 'free', guides: true };
@@ -1738,8 +1756,9 @@ class Component extends DCLogic {
 
   hydrate() {
     if (this.props.newCase) { this._hydrated = true; return; }
-    const r = this.props.overrideRecord;
-    const p = r && r.progress;
+    /* the saved draft of the open case (screenDraft.records, written by onRecordChange) */
+    const c = this.caseNow();
+    const p = c && c.screenDraft && c.screenDraft.records;
     if (!p || this._hydrated) return;
     this._hydrated = true;
     const patch = {};
@@ -1763,7 +1782,50 @@ class Component extends DCLogic {
     }, 240);
   }
 
+  /* the open case, read from the store. Only the case the shell has open (or the store's current one) is read. */
+  caseNow() {
+    const OT = window.OT;
+    if (!OT || this.props.newCase) return null;
+    const id = this.props.overrideId || (OT.current() || {}).id;
+    return id ? OT.store.get(id) : null;
+  }
+
+  /* on mount: the case's analysis files, and the radiographs and CBCT it already has. A new case has none. */
+  seedFromCase() {
+    const c = this.caseNow();
+    if (!c) return;
+    const OT = window.OT;
+    const files = c.records.files || [];
+    const media = c.records.media || [];
+    this.setState({
+      reports: files.map(f => [f.name, f.type, f.source, OT.fmtDate(f.date), f.size]),
+      radFiles: {
+        ceph: media.some(m => m.label === 'Lateral cephalogram') ? 1 : 0,
+        opg: media.some(m => m.label === 'Panoramic (OPG)') ? 1 : 0,
+        cbct: files.some(f => /CBCT/i.test(f.name)) ? 1 : 0,
+        pa: 0, handwrist: 0, tmj: 0
+      }
+    });
+  }
+
+  /* a value read from the analysis report: the case's own measurement, or '' when the case has none */
+  caseValue(k) {
+    const c = this.caseNow();
+    const m = c && c.measurements[k];
+    return m && m.current !== null && m.current !== undefined ? String(m.current) : '';
+  }
+
+  /* the seven photo slots of one group, for an existing case: the case's photo, or an empty slot */
+  viewRows(labels) {
+    return labels.map(l => {
+      const i = this.findMedia(l);
+      return { label: l, has: i >= 0, empty: i < 0, src: i >= 0 ? this.mediaDefs[i][0] : '',
+               tf: i >= 0 ? this.tf(i) : 'none', mediaIdx: i };
+    });
+  }
+
   componentDidMount() {
+    this.seedFromCase();
     this._stepFit = () => {
       /* embedded, the case sidebar eats ~244px — measure against the pane, not the window */
       const tight = window.innerWidth < (this.props.embedded ? 1320 : 1040);
@@ -2282,7 +2344,7 @@ class Component extends DCLogic {
     var kinds = ['XML', 'PDF', 'CSV', 'PDF'];
     var p = (i - 3 + names.length) % names.length;
     this.setState(st => ({
-      reports: st.reports.concat([[names[p], kinds[p], 'Asnan Scan', '2026-08-27', (0.4 + p * 0.6).toFixed(1) + ' MB']]),
+      reports: st.reports.concat([[names[p], kinds[p], 'Uploaded', window.OT.fmtDate(window.OT.DEMO_TODAY), (0.4 + p * 0.6).toFixed(1) + ' MB']]),
       repDrag: false
     }));
     this.notify({ tone: 'info', title: 'An analysis report was added', body: names[p],
@@ -2337,7 +2399,7 @@ class Component extends DCLogic {
     const k = key + '-' + i, v = this.state.values[k];
     if (v !== undefined) return v;
     const idx = this.order().indexOf(k);
-    return (this.state.phase !== 'idle' && idx < this.state.filled) ? String(this.rowDefs[key][i][3]) : '';
+    return (this.state.phase !== 'idle' && idx < this.state.filled) ? this.caseValue(k) : '';
   }
 
   pendingReviews() {
@@ -2385,33 +2447,6 @@ class Component extends DCLogic {
     this.state.newInfo || {}
   );
   setNi = (k, v) => this.setState(s => ({ newInfo: Object.assign({}, s.newInfo, { [k]: v }) }));
-
-  /* the uploaded demo case — one click fills the intake with it end to end */
-  demoCase = {
-    newInfo: { name: 'Ehab Mohammed Hosny', dob: '2011-04-18', gender: 'Male',
-               guardian: 'Mohammed Hosny', phone: '+20 100 442 8817', city: 'Cairo · Egypt', ext: '005025' },
-    med: false, medText: '', alg: false, allergens: [],
-    habits: ['Mouth breathing'],
-    complaint: 'Spacing', complaintText: 'Gaps between the upper front teeth',
-    photos: ['assets/face-m.jpeg', 'assets/face-m.jpeg', 'assets/face-m.jpeg', 'assets/face-m.jpeg',
-             'assets/face-m.jpeg', 'assets/face-m.jpeg', 'assets/face-m.jpeg',
-             'assets/p07.jpeg', 'assets/p08.jpeg', 'assets/p02.jpeg', 'assets/p01.jpeg',
-             'assets/p05.jpeg', 'assets/p06.jpeg', 'assets/p03.jpeg']
-  };
-
-  fillFromDemo = () => {
-    const d = this.demoCase;
-    const uploads = {};
-    this.slotOrder.forEach((k, i) => { uploads[k] = { src: d.photos[i], name: k + '.jpeg' }; });
-    this.setState({
-      newInfo: Object.assign({}, d.newInfo),
-      med: d.med, medText: d.medText, alg: d.alg, allergens: d.allergens.slice(),
-      habits: d.habits.slice(), complaint: d.complaint, complaintText: d.complaintText,
-      uploads: uploads, demoFilled: true
-    });
-    this.notify({ id: 'demofill', tone: 'info', title: 'Demo case loaded',
-                  body: d.newInfo.name + ' — demographics, history and all 14 photos', life: 4200 });
-  };
 
   pickFile(key) {
     const inp = document.createElement('input');
@@ -2467,12 +2502,11 @@ class Component extends DCLogic {
   }
 
   ageFromDob(dob) {
-    if (!dob) return '';
-    const b = new Date(dob); if (isNaN(b)) return '';
-    const now = new Date();
-    let y = now.getFullYear() - b.getFullYear();
-    let m = now.getMonth() - b.getMonth();
-    if (now.getDate() < b.getDate()) m -= 1;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dob || '')) return '';
+    const b = dob.split('-').map(Number), now = window.OT.DEMO_TODAY.split('-').map(Number);
+    let y = now[0] - b[0];
+    let m = now[1] - b[1];
+    if (now[2] < b[2]) m -= 1;
     if (m < 0) { y -= 1; m += 12; }
     if (y < 0) return '';
     return m ? y + ' years ' + m + ' months' : y + ' years';
@@ -2491,36 +2525,33 @@ class Component extends DCLogic {
     const dobParts = (() => { const p = (ni.dob || '').split('-'); while (p.length < 3) p.push(''); return p; })();
     const exoSlots = this.slotList('exo', ['Frontal repose', 'Frontal smile', 'Oblique repose', 'Oblique smile', 'Profile repose', 'Profile smile', 'Lips at rest']);
     const intraSlots = this.slotList('intra', ['Frontal occlusion', 'Frontal open', 'Upper occlusal', 'Lower occlusal', 'Right buccal', 'Left buccal', 'Buccal detail']);
-    const exoUp = exoSlots.filter(s => s.has).length;
-    const intraUp = intraSlots.filter(s => s.has).length;
     const newMeta = [age ? (age.match(/\d+/) || [''])[0] + 'y' : '', ni.gender].filter(Boolean).join(' · ');
     Object.assign(base, {
       editDemo: editing,
       readOnlyDemo: !editing,
       demoSourceNote: isNew ? 'New entry' : (editing ? 'Edit mode' : 'From the patient file'),
       showDemoEdit: !isNew,
-      showDemoFill: isNew,
+      showDemoFill: false,
       demoFillLabel: this.state.demoFilled ? 'Demo case loaded' : 'Fill with demo case',
-      onDemoFill: this.fillFromDemo,
       demoEditLabel: editing ? 'Done' : 'Edit',
       demoEditBg: editing ? '#2563eb' : '#ffffff',
       demoEditFg: editing ? '#ffffff' : '#64748b',
       demoEditBd: editing ? '#2563eb' : '#e8edf3',
       onDemoEdit: () => {
         if (this.state.editingDemo) { this.setState({ editingDemo: false }); return; }
-        const rec = this.props.overrideRecord || {};
+        const P = (this.caseNow() || {}).patient || {};
         this.setState({
           editingDemo: true,
           newInfo: Object.assign({
-            name: this.props.overrideName || '',
-            dob: rec.dob || '', gender: rec.gender || '',
-            guardian: rec.guardianName || '', phone: rec.guardianPhone || '',
-            city: rec.city || '', ext: rec.ext || ''
+            name: P.name || '', dob: P.dob || '', gender: P.sex || '',
+            guardian: P.guardian || '', phone: P.phone || '',
+            city: P.city || '', ext: P.fileNo || ''
           }, this.state.newInfo || {})
         });
       },
       niName: ni.name, niDob: ni.dob, niGuardian: ni.guardian, niPhone: ni.phone, niCity: ni.city, niExt: ni.ext,
       setNiName: ev => { if (this.state.nameErr) this.setState({ nameErr: false }); this.setNi('name', ev.target.value); },
+      setNiDob: ev => this.setNi('dob', ev.target.value),
       niNameBd: (this.state.nameErr && !ni.name.trim()) ? '#dc2626' : '#e8edf3',
       niNameErr: !!(this.state.nameErr && !ni.name.trim()),
       dobDay: dobParts[2], dobMonth: dobParts[1], dobYear: dobParts[0],
@@ -2580,68 +2611,88 @@ class Component extends DCLogic {
             allergy: this.state.alg === true, allergens: picked(this.state.allergens),
             habits: picked(this.state.habits),
             complaint: this.state.complaint || '', complaintText: this.state.complaintText || '',
-            conditions: picked(this.state.allergens).concat(picked(this.state.habits)).map(en => ({ en: en })),
-            createdAt: new Date().toISOString()
+            conditions: picked(this.state.allergens).concat(picked(this.state.habits)).map(en => ({ en: en }))
           });
           this.setState({ step: 1 });
         };
       }
     }
-    const r = this.props.overrideRecord || null;
-    const other = this.isOtherPatient();
-    const ph = '— Not recorded';
-    const val = (v, demo) => r ? (v || ph) : (other ? ph : demo);
+    /* the open case: its own patient facts, medical rows, complaint and photos. Null on a new case or with no case open. */
+    const OT = window.OT;
+    const c = this.caseNow();
+    const P = (c && c.patient) || {};
+    const cx = (c && c.complaint) || {};
+    const ageYears = c ? OT.age(P.dob) : null;
+    const ageLabel = ageYears === null ? '' : ageYears + ' years';
+    const metaText = c ? [ageYears === null ? '' : ageYears + 'y', P.sex || '', cx.chip || ''].filter(Boolean).join(' · ') : '';
+    /* a new case once it is saved (the shell passes its id): its header is read from the store, not typed in */
+    const savedNew = isNew && this.props.overrideId ? OT.store.get(this.props.overrideId) : null;
+    const savedNewAge = savedNew ? OT.age(savedNew.patient.dob) : null;
+    const savedNewMeta = savedNew ? [savedNewAge === null ? '' : savedNewAge + 'y', savedNew.patient.sex || '', savedNew.complaint.chip || ''].filter(Boolean).join(' · ') : '';
+    const newHeaderMeta = savedNew ? savedNewMeta : newMeta;
+    const headerPhoto = isNew ? ((savedNew && savedNew.records.media[0] && savedNew.records.media[0].src) || '') : ((c && c.records.media[0] && c.records.media[0].src) || '');
+    const exoView = isNew ? [] : this.viewRows(['Frontal repose', 'Frontal smile', 'Oblique repose', 'Oblique smile', 'Profile repose', 'Profile smile', 'Lips at rest']);
+    const intraView = isNew ? [] : this.viewRows(['Frontal occlusion', 'Frontal open', 'Upper occlusal', 'Lower occlusal', 'Right buccal', 'Left buccal', 'Buccal detail']);
+    const exoUp = isNew ? exoSlots.filter(s => s.has).length : exoView.filter(s => s.has).length;
+    const intraUp = isNew ? intraSlots.filter(s => s.has).length : intraView.filter(s => s.has).length;
+    /* the history rows read these; the store keeps no yes-count, so that row stays empty */
+    const r = c ? {
+      conditions: (c.medical || []).map(m => m.label),
+      complaint: cx.chip || null,
+      complaintText: cx.words || null
+    } : null;
     return Object.assign(base, {
       showAside: !this.props.embedded,
       onBreadcrumbDash: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); else window.location.href = 'OrthoTrack Case Dashboard v2.dc.html'; },
       onBreadcrumbSummary: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('summary'); },
       onOpenOverview: () => { if (this.props.onNavigate) this.props.onNavigate('overview'); },
-      headerName: isNew ? (this.props.overrideName || ni.name.trim() || 'New case') : (this.props.overrideName || 'Ehab Mohammed Hosny'),
-      headerId: isNew ? (this.props.overrideId || '') : (this.props.overrideId || 'ORT-2026-0148'),
+      headerName: isNew ? (savedNew ? OT.empty(savedNew.patient.name) : (ni.name.trim() || 'New case')) : OT.empty(P.name),
+      headerId: isNew ? (this.props.overrideId || '') : OT.empty(c && c.id),
       hasCaseId: !isNew || !!this.props.overrideId,
       noCaseId: isNew && !this.props.overrideId,
-      headerMeta: isNew ? (this.props.overrideMeta || newMeta) : (this.props.overrideMeta || '14y · Male · Spacing'),
-      hasCaseMeta: !isNew || !!(this.props.overrideMeta || newMeta),
-      noCaseMeta: isNew && !(this.props.overrideMeta || newMeta),
-      headerPhoto: isNew ? (this.props.overridePhoto || '') : (this.props.overridePhoto || 'assets/p04.jpeg'),
+      headerMeta: isNew ? OT.empty(newHeaderMeta) : OT.empty(metaText),
+      hasCaseMeta: !isNew || !!newHeaderMeta,
+      noCaseMeta: isNew && !newHeaderMeta,
+      headerPhoto: headerPhoto,
       hasPhotos: !isNew,
       noPhotos: isNew,
       exoSlots: exoSlots,
       intraSlots: intraSlots,
-      exoCount: isNew ? exoUp + ' / 7' : '7 / 7',
-      intraCount: isNew ? intraUp + ' / 7' : '7 / 7',
-      exoFg: isNew ? (exoUp === 7 ? '#047857' : '#b45309') : '#047857',
-      exoBg: isNew ? (exoUp === 7 ? '#ecfdf5' : '#fffbeb') : '#ecfdf5',
-      exoBd: isNew ? (exoUp === 7 ? '#a7f3d0' : '#fde68a') : '#a7f3d0',
-      intraFg: isNew ? (intraUp === 7 ? '#047857' : '#b45309') : '#047857',
-      intraBg: isNew ? (intraUp === 7 ? '#ecfdf5' : '#fffbeb') : '#ecfdf5',
-      intraBd: isNew ? (intraUp === 7 ? '#a7f3d0' : '#fde68a') : '#a7f3d0',
-      hasHeaderPhoto: !isNew || !!this.props.overridePhoto,
-      noHeaderPhoto: isNew && !this.props.overridePhoto,
-      headerInitial: (ni.name.trim() || '+').slice(0, 1),
-      demoFg: (r || !other) ? '#0f172a' : '#94a3b8',
-      demoDob: edited.dob || val(r && r.dob, '2011-04-18'),
-      demoAge: (edited.dob ? age : '') || val(r && r.ageText, '14 years 3 months'),
-      demoGender: edited.gender || val(r && r.gender, 'Male'),
-      demoGuardian: edited.guardian || val(r && r.guardianName, 'Mohammed Hosny'),
-      demoGuardianPhone: edited.phone || (r ? (r.guardianPhone || '') : (other ? '' : '+20 100 442 8817')),
-      demoCity: edited.city || val(r && r.city, 'Cairo · Egypt'),
-      demoFile: edited.ext || val(r && r.ext, '005025'),
+      exoViews: exoView,
+      intraViews: intraView,
+      exoCount: exoUp + ' / 7',
+      intraCount: intraUp + ' / 7',
+      exoFg: exoUp === 7 ? '#047857' : '#b45309',
+      exoBg: exoUp === 7 ? '#ecfdf5' : '#fffbeb',
+      exoBd: exoUp === 7 ? '#a7f3d0' : '#fde68a',
+      intraFg: intraUp === 7 ? '#047857' : '#b45309',
+      intraBg: intraUp === 7 ? '#ecfdf5' : '#fffbeb',
+      intraBd: intraUp === 7 ? '#a7f3d0' : '#fde68a',
+      hasHeaderPhoto: !!headerPhoto,
+      noHeaderPhoto: !headerPhoto,
+      headerInitial: isNew ? (ni.name.trim() || '+').slice(0, 1) : ((P.name || '+').slice(0, 1)),
+      demoFg: c ? '#0f172a' : '#94a3b8',
+      demoDob: edited.dob || OT.empty(OT.fmtDate(P.dob)),
+      demoAge: (edited.dob ? age : '') || OT.empty(ageLabel),
+      demoGender: edited.gender || OT.empty(P.sex),
+      demoGuardian: edited.guardian || OT.empty(P.guardian),
+      demoGuardianPhone: edited.phone || OT.empty(P.phone),
+      demoCity: edited.city || OT.empty(P.city),
+      demoFile: edited.ext || OT.empty(P.fileNo),
       hasRecord: !!r,
       noRecord: !r,
       histSourceNote: r ? 'Recorded at the case creation step' : 'Recorded with every case',
-      histGeneral: r ? (r.clean ? 'Healthy — no medical or dental history' : ((r.conditions || []).length + ' items recorded')) : '',
-      histYes: r ? ((r.yesCount || 0) + ' a positive answer out of eleven questions') : '',
-      histConditions: r ? (r.conditions || []).map(en => ({ en })) : [],
-      hasHistConditions: !!r && (r.conditions || []).length > 0,
-      noHistConditions: !!r && (r.conditions || []).length === 0,
-      histComplaint: r ? (r.complaint || '—') : '',
-      histSecondary: r ? (r.secondary || []).map(s => ({ label: s })) : [],
+      histGeneral: r ? (r.conditions.length ? r.conditions.length + ' items recorded' : OT.EMPTY) : '',
+      histYes: '',
+      histConditions: r ? r.conditions.map(en => ({ en: en })) : [],
+      hasHistConditions: !!r && r.conditions.length > 0,
+      noHistConditions: !!r && r.conditions.length === 0,
+      histComplaint: r ? OT.empty(r.complaint) : '',
+      histSecondary: [],
       histComplaintText: r ? (r.complaintText || '') : '',
       hasComplaintText: !!r && !!r.complaintText,
-      fallbackComplaints: (r ? [] : (other
-        ? [((this.props.overrideMeta || '').split(' · ').pop() || '—')]
-        : ['Crowding', 'Spacing', 'Increased overjet', 'Esthetic concern', 'Jaw asymmetry'])).map((s, i) => {
+      /* the generic complaint list is for a new case only; an open case shows its own chip */
+      fallbackComplaints: (isNew ? ['Crowding', 'Spacing', 'Increased overjet', 'Esthetic concern', 'Jaw asymmetry'] : []).map((s, i) => {
           const editable = !!this.props.newCase;
           const on = editable ? this.state.complaint === s : i === 0;
           return {
@@ -2655,11 +2706,6 @@ class Component extends DCLogic {
           };
         })
     });
-  }
-
-  isOtherPatient() {
-    const n = this.props.overrideName;
-    return !!n && n !== 'Ehab Mohammed Hosny' && n !== 'إيهاب محمد حسني';
   }
 
   renderValsBase() {
@@ -2950,7 +2996,7 @@ class Component extends DCLogic {
       applyEdit: () => {
         this.setState(st => ({
           edits: Object.assign({}, st.edits, { [this.mediaKey(st.viewer)]: Object.assign({}, st.ed) }),
-          edSaved: 'Levelling saved ' + new Date().toTimeString().slice(0, 5)
+          edSaved: 'Levelling saved'
         }));
         this.notify({ tone: 'ok', title: 'Image levelling saved',
           body: (v ? v[2] : '') + ' — The original is kept, and the levelling is a new version.',
@@ -2985,7 +3031,7 @@ class Component extends DCLogic {
         const key = rt[0];
         const up = this.state.radFiles[key] > 0;
         const isVol = key === 'cbct' && up;
-        const mediaIdx = key === 'ceph' ? 14 : key === 'opg' ? 15 : -1;
+        const mediaIdx = key === 'ceph' ? this.findMedia('Lateral cephalogram') : key === 'opg' ? this.findMedia('Panoramic (OPG)') : -1;
         const mag = this.state.radMag[key] || '';
         const needsMag = rt[4];
         const magOk = !needsMag || mag !== '';
@@ -3002,13 +3048,13 @@ class Component extends DCLogic {
           needBg: rt[3] === 'required' ? '#fef2f2' : rt[3] === 'recommended' ? '#fffbeb' : '#eff6ff',
           needBd: rt[3] === 'required' ? '#fecaca' : rt[3] === 'recommended' ? '#fde68a' : '#bfdbfe',
           uploaded: up && !isVol, isVolume: isVol, empty: !up,
-          mediaIdx: mediaIdx, thumb: key === 'ceph' ? 'assets/ceph.png' : 'assets/opg.png',
-          img: up && !isVol ? this.imgEl(key === 'ceph' ? 'assets/ceph.png' : 'assets/opg.png', rt[1], mediaIdx >= 0 ? this.tf(mediaIdx) : 'none') : null,
-          slices: '412 slices',
+          mediaIdx: mediaIdx, thumb: mediaIdx >= 0 ? this.mediaDefs[mediaIdx][0] : '',
+          img: up && !isVol && mediaIdx >= 0 ? this.imgEl(this.mediaDefs[mediaIdx][0], rt[1], this.tf(mediaIdx)) : null,
+          slices: '',
           emptyBd: rt[3] === 'required' ? '#fecaca' : '#e8edf3',
           emptyBg: rt[3] === 'required' ? '#fef2f2' : '#f6f8fb',
           emptyFg: rt[3] === 'required' ? '#dc2626' : '#94a3b8',
-          meta: up ? (key === 'cbct' ? 'CS 8200 3D · 2026-07-31 · 92 MB' : 'CS 8200 3D · 2026-07-31') : 'Not uploaded yet — drag the file or click the box',
+          meta: up ? 'On file' : 'Not uploaded yet — drag the file or click the box',
           hasReason: !up && reason !== '', reason,
           needsMag, mag,
           magBd: magOk ? '#a7f3d0' : '#fde68a',
@@ -3094,10 +3140,10 @@ class Component extends DCLogic {
           return;
         }
         const total = this.order().length;
-        this.setState({ confirmed: true, saved: 'Saved automatically 14:36' });
+        this.setState({ confirmed: true, saved: 'Saved automatically' });
         this.notify({ tone: 'ok', title: 'The clinical record is closed',
           body: 'An uneditable version was created — any later correction creates a new version.',
-          stat: 'v4', statLabel: 'Record version · ' + total + ' confirmed value' });
+          stat: String(total), statLabel: 'Confirmed values in the record' });
       },
 
       groups: this.groupDefs.map(g => {
@@ -3162,7 +3208,7 @@ class Component extends DCLogic {
               markC: empty ? 'transparent' : odd ? '#d97706' : '#059669',
               hasPrev: changed, prev: prev + ' →',
               showSrc: edited && !empty,
-              src: 'HZ', srcTitle: 'Edited by the clinician — the imported value was ' + (m[3] !== undefined ? m[3] : '—'),
+              src: 'HZ', srcTitle: 'Edited by the clinician',
               infoOpen: !!this.state.info[key + '-' + ri],
               infoOp: this.state.info[key + '-' + ri] ? 1 : 0.35,
               infoBd: this.state.info[key + '-' + ri] ? '#bfdbfe' : '#e8edf3',
@@ -3469,13 +3515,8 @@ class Component extends DCLogic {
       nextStep: () => {
         if (lastStep) {
           /* hand the finished workup to the case summary, not just the screen name */
-          const info = {
-            name: this.props.overrideName || ni.name.trim() || 'New case',
-            id: this.props.overrideId || '',
-            meta: this.props.overrideMeta || newMeta,
-            photo: this.props.overridePhoto || '',
-            record: { progress: this.snapshot() }
-          };
+          /* the case is the store's current one (the shell set it); the summary reads it from there */
+          const info = { id: this.props.overrideId || '' };
           if (this.props.onNavigate) this.props.onNavigate('summary', info);
           else window.location.href = encodeURI('OrthoTrack Case Summary EN.dc.html');
           return;
