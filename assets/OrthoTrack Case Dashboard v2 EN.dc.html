@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>OrthoTrack — Case Dashboard</title>
+<link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+<link rel="stylesheet" href="assets/vendor/css/google-outfit-400-700.css">
+<script src="./ortho-knowledge-en.js"></script>
+<script src="./ortho-cases.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{direction:ltr;background:#f6f8fb;color:#0f172a;font-family:Outfit,system-ui,sans-serif;font-weight:500;line-height:1.55;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#2563eb;text-decoration:none}
+a:hover{color:#1d4ed8;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+@keyframes otIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes otFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;background:#f6f8fb">
+
+  <sc-if value="{{ showAside }}" hint-placeholder-val="{{ true }}">
+  <aside style="width:{{ sideW }};flex:none;position:sticky;top:0;height:100vh;align-self:flex-start;background:#ffffff;border-inline-end:1px solid #e8edf3;display:flex;flex-direction:column;padding:18px 12px;gap:5px;transition:width .28s cubic-bezier(.4,0,.2,1);overflow:hidden">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 18px;min-height:44px">
+      <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#2563eb"></div>
+      <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.04em;color:#0f172a;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">OrthoTrack</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;background:#eff6ff;color:#1d4ed8">
+      <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
+      <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13.5px;font-weight:700;letter-spacing:0.02em;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Dashboard</span>
+    </div>
+    <div style="padding:16px 10px 6px;opacity:{{ labelOp }};transition:opacity .2s">
+      <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#94a3b8;white-space:nowrap">Coming soon</span>
+    </div>
+    <sc-for list="{{ soonLinks }}" as="l" hint-placeholder-count="4">
+      <div title="Coming soon — not available in this preview" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;border-radius:12px;color:#94a3b8;cursor:not-allowed">
+        <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Outfit,sans-serif;font-size:13px;font-weight:600">{{ l.mark }}</span>
+        <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">{{ l.en }}</span>
+      </div>
+    </sc-for>
+    <div style="flex:1"></div>
+    <button type="button" onClick="{{ toggleSide }}" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;border:none;background:transparent;color:#64748b;cursor:pointer;text-align:start" style-hover="background:#f6f8fb;color:#0f172a">
+      <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Outfit,sans-serif;font-size:17px;font-weight:500">{{ sideIcon }}</span>
+      <span style="font-size:14px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Collapse menu</span>
+    </button>
+    <div style="display:flex;align-items:center;gap:11px;padding:12px 8px 2px;border-top:1px solid #e8edf3;margin-top:5px">
+      <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">MS</div>
+      <div style="display:grid;gap:0;min-width:0;opacity:{{ labelOp }};transition:opacity .2s">
+        <span style="font-size:13.5px;font-weight:500;white-space:nowrap">Dr. Mohammed Shady</span>
+        <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:500;color:#94a3b8;white-space:nowrap">Orthodontist</span>
+      </div>
+    </div>
+  </aside>
+  </sc-if>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+    <div style="min-height:70px;flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;display:flex;align-items:center;gap:14px;padding:12px 26px;flex-wrap:wrap">
+      <div style="position:relative;flex:1;min-width:220px;max-width:420px">
+        <input type="search" aria-label="Search cases" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search by name, case ID or malocclusion" style="width:100%;min-height:46px;padding:0 44px 0 16px;border-radius:12px;border:1px solid #e8edf3;background:#f6f8fb;font-size:14.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;background:#ffffff;box-shadow:0 0 0 3px rgba(37,99,235,0.12)">
+        <span style="position:absolute;inset-inline-start:15px;top:50%;transform:translateY(-50%);display:flex;pointer-events:none">
+          <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="#94a3b8" stroke-width="1.9" stroke-linecap="round"><circle cx="7.8" cy="7.8" r="4.9"></circle><path d="M11.4 11.4l3.4 3.4"></path></svg>
+        </span>
+      </div>
+      <span title="Demo data — but every number on screen is computed from the same visible cases" style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;background:#fffbeb;border:1px solid #fde68a;cursor:default">
+        <span style="width:6px;height:6px;border-radius:50%;background:#d97706"></span>
+        <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#b45309">Demo data</span>
+      </span>
+      <sc-if value="{{ hasExtras }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ onResetDemo }}" title="Remove the saved test cases and show the demo set only" style="min-height:30px;padding:0 11px;border-radius:9px;border:1px solid #e8edf3;background:#ffffff;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#64748b;cursor:pointer" style-hover="background:#fef2f2;border-color:#fecaca;color:#b91c1c">Clear {{ extraCount }} saved</button>
+      </sc-if>
+      <div style="margin-inline-start:auto;display:flex;align-items:center;gap:10px">
+        <div style="display:inline-flex;padding:4px;gap:3px;background:#f6f8fb;border-radius:12px">
+          <span style="min-height:34px;padding:0 13px;display:inline-flex;align-items:center;border-radius:9px;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;box-shadow:0 1px 2px rgba(15,23,42,0.09)">EN</span>
+          <button type="button" onClick="{{ onLang }}" title="Switch to the Arabic version" style="min-height:34px;padding:0 13px;display:inline-flex;align-items:center;border-radius:9px;border:none;background:transparent;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#64748b;cursor:pointer" style-hover="background:#ffffff;color:#0f172a">AR</button>
+        </div>
+        <button type="button" onClick="{{ onNewCase }}" style="min-height:46px;padding:0 20px;border-radius:12px;background:#2563eb;color:#ffffff;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .15s" style-hover="background:#1d4ed8;transform:translateY(-1px)">
+          <span style="font-family:Outfit,sans-serif;font-size:17px;font-weight:500">+</span>New case
+        </button>
+      </div>
+    </div>
+
+    <main style="flex:1;min-width:0;padding:24px 26px 40px;display:grid;gap:18px;align-content:start">
+
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="display:grid;gap:3px;min-width:0">
+          <h1 style="margin:0;font-size:27px;font-weight:900;line-height:1.35">{{ greeting }}</h1>
+          <p style="margin:0;font-size:14.5px;font-weight:300;color:#64748b">{{ subline }}</p>
+        </div>
+        <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">{{ todayLong }}</span>
+      </div>
+
+      <div style="display:grid;gap:10px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:12px">
+          <sc-for list="{{ metricsPrimary }}" as="m" hint-placeholder-count="2">
+            <button type="button" onClick="{{ m.onClick }}" title="{{ m.title }}" style="text-align:start;background:#ffffff;border:1px solid {{ m.bd }};box-shadow:{{ m.sh }};border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:transform .15s" style-hover="transform:translateY(-2px)">
+              <span style="width:52px;height:52px;flex:none;border-radius:15px;background:{{ m.tint }};display:flex;align-items:center;justify-content:center">
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:24px;font-weight:600;line-height:1;color:{{ m.fg }};font-variant-numeric:tabular-nums">{{ m.n }}</span>
+              </span>
+              <div style="display:grid;gap:2px;min-width:0">
+                <span style="font-size:15px;font-weight:700;line-height:1.4">{{ m.label }}</span>
+                <span style="font-size:12.5px;font-weight:300;color:#64748b">{{ m.sub }}</span>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ metricsSecondary }}" as="m" hint-placeholder-count="3">
+            <button type="button" onClick="{{ m.onClick }}" style="min-height:38px;padding:0 14px;border-radius:11px;border:1px solid {{ m.bd }};background:{{ m.bg }};color:{{ m.fg }};font-size:12.5px;font-weight:{{ m.fw }};cursor:pointer;display:inline-flex;align-items:center;gap:8px">{{ m.label }}<span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">{{ m.n }}</span></button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:6px;padding:5px;border-radius:14px;background:#eef2f7;width:fit-content;max-width:100%;flex-wrap:wrap">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+          <button type="button" onClick="{{ t.onClick }}" style="min-height:40px;padding:0 18px;border-radius:11px;border:none;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;font-weight:{{ t.fw }};cursor:pointer;box-shadow:{{ t.sh }};display:inline-flex;align-items:center;gap:8px">{{ t.label }}<span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:{{ t.nFg }};font-variant-numeric:tabular-nums">{{ t.n }}</span></button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ todayTab }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;animation:otFade .2s ease-out">
+        <div style="padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #f1f5f9">
+          <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
+          <div style="display:grid;gap:0;min-width:0;flex:1">
+            <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Chair schedule</span>
+            <span style="font-size:12.5px;font-weight:300;color:#64748b">{{ scopeSub }}</span>
+          </div>
+          <div style="display:inline-flex;padding:4px;gap:3px;background:#f6f8fb;border-radius:11px">
+            <sc-for list="{{ scopes }}" as="s" hint-placeholder-count="3">
+              <button type="button" onClick="{{ s.onClick }}" style="min-height:34px;padding:0 14px;border-radius:8px;border:none;background:{{ s.bg }};color:{{ s.fg }};font-size:12.5px;font-weight:{{ s.fw }};cursor:pointer;box-shadow:{{ s.sh }}">{{ s.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding:12px 20px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-bottom:1px solid #f1f5f9;background:#fbfcfe">
+          <span style="font-size:12px;font-weight:500;color:#94a3b8">Filter</span>
+          <select aria-label="Visit type" value="{{ visitFilter }}" onChange="{{ onVisitFilter }}" style="min-height:36px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
+            <sc-for list="{{ visitTypeOptions }}" as="o" hint-placeholder-count="4">
+              <option value="{{ o.value }}">{{ o.label }}</option>
+            </sc-for>
+          </select>
+          <select aria-label="Stage" value="{{ stageFilter }}" onChange="{{ onStageFilter }}" style="min-height:36px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
+            <sc-for list="{{ stageOptions }}" as="o" hint-placeholder-count="6">
+              <option value="{{ o.value }}">{{ o.label }}</option>
+            </sc-for>
+          </select>
+          <button type="button" onClick="{{ toggleHideDone }}" style="min-height:36px;padding:0 13px;border-radius:10px;border:1px solid {{ hideDoneBd }};background:{{ hideDoneBg }};color:{{ hideDoneFg }};font-size:12.5px;font-weight:{{ hideDoneFw }};cursor:pointer;display:inline-flex;align-items:center;gap:7px"><span style="font-family:Outfit,sans-serif;font-size:12px">{{ hideDoneMark }}</span>Hide completed</button>
+          <sc-if value="{{ visitFiltered }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ clearVisitFilters }}" style="min-height:36px;padding:0 13px;border-radius:10px;border:1px solid #e8edf3;background:#ffffff;font-size:12.5px;font-weight:600;color:#1d4ed8;cursor:pointer" style-hover="background:#eff6ff">Clear</button>
+          </sc-if>
+          <span style="margin-inline-start:auto;font-size:12px;font-weight:300;color:#64748b">Showing <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ visitShown }}</span> of <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ visitTotal }}</span></span>
+        </div>
+        <sc-for list="{{ visits }}" as="v" hint-placeholder-count="6">
+          <div onClick="{{ v.onRow }}" onKeyDown="{{ v.onKey }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid #f8fafc;background:{{ v.rowBg }};opacity:{{ v.op }};cursor:pointer" style-hover="background:#f6f8fb">
+            <div style="width:64px;flex:none;display:grid;gap:2px">
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:15px;font-weight:600;color:{{ v.timeFg }};font-variant-numeric:tabular-nums">{{ v.time }}</span>
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:500;color:#94a3b8">{{ v.dur }}</span>
+            </div>
+            <span style="width:3px;flex:none;align-self:stretch;border-radius:999px;background:{{ v.bar }}"></span>
+            <img data-src="{{ v.photo }}" data-fb="{{ v.fallback }}" alt="{{ v.name }}" style="width:38px;height:38px;flex:none;border-radius:50%;object-fit:cover;object-position:center 22%;background:#f1f5f9">
+            <div style="flex:1;min-width:0;display:grid;gap:1px">
+              <span style="font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.name }}</span>
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:500;color:#94a3b8">{{ v.id }}</span>
+            </div>
+            <span style="flex:none"><span style="display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:{{ v.typeBg }};color:{{ v.typeFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;white-space:nowrap"><span dir="ltr" style="unicode-bidi:isolate">{{ v.type }}</span></span></span>
+            <span style="flex:2;min-width:0;font-size:13.5px;font-weight:500;color:#334155;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ v.objective }}</span>
+            <sc-if value="{{ v.done }}" hint-placeholder-val="{{ false }}">
+              <span style="flex:none;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#047857"><span style="width:18px;height:18px;border-radius:50%;background:#ecfdf5;display:flex;align-items:center;justify-content:center;font-size:11px">✓</span>Done</span>
+            </sc-if>
+            <sc-if value="{{ v.pending }}" hint-placeholder-val="{{ true }}">
+              <button type="button" onClick="{{ v.onOpen }}" style="flex:none;min-height:38px;padding:0 16px;border-radius:11px;border:1px solid #bfdbfe;background:#eff6ff;font-size:13px;font-weight:700;color:#1d4ed8;cursor:pointer" style-hover="background:#dbeafe">Open session</button>
+            </sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noVisits }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:40px 22px;display:grid;gap:8px;justify-items:center;text-align:center">
+            <span style="font-size:14px;font-weight:500">No visits in this range</span>
+            <span style="font-size:12.5px;font-weight:300;color:#64748b">Try the week view, or review overdue cases in All cases</span>
+          </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ hasSpotlight }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;display:flex;flex-wrap:wrap;animation:otFade .2s ease-out">
+          <div style="position:relative;width:264px;flex:none;align-self:stretch;min-height:232px;background:{{ spotPanelBg }};display:flex;align-items:center;justify-content:center">
+            <sc-if value="{{ spotHasPhoto }}" hint-placeholder-val="{{ true }}">
+              <img data-src="{{ spotPhoto }}" alt="{{ spotName }}" style="width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block">
+            </sc-if>
+            <sc-if value="{{ spotNoPhoto }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;gap:10px;justify-items:center;padding:24px">
+                <span style="width:92px;height:92px;border-radius:50%;background:#ffffff;color:{{ spotInitialsFg }};display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:34px;font-weight:600">{{ spotInitials }}</span>
+                <span style="font-size:11.5px;font-weight:500;color:{{ spotInitialsFg }};text-align:center">No portrait on file</span>
+              </div>
+            </sc-if>
+            <span style="position:absolute;top:14px;inset-inline-start:14px;display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:#ffffff;box-shadow:0 1px 3px rgba(15,23,42,.14);font-family:Outfit,sans-serif;font-size:11.5px;font-weight:700;color:#b91c1c"><span style="width:6px;height:6px;border-radius:50%;background:#dc2626"></span>{{ spotBadge }}</span>
+          </div>
+          <div style="flex:1;min-width:300px;padding:22px 24px;display:grid;gap:14px;align-content:center">
+            <div style="display:flex;align-items:center;gap:11px;flex-wrap:wrap">
+              <span style="font-size:20px;font-weight:900;line-height:1.25">{{ spotName }}</span>
+              <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;background:{{ spotStageBg }};color:{{ spotStageFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:{{ spotStageDot }}"></span>{{ spotStage }}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">
+              <span>{{ spotId }}</span><span style="color:#e2e8f0">·</span><span>{{ spotMeta }}</span>
+            </div>
+            <div style="display:grid;gap:4px;padding:13px 15px;border-radius:12px;background:#fffbeb">
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <span style="width:18px;height:18px;flex:none;border-radius:5px;background:#d97706;color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;margin-top:1px">!</span>
+                <span style="font-size:14px;font-weight:700;color:#92400e;line-height:1.5">{{ spotBlocker }}</span>
+              </div>
+              <span style="padding-inline-start:28px;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#b45309">{{ spotDetail }}</span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" onClick="{{ spotOpen }}" style="min-height:46px;padding:0 20px;border-radius:12px;border:none;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;cursor:pointer">{{ spotAction }}</button>
+              <button type="button" onClick="{{ spotSnooze }}" style="min-height:46px;padding:0 18px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#0f172a;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#f6f8fb">Snooze a week</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ allTab }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;animation:otFade .2s ease-out">
+        <div style="padding:16px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid #f1f5f9">
+          <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#ecfdf5;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#059669"></span></span>
+          <div style="display:grid;gap:0;min-width:0;flex:1">
+            <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">All cases</span>
+            <span style="font-size:12.5px;font-weight:300;color:#64748b">{{ viewCaption }}</span>
+          </div>
+          <sc-if value="{{ viewActive }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ clearFilters }}" style="min-height:38px;padding:0 13px;border-radius:10px;border:1px solid #bfdbfe;background:#eff6ff;font-size:12.5px;font-weight:600;color:#1d4ed8;cursor:pointer;display:inline-flex;align-items:center;gap:7px" style-hover="background:#dbeafe">{{ viewLabel }}<span style="font-family:Outfit,sans-serif;font-size:13px">×</span></button>
+          </sc-if>
+          <select aria-label="Stage" value="{{ stageFilter }}" onChange="{{ onStageFilter }}" style="min-height:38px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
+            <sc-for list="{{ stageOptions }}" as="o" hint-placeholder-count="6">
+              <option value="{{ o.value }}">{{ o.label }}</option>
+            </sc-for>
+          </select>
+          <select aria-label="Sort cases" value="{{ sort }}" onChange="{{ onSort }}" style="min-height:38px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
+            <sc-for list="{{ sortOptions }}" as="o" hint-placeholder-count="3">
+              <option value="{{ o.value }}">{{ o.label }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <div style="min-width:900px">
+            <div style="display:flex;align-items:center;gap:14px;padding:11px 20px;background:#f6f8fb;border-bottom:1px solid #e8edf3;position:sticky;top:0;z-index:1">
+              <span style="flex:1.2;min-width:0;font-size:11.5px;font-weight:700;color:#94a3b8">Patient</span>
+              <span dir="ltr" style="unicode-bidi:isolate;width:150px;flex:none;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#94a3b8">Stage</span>
+              <span style="width:120px;flex:none;font-size:11.5px;font-weight:700;color:#94a3b8">Next visit</span>
+              <span style="flex:1.4;min-width:0;font-size:11.5px;font-weight:700;color:#94a3b8">Next required step</span>
+              <span style="width:92px;flex:none;font-size:11.5px;font-weight:700;color:#94a3b8">In treatment</span>
+              <span style="width:104px;flex:none;font-size:11.5px;font-weight:700;color:#94a3b8">Records</span>
+              <span style="width:34px;flex:none" aria-hidden="true"></span>
+            </div>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+              <div onClick="{{ r.onClick }}" onKeyDown="{{ r.onKey }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid #f8fafc;cursor:pointer" style-hover="background:#f6f8fb">
+                <div style="flex:1.2;min-width:0;display:flex;align-items:center;gap:11px">
+                  <img data-src="{{ r.photo }}" data-fb="{{ r.fallback }}" alt="{{ r.name }}" style="width:38px;height:38px;flex:none;border-radius:50%;object-fit:cover;object-position:center 22%;background:#f1f5f9">
+                  <div style="display:grid;gap:0;min-width:0">
+                    <span style="font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:500;color:#94a3b8">{{ r.meta }}</span>
+                  </div>
+                </div>
+                <span style="width:150px;flex:none"><span style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;background:{{ r.stageBg }};color:{{ r.stageFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;white-space:nowrap"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ r.stageDot }}"></span><span dir="ltr" style="unicode-bidi:isolate">{{ r.stage }}</span></span></span>
+                <span dir="ltr" style="unicode-bidi:isolate;width:120px;flex:none;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:{{ r.visitFw }};color:{{ r.visitFg }};font-variant-numeric:tabular-nums">{{ r.visit }}</span>
+                <span style="flex:1.4;min-width:0;font-size:13px;font-weight:500;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.next }}</span>
+                <span dir="ltr" style="unicode-bidi:isolate;width:92px;flex:none;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">{{ r.months }}</span>
+                <span style="width:104px;flex:none;display:flex;justify-content:flex-start">
+                  <sc-if value="{{ r.hasRecGap }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" onClick="{{ r.onRecords }}" title="{{ r.recTitle }}" style="display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:0 10px;border-radius:9px;border:1px solid #fde68a;background:#fffbeb;color:#b45309;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#fef3c7"><span style="width:6px;height:6px;border-radius:50%;background:#d97706"></span>{{ r.recLabel }}</button>
+                  </sc-if>
+                </span>
+                <button type="button" onClick="{{ r.onFile }}" title="Open full case file" aria-label="Open full case file" style="width:34px;height:34px;flex:none;border-radius:10px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Outfit,sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">›</button>
+              </div>
+            </sc-for>
+            <sc-if value="{{ noRows }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:44px 22px;display:grid;gap:12px;justify-items:center;text-align:center">
+                <span style="font-size:14px;font-weight:500">No matching results</span>
+                <button type="button" onClick="{{ clearFilters }}" style="min-height:40px;padding:0 18px;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;font-size:13px;font-weight:600;color:#1d4ed8;cursor:pointer" style-hover="background:#eff6ff">Clear filters</button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+        <div style="padding:13px 20px;border-top:1px solid #f1f5f9;font-size:12.5px;font-weight:300;color:#64748b">Showing <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ shownCount }}</span> of <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ totalCount }}</span> cases</div>
+      </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;z-index:40;background:rgba(15,23,42,.38);animation:otFade .15s ease-out"></div>
+    <aside role="dialog" aria-modal="true" aria-label="Case session" style="position:fixed;inset-block:0;inset-inline-end:0;z-index:41;width:min(640px,100%);background:#f6f8fb;border-inline-start:1px solid #e8edf3;display:flex;flex-direction:column;box-shadow:18px 0 48px rgba(15,23,42,.14);animation:otIn .22s cubic-bezier(.4,0,.2,1)">
+
+      <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:16px 20px 14px;display:grid;gap:12px">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <img data-src="{{ dPhoto }}" data-fb="{{ dFallback }}" alt="{{ dName }}" style="width:50px;height:50px;flex:none;border-radius:50%;object-fit:cover;object-position:center 22%;background:#f1f5f9">
+          <div style="display:grid;gap:2px;min-width:0;flex:1">
+            <div style="display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap">
+              <span style="font-size:18px;font-weight:900;line-height:1.3">{{ dName }}</span>
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:500;color:#94a3b8">{{ dMeta }}</span>
+            </div>
+            <sc-if value="{{ dHasCC }}" hint-placeholder-val="{{ true }}">
+              <span style="font-size:13px;font-weight:300;color:#64748b;line-height:1.5">«{{ dCC }}»</span>
+            </sc-if>
+          </div>
+          <button type="button" onClick="{{ closeDrawer }}" aria-label="Close" style="width:36px;height:36px;flex:none;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Outfit,sans-serif;font-size:15px;cursor:pointer" style-hover="background:#f6f8fb;color:#0f172a">✕</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;background:{{ dStageBg }};color:{{ dStageFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:{{ dStageDot }}"></span><span dir="ltr" style="unicode-bidi:isolate">{{ dStage }}</span></span>
+          <sc-if value="{{ dHasProgress }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:9px;flex:1;min-width:160px">
+              <div style="flex:1;height:6px;border-radius:999px;background:#f1f5f9;overflow:hidden"><div style="height:100%;width:{{ dProgressPct }};border-radius:999px;background:{{ dProgressFill }}"></div></div>
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums;white-space:nowrap">{{ dProgressLabel }}</span>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ dHasAlerts }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ dAlerts }}" as="a" hint-placeholder-count="1">
+            <div style="display:flex;align-items:flex-start;gap:9px;padding:9px 12px;border-radius:11px;background:{{ a.bg }}">
+              <span style="width:17px;height:17px;flex:none;border-radius:5px;background:{{ a.fg }};color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;margin-top:2px">!</span>
+              <span style="font-size:13px;font-weight:500;line-height:1.55;color:{{ a.fg }}">{{ a.text }}</span>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{ dHasAppliance }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ dAppliance }}" as="a" hint-placeholder-count="2">
+              <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:9px;background:#f6f8fb;border:1px solid #e8edf3">
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.08em;color:#94a3b8">{{ a.arch }}</span>
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">{{ a.value }}</span>
+              </span>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:14px 20px;display:grid;gap:12px;align-content:start">
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:14px">
+          <button type="button" onClick="{{ toggleSum }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:12px 16px;border:none;border-radius:13px;background:transparent;cursor:pointer;text-align:start" style-hover="background:#fbfcfe">
+            <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1;flex-wrap:wrap">
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Case summary</span>
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:500;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dSumBrief }}</span>
+            </div>
+            <span style="font-family:Outfit,sans-serif;font-size:12px;color:#94a3b8;width:18px;text-align:center">{{ dSumCaret }}</span>
+          </button>
+          <sc-if value="{{ dSumOpen }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:2px 16px 14px;display:grid;gap:13px;border-top:1px solid #f1f5f9">
+
+              <div style="display:grid;gap:6px;padding-top:10px">
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Medical</span>
+                <sc-if value="{{ dHasFlags }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <sc-for list="{{ dFlags }}" as="f" hint-placeholder-count="2">
+                      <span title="{{ f.title }}" dir="ltr" style="unicode-bidi:isolate;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:{{ f.bg }};color:{{ f.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:help"><span style="width:14px;height:14px;border-radius:4px;background:{{ f.fg }};color:#ffffff;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">!</span>{{ f.label }}</span>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ dNoFlags }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:12.5px;font-weight:300;color:#94a3b8">No medical alerts</span>
+                </sc-if>
+              </div>
+
+              <sc-if value="{{ dHasRecGap }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;gap:8px;padding:12px 14px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a">
+                  <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#b45309">Records incomplete</span>
+                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:700;color:#b45309;font-variant-numeric:tabular-nums">{{ dRecCount }}</span>
+                    <span style="margin-inline-start:auto;font-size:11.5px;font-weight:300;color:#b45309">{{ dRecBlocks }}</span>
+                  </div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <sc-for list="{{ dRecMissing }}" as="m" hint-placeholder-count="3">
+                      <span dir="ltr" style="unicode-bidi:isolate;padding:4px 10px;border-radius:8px;background:#ffffff;border:1px solid #fde68a;color:#92400e;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600">{{ m.text }}</span>
+                    </sc-for>
+                  </div>
+                  <button type="button" onClick="{{ dOpenRecords }}" style="justify-self:start;min-height:40px;padding:0 15px;border-radius:11px;border:none;background:#d97706;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer" style-hover="background:#b45309">Continue records</button>
+                </div>
+              </sc-if>
+
+              <div style="display:grid;gap:6px">
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Diagnosis</span>
+                <sc-if value="{{ dHasDx }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <sc-for list="{{ dDx }}" as="d" hint-placeholder-count="4">
+                      <span dir="ltr" style="unicode-bidi:isolate;padding:4px 10px;border-radius:8px;background:{{ d.bg }};color:{{ d.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600">{{ d.label }}</span>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ dNoDx }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:12.5px;font-weight:300;color:#94a3b8">Not set yet</span>
+                </sc-if>
+              </div>
+
+              <div style="display:grid;gap:8px">
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Plan</span>
+                <sc-if value="{{ dHasPlan }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;gap:6px 14px;flex-wrap:wrap">
+                    <sc-for list="{{ dPlan }}" as="p" hint-placeholder-count="4">
+                      <span dir="ltr" style="unicode-bidi:isolate;display:inline-flex;align-items:baseline;gap:6px;font-family:Outfit,sans-serif"><span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">{{ p.k }}</span><span style="font-size:12.5px;font-weight:600;color:#0f172a">{{ p.v }}</span></span>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ dNoPlan }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:12.5px;font-weight:300;color:#94a3b8">Not set yet</span>
+                </sc-if>
+                <sc-if value="{{ dHasPhase }}" hint-placeholder-val="{{ true }}">
+                  <div dir="ltr" style="display:flex;align-items:flex-start;padding-top:2px">
+                    <sc-for list="{{ dPhases }}" as="s" hint-placeholder-count="5">
+                      <div style="flex:1;display:grid;gap:5px;justify-items:center;position:relative;min-width:0">
+                        <div style="display:flex;align-items:center;width:100%">
+                          <span style="flex:1;height:2px;background:{{ s.lineL }}"></span>
+                          <span style="width:12px;height:12px;flex:none;border-radius:50%;border:2px solid {{ s.ring }};background:{{ s.dot }};box-sizing:border-box;display:flex;align-items:center;justify-content:center"><sc-if value="{{ s.now }}" hint-placeholder-val="{{ false }}"><span style="width:4px;height:4px;border-radius:50%;background:#7c3aed"></span></sc-if></span>
+                          <span style="flex:1;height:2px;background:{{ s.lineR }}"></span>
+                        </div>
+                        <span style="font-family:Outfit,sans-serif;font-size:10px;font-weight:{{ s.fw }};color:{{ s.fg }};white-space:nowrap">{{ s.label }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+
+              <sc-if value="{{ dHasTimeline }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;gap:7px">
+                  <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Timeline</span>
+                  <div dir="ltr" style="position:relative;height:14px;display:flex;align-items:center">
+                    <div style="width:100%;height:4px;border-radius:999px;background:#f1f5f9;overflow:hidden"><div style="height:100%;width:{{ dTimelinePct }};background:#ede9fe"></div></div>
+                    <sc-for list="{{ dTimelineDots }}" as="d" hint-placeholder-count="6">
+                      <span style="position:absolute;left:{{ d.x }};top:2px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:{{ d.bg }};border:2px solid {{ d.bd }};box-sizing:border-box"></span>
+                    </sc-for>
+                  </div>
+                  <div dir="ltr" style="display:flex;gap:4px 12px;flex-wrap:wrap;font-family:Outfit,sans-serif;font-size:12px;font-variant-numeric:tabular-nums">
+                    <span style="color:#475569"><span style="color:#94a3b8">Bonded</span> <span style="font-weight:600">{{ dBonded }}</span></span>
+                    <span style="color:#475569"><span style="font-weight:600">{{ dSessions }}</span> sessions</span>
+                    <span style="color:{{ dMissedFg }}"><span style="font-weight:600">{{ dMissed }}</span> missed</span>
+                    <span style="color:#475569;margin-left:auto"><span style="color:#94a3b8">Est. end</span> <span style="font-weight:600">{{ dEstEnd }}</span></span>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ dHasProblems }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;gap:4px">
+                  <div style="display:flex;align-items:center;gap:8px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Problem list</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;color:#047857;font-variant-numeric:tabular-nums">{{ dProblemsDone }}</span><span style="font-size:11px;font-weight:300;color:#94a3b8;margin-inline-start:auto">Tap to change status</span></div>
+                  <sc-for list="{{ dProblems }}" as="p" hint-placeholder-count="3">
+                    <button type="button" onClick="{{ p.onClick }}" style="display:flex;align-items:center;gap:10px;min-height:36px;padding:0 8px;margin:0 -8px;border:none;border-radius:9px;background:transparent;cursor:pointer;text-align:start" style-hover="background:#f6f8fb">
+                      <span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ p.dot }}"></span>
+                      <span dir="ltr" style="unicode-bidi:isolate;flex:1;font-family:Outfit,sans-serif;font-size:13px;font-weight:500;color:{{ p.fg }};text-decoration:{{ p.deco }};text-align:left">{{ p.text }}</span>
+                      <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;color:{{ p.dot }}">{{ p.status }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ dHasMeas }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;gap:4px">
+                  <div dir="ltr" style="display:grid;grid-template-columns:1.4fr 1fr 1fr .9fr;gap:8px;align-items:center;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8;padding-bottom:2px">
+                    <span>Measurements</span><span style="text-align:center">Baseline</span><span style="text-align:center">Current</span><span style="text-align:right">Goal</span>
+                  </div>
+                  <sc-for list="{{ dMeas }}" as="m" hint-placeholder-count="3">
+                    <div dir="ltr" style="display:grid;grid-template-columns:1.4fr 1fr 1fr .9fr;gap:8px;align-items:center;min-height:34px;border-top:1px solid #f8fafc;font-family:Outfit,sans-serif;font-variant-numeric:tabular-nums">
+                      <span style="font-size:12.5px;font-weight:500;color:#334155">{{ m.label }}</span>
+                      <span style="font-size:12.5px;font-weight:500;color:#64748b;text-align:center">{{ m.base }}</span>
+                      <sc-if value="{{ m.editing }}" hint-placeholder-val="{{ false }}">
+                        <input type="text" value="{{ m.draft }}" onChange="{{ m.onDraft }}" onKeyDown="{{ m.onKey }}" onBlur="{{ m.onBlur }}" autoFocus="{{ true }}" style="width:100%;min-height:30px;padding:0 8px;border-radius:8px;border:1px solid #2563eb;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:700;color:#0f172a;text-align:center;outline:none">
+                      </sc-if>
+                      <sc-if value="{{ m.notEditing }}" hint-placeholder-val="{{ true }}">
+                        <button type="button" onClick="{{ m.onEdit }}" style="min-height:30px;padding:0 8px;border-radius:8px;border:1px solid {{ m.curBd }};background:{{ m.curBg }};color:{{ m.curFg }};font-family:Outfit,sans-serif;font-size:12.5px;font-weight:{{ m.curFw }};cursor:pointer;text-align:center" style-hover="border-color:#2563eb">{{ m.cur }}</button>
+                      </sc-if>
+                      <span style="font-size:11.5px;font-weight:500;color:#94a3b8;text-align:right">{{ m.goal }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:14px">
+          <button type="button" onClick="{{ toggleLast }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:12px 16px;border:none;border-radius:13px;background:transparent;cursor:pointer;text-align:start" style-hover="background:#fbfcfe">
+            <div style="display:grid;gap:1px;min-width:0;flex:1">
+              <div style="display:flex;align-items:center;gap:8px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Last session</span><span style="font-size:11.5px;font-weight:300;color:#94a3b8">{{ dLastWhen }}</span></div>
+              <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                <span style="font-size:13.5px;font-weight:500;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dLastFirst }}</span>
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;color:#94a3b8">{{ dLastMore }}</span>
+              </div>
+            </div>
+            <sc-if value="{{ dHasComp }}" hint-placeholder-val="{{ false }}">
+              <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:9px;background:{{ dCompBg }}"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:600;color:#94a3b8">{{ dCompLabel }}</span><span style="font-size:12px;font-weight:700;color:{{ dCompFg }}">{{ dCompValue }}</span></span>
+            </sc-if>
+            <span style="font-family:Outfit,sans-serif;font-size:12px;color:#94a3b8;width:18px;text-align:center">{{ dLastCaret }}</span>
+          </button>
+          <sc-if value="{{ dLastOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:4px 16px 14px;display:grid;gap:8px;border-top:1px solid #f1f5f9">
+              <sc-for list="{{ dLastItems }}" as="i" hint-placeholder-count="2">
+                <div style="display:flex;align-items:flex-start;gap:9px;padding-top:6px"><span style="width:14px;flex:none;color:#059669;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:700;margin-top:3px">✓</span><span style="font-size:13.5px;font-weight:500;line-height:1.6;color:#334155">{{ i.text }}</span></div>
+              </sc-for>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;padding-top:6px">
+                <sc-for list="{{ dCompliance }}" as="c" hint-placeholder-count="1">
+                  <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:9px;background:{{ c.bg }}"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:600;color:#94a3b8">{{ c.label }}</span><span style="font-size:12px;font-weight:700;color:{{ c.fg }}">{{ c.value }}</span></span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:14px;padding:14px 16px;display:grid;gap:6px" data-comment-anchor="9d5bdb0714-div">
+          <div style="display:flex;align-items:center;gap:10px;padding-bottom:6px">
+            <div style="display:grid;gap:1px;min-width:0;flex:1">
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#1d4ed8">{{ dTodayHead }}</span>
+              <span style="font-size:11.5px;font-weight:300;color:#64748b">{{ dTodayWhen }}</span>
+            </div>
+            <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:#1d4ed8;font-variant-numeric:tabular-nums">{{ dPlanCount }}</span>
+          </div>
+          <sc-if value="{{ dReadOnly }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:2px;border-radius:9px;background:#f6f8fb"><span style="width:14px;height:14px;flex:none;border-radius:4px;background:#cbd5e1;color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:9.5px;font-weight:700">i</span><span style="font-size:12px;font-weight:500;color:#64748b">{{ dReadOnlyNote }}</span></div>
+          </sc-if>
+
+          <sc-for list="{{ dPlanItems }}" as="i" hint-placeholder-count="3">
+            <div style="display:grid;gap:0;border-radius:11px;background:#ffffff">
+              <div onClick="{{ i.onToggle }}" role="{{ i.role }}" tabindex="0" style="display:flex;align-items:flex-start;gap:10px;padding:8px 9px;margin:0 -9px;border-radius:10px;cursor:{{ i.cursor }}" style-hover="background:#f8fafc">
+                <sc-if value="{{ i.tickable }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:18px;height:18px;flex:none;border-radius:6px;border:1.5px solid {{ i.boxBd }};background:{{ i.boxBg }};color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;margin-top:2px">{{ i.mark }}</span>
+                </sc-if>
+                <sc-if value="{{ i.notTickable }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:18px;flex:none;display:flex;justify-content:center;margin-top:2px"><span style="width:6px;height:6px;border-radius:50%;background:#cbd5e1"></span></span>
+                </sc-if>
+                <span style="flex:1;min-width:0;font-size:13.5px;font-weight:500;line-height:1.6;color:{{ i.textFg }}">{{ i.text }}</span>
+                <sc-if value="{{ i.carried }}" hint-placeholder-val="{{ false }}"><span style="flex:none;padding:2px 8px;border-radius:999px;background:#fffbeb;color:#b45309;font-size:10.5px;font-weight:700;margin-top:3px">Carried over</span></sc-if>
+                <sc-if value="{{ i.extra }}" hint-placeholder-val="{{ false }}"><span style="flex:none;padding:2px 8px;border-radius:999px;background:#f1f5f9;color:#64748b;font-size:10.5px;font-weight:700;margin-top:3px">Unplanned</span></sc-if>
+                <sc-if value="{{ i.tickable }}" hint-placeholder-val="{{ true }}">
+                  <button type="button" onClick="{{ i.onRemove }}" title="Remove this item" aria-label="Remove this item" style="width:26px;height:26px;flex:none;border-radius:8px;border:none;background:transparent;color:#cbd5e1;font-family:Outfit,sans-serif;font-size:14px;cursor:pointer;margin-top:1px" style-hover="background:#fef2f2;color:#b91c1c">✕</button>
+                </sc-if>
+              </div>
+              <sc-if value="{{ i.isWire }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
+                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">UPPER</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.wiresU }}" as="w" hint-placeholder-count="3"><button type="button" onClick="{{ w.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ w.bd }};background:{{ w.bg }};color:{{ w.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ w.label }}</button></sc-for></div></div>
+                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">LOWER</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.wiresL }}" as="w2" hint-placeholder-count="3"><button type="button" onClick="{{ w2.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ w2.bd }};background:{{ w2.bg }};color:{{ w2.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ w2.label }}</button></sc-for></div></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ i.isElastics }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;gap:5px;padding:6px 0 10px 28px;animation:otFade .15s ease-out"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">PRESCRIPTION</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.elastics }}" as="e" hint-placeholder-count="3"><button type="button" onClick="{{ e.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ e.bd }};background:{{ e.bg }};color:{{ e.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ e.label }}</button></sc-for></div></div>
+              </sc-if>
+              <sc-if value="{{ i.isCompliance }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
+                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">WEAR / DAY</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.hours }}" as="h" hint-placeholder-count="3"><button type="button" onClick="{{ h.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ h.bd }};background:{{ h.bg }};color:{{ h.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ h.label }}</button></sc-for></div></div>
+                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">ORAL HYGIENE</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.hygiene }}" as="g" hint-placeholder-count="3"><button type="button" onClick="{{ g.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ g.bd }};background:{{ g.bg }};color:{{ g.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ g.label }}</button></sc-for></div></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ i.isPhoto }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;gap:5px;padding:6px 0 10px 28px;animation:otFade .15s ease-out"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">INTRAORAL VIEWS</span>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.photoSlots }}" as="p" hint-placeholder-count="5"><button type="button" onClick="{{ p.onClick }}" style="display:inline-flex;align-items:center;gap:7px;min-height:44px;min-width:64px;padding:0 10px;border-radius:9px;border:1.5px dashed {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;cursor:pointer" dir="ltr"><sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}"><img data-src="{{ p.src }}" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:cover;background:#f1f5f9"></sc-if>{{ p.label }}</button></sc-for></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ i.isMeasure }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
+                  <input type="text" inputmode="decimal" value="{{ i.measureVal }}" onChange="{{ i.onMeasure }}" placeholder="0.0" dir="ltr" style="width:84px;min-height:36px;padding:0 10px;border-radius:9px;border:1px solid #e2e8f0;background:#f6f8fb;font-family:Outfit,sans-serif;font-size:14px;font-weight:600;color:#0f172a;outline:none;text-align:center" style-focus="border-color:#2563eb;background:#ffffff">
+                  <span dir="ltr" style="font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:#94a3b8">mm</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ i.isIPR }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
+                  <input type="text" value="{{ i.iprVal }}" onChange="{{ i.onIpr }}" placeholder="13–23 · 0.3mm" dir="ltr" style="flex:1;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid #e2e8f0;background:#f6f8fb;font-family:Outfit,sans-serif;font-size:13px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;background:#ffffff">
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+
+          <sc-if value="{{ dCanAdd }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ openAdd }}" style="justify-self:start;min-height:34px;padding:0 10px;margin:2px -9px 0;border-radius:9px;border:none;background:transparent;color:#2563eb;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px" style-hover="background:#eff6ff"><span style="font-family:Outfit,sans-serif;font-size:15px">+</span>Unplanned procedure</button>
+          </sc-if>
+          <sc-if value="{{ dAddOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:8px;padding-top:4px;padding-bottom:4px">
+              <input type="text" value="{{ addText }}" onChange="{{ onAddText }}" onKeyDown="{{ onAddKey }}" placeholder="e.g. Rebond bracket 36" style="flex:1;min-height:40px;padding:0 12px;border-radius:10px;border:1px solid #bfdbfe;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;outline:none" style-focus="box-shadow:0 0 0 3px rgba(37,99,235,.12)">
+              <button type="button" onClick="{{ commitAdd }}" style="min-height:40px;padding:0 14px;border-radius:10px;border:none;background:#2563eb;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer">Add</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ dShowReview }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gap:7px;padding-top:10px;margin-top:4px;border-top:1px solid #f1f5f9">
+              <div style="display:flex;align-items:center;gap:8px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Session photos</span><span style="font-size:11.5px;font-weight:300;color:#94a3b8">For documentation</span><span dir="ltr" style="unicode-bidi:isolate;margin-inline-start:auto;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#64748b;font-variant-numeric:tabular-nums">{{ dDocCount }}</span></div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ dDocPhotos }}" as="p" hint-placeholder-count="5"><button type="button" onClick="{{ p.onClick }}" style="display:inline-flex;align-items:center;gap:7px;min-height:44px;min-width:64px;padding:0 10px;border-radius:9px;border:1.5px dashed {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;cursor:pointer" dir="ltr"><sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}"><img data-src="{{ p.src }}" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:cover;background:#f1f5f9"></sc-if>{{ p.label }}</button></sc-for></div>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ dHasGate }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#ffffff;border:1px solid #fde68a;border-radius:14px;padding:13px 16px;display:grid;gap:8px">
+            <div style="display:flex;align-items:center;gap:9px"><span style="width:20px;height:20px;flex:none;border-radius:6px;background:#fffbeb;color:#b45309;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:12px;font-weight:700">!</span><span style="font-size:13px;font-weight:700">{{ dGateHead }}</span></div>
+            <sc-for list="{{ dGate }}" as="g" hint-placeholder-count="2">
+              <div style="display:flex;align-items:flex-start;gap:9px"><span style="width:5px;height:5px;flex:none;border-radius:50%;background:#d97706;margin-top:10px"></span><span style="font-size:13px;font-weight:500;line-height:1.6;color:#334155">{{ g.text }}</span></div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ dShowNext }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:14px;padding:14px 16px;display:grid;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">{{ dNextHead }}</span>
+              <div style="display:flex;gap:5px;margin-inline-start:auto"><sc-for list="{{ dIntervals }}" as="v" hint-placeholder-count="3"><button type="button" onClick="{{ v.onClick }}" style="min-height:32px;padding:0 12px;border-radius:9px;border:1px solid {{ v.bd }};background:{{ v.bg }};color:{{ v.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer" dir="ltr">{{ v.label }}</button></sc-for></div>
+              <label dir="ltr" style="display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 10px;border-radius:9px;border:1px solid {{ dCustomBd }};background:#ffffff;color:{{ dCustomFg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer"><span>Date</span><input type="date" value="{{ dNextISO }}" min="{{ dTodayISO }}" onChange="{{ onNextDate }}" style="border:none;background:transparent;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:inherit;outline:none;padding:0;cursor:pointer"></label>
+              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums">{{ dNextDate }} · {{ dNextDays }} · {{ dNextType }}</span>
+            </div>
+
+            <div style="display:grid;gap:7px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;font-weight:700">{{ dProcsHead }}</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#1d4ed8;font-variant-numeric:tabular-nums">{{ dProcCount }}</span><span style="font-size:11.5px;font-weight:300;color:#94a3b8">Select one or more</span></div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ dProcs }}" as="p" hint-placeholder-count="8">
+                  <button type="button" onClick="{{ p.onClick }}" style="min-height:34px;padding:0 12px;border-radius:9px;border:1px solid {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:start;display:inline-flex;align-items:center;gap:6px"><sc-if value="{{ p.carried }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:#d97706"></span></sc-if><span dir="ltr" style="unicode-bidi:isolate">{{ p.label }}</span></button>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:8px">
+                <input type="text" value="{{ freeText }}" onChange="{{ onFreeText }}" onKeyDown="{{ onFreeKey }}" placeholder="Custom procedure — type and press Enter" style="flex:1;min-height:38px;padding:0 12px;border-radius:10px;border:1px dashed #cbd5e1;background:#fbfcfe;font-size:13px;font-weight:500;color:#0f172a;outline:none" style-focus="border-style:solid;border-color:#2563eb;background:#ffffff">
+                <button type="button" onClick="{{ commitFree }}" style="min-height:38px;padding:0 13px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;color:#1d4ed8;font-size:13px;font-weight:700;cursor:pointer" style-hover="background:#eff6ff">Add</button>
+              </div>
+            </div>
+
+            <sc-if value="{{ dShowReview }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ toggleReview }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:11px;border:1px solid {{ dReviewBd }};background:{{ dReviewBg }};color:{{ dReviewFg }};cursor:pointer;text-align:start">
+              <span style="width:18px;height:18px;flex:none;border-radius:6px;border:1.5px solid {{ dReviewBd }};background:{{ dReviewBg }};display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700">{{ dReviewMark }}</span>
+              <span style="flex:1;font-size:13.5px;font-weight:600">Flag for end-of-day review</span>
+              <span style="font-size:11.5px;font-weight:300;opacity:.75">Appears in the evening review list</span>
+            </button>
+            </sc-if>
+
+            <div style="display:grid;gap:8px">
+              <div style="display:flex;gap:5px;flex-wrap:wrap">
+                <sc-for list="{{ dNoteTabs }}" as="t" hint-placeholder-count="3">
+                  <button type="button" onClick="{{ t.onClick }}" style="min-height:32px;padding:0 12px;border-radius:9px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px">{{ t.label }}<sc-if value="{{ t.dot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:#2563eb"></span></sc-if></button>
+                </sc-for>
+              </div>
+              <textarea value="{{ dNoteValue }}" onChange="{{ onNote }}" placeholder="{{ dNotePlaceholder }}" rows="2" style="width:100%;min-height:56px;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#f6f8fb;font-size:13px;font-weight:500;color:#0f172a;resize:vertical;outline:none;line-height:1.6" style-focus="border-color:#2563eb;background:#ffffff"></textarea>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <div style="flex:none;padding:14px 20px;background:#ffffff;border-top:1px solid #e8edf3;display:flex;gap:10px;flex-wrap:wrap">
+        <button type="button" onClick="{{ dPrimaryAct }}" style="flex:1;min-height:48px;padding:0 18px;border-radius:12px;border:1px solid {{ dPrimaryBd }};background:{{ dPrimaryBg }};color:{{ dPrimaryFg }};font-size:14.5px;font-weight:700;cursor:pointer">{{ dPrimary }}</button>
+        <sc-if value="{{ dShowFull }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ dOpenFull }}" title="For complex visits — bonding, debond, records" style="flex:none;min-height:48px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb">Full session</button>
+        </sc-if>
+        <sc-if value="{{ dShowNext }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ dOpenCase }}" style="flex:none;min-height:48px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb">Case file</button>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ dGalleryOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:5;background:rgba(15,23,42,.42);display:flex;align-items:flex-end;animation:otFade .15s ease-out">
+          <div role="dialog" aria-label="Photo gallery" style="width:100%;max-height:78%;background:#ffffff;border-radius:18px 18px 0 0;box-shadow:0 -12px 40px rgba(15,23,42,.18);display:flex;flex-direction:column;animation:otIn .2s cubic-bezier(.4,0,.2,1)">
+            <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid #f1f5f9">
+              <div style="display:grid;gap:1px;flex:1;min-width:0">
+                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Session photo</span>
+                <span style="font-size:15px;font-weight:700">{{ dGallerySlot }} view</span>
+              </div>
+              <label style="display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:0 14px;border-radius:11px;background:#2563eb;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer">
+                <span style="font-family:Outfit,sans-serif;font-size:16px;line-height:1">+</span>Upload new
+                <input type="file" accept="image/*" onChange="{{ onUpload }}" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+              </label>
+              <sc-if value="{{ dGalleryHas }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ clearPhoto }}" style="min-height:38px;padding:0 12px;border-radius:11px;border:1px solid #fecaca;background:#ffffff;color:#b91c1c;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:#fef2f2">Remove</button>
+              </sc-if>
+              <button type="button" onClick="{{ closeGallery }}" aria-label="Close" style="width:36px;height:36px;flex:none;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Outfit,sans-serif;font-size:15px;cursor:pointer" style-hover="background:#f6f8fb;color:#0f172a">✕</button>
+            </div>
+            <div style="overflow-y:auto;padding:14px 18px 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+              <sc-for list="{{ dGallery }}" as="g" hint-placeholder-count="8">
+                <button type="button" onClick="{{ g.onClick }}" style="position:relative;aspect-ratio:1;padding:0;border-radius:12px;border:2px solid transparent;overflow:hidden;background:#f1f5f9;cursor:pointer" style-hover="border-color:#bfdbfe">
+                  <img data-src="{{ g.src }}" alt="{{ g.label }}" style="width:100%;height:100%;object-fit:cover;display:block">
+                  <span dir="ltr" style="position:absolute;left:6px;bottom:6px;padding:2px 7px;border-radius:6px;background:rgba(15,23,42,.72);color:#ffffff;font-family:Outfit,sans-serif;font-size:10px;font-weight:600">{{ g.label }}</span>
+                  <sc-if value="{{ g.on }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:#059669;color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:12px;font-weight:700">✓</span></sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </aside>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
+  &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: any) =&gt; void&quot;},
+  &quot;onReset&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;() =&gt; void&quot;},
+  &quot;onLang&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;() =&gt; void&quot;},
+  &quot;openId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;extraCase&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;any[]&quot;},
+  &quot;extraCases&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;any[][]&quot;}
+}">
+class Component extends DCLogic {
+  state = { tab: null, scope: 'today', query: '', view: 'all', sort: 'visit',
+            visitFilter: '', stageFilter: '', hideDone: false, openId: null,
+            sess: {}, lastOpen: false, addOpen: false, addText: '', freeText: '', noteTab: 'clinical',
+            collapsed: false, narrow: false, sumOpen: true, measEdit: null, measDraft: '', gallery: null,
+            snoozed: [] };
+
+  soonLinks = [
+    { mark: '◍', en: 'Patients' }, { mark: '≡', en: 'Treatment plans' },
+    { mark: '◷', en: 'Schedule' }, { mark: '⚙', en: 'Settings' }
+  ];
+
+  /* gate flag codes → knowledge keys. Unknown codes are reported, not swallowed. */
+  flagMap = { R: 'recordsComplete', P: 'problemListApproved', A: 'planApproved', D: 'debondDone' };
+
+  /* One record per case. last = the session that happened, next = the session to come;
+     next.plan[0] IS the objective — it is never stored twice. */
+  get seed() { return (window.OrthoCases || {}).seed || []; }
+
+  /* presentation only — visit type → one of the six allowed status hues */
+  visitTone = {
+    consultation: 'slate', records: 'blue', progress: 'blue',
+    wire: 'emerald', adjustment: 'emerald', elastics: 'emerald',
+    ipr: 'amber', aligner: 'amber',
+    bonding: 'violet', debond: 'violet', retainer: 'violet',
+    emergency: 'red'
+  };
+
+  tones = {
+    slate:   ['#f1f5f9', '#475569', '#94a3b8'],
+    blue:    ['#eff6ff', '#1d4ed8', '#2563eb'],
+    emerald: ['#ecfdf5', '#047857', '#059669'],
+    amber:   ['#fffbeb', '#b45309', '#d97706'],
+    violet:  ['#f5f3ff', '#6d28d9', '#7c3aed'],
+    red:     ['#fef2f2', '#b91c1c', '#dc2626']
+  };
+
+  /* chairside detail per case:
+     cc  = chief complaint (why they came)
+     al  = [tone, text] medical / clinical alerts
+     ap  = appliance in the mouth right now [[label, value], …]
+     cmp = [label, value, ok?] compliance readings from the last session
+     carry = planned last time but not done — carries into today
+     est = estimated total months (for the progress bar) */
+  get detail() { return (window.OrthoCases || {}).detail || {}; }
+
+  /* chart summary per case — what the doctor needs in the first ten seconds:
+     dx       = [text, tone] findings from the diagnosis screen (2 severe · 1 moderate · 0 mild)
+     plan     = { ex, appl, mech, anch } approved plan; null until planning is done
+     phase    = current treatment phase key (OrthoKnowledge.treatmentPhases)
+     med      = condition names from the medical history (OrthoKnowledge.conditions)
+     problems = [text, status] problem list with treatment status
+     meas     = key → [baseline, current] for tracked measurements
+     bonded   = 'YYYY-MM' · sessions = visits so far · missedAt = indices of missed visits */
+  get chart() { return (window.OrthoCases || {}).chart || {}; }
+
+  get records() { return (window.OrthoCases || {}).records || {}; }
+
+  /* the Records screen resumes from an overrideRecord.progress patch, so translate
+     the case's completeness into the shape that screen already understands */
+  recordPayload(o) {
+    if (!o.seeded) return o.record || null;
+    const rc = this.records[o.id];
+    if (!rc) return null;
+    const slots = ['exo-0', 'exo-1', 'exo-2', 'exo-3', 'exo-4', 'exo-5', 'exo-6',
+                   'intra-0', 'intra-1', 'intra-2', 'intra-3', 'intra-4', 'intra-5', 'intra-6'];
+    const uploads = {};
+    slots.slice(0, rc.done).forEach((k, i) => {
+      uploads[k] = { src: k.indexOf('exo') === 0 ? (o.photo || 'assets/face-m.jpeg') : this.localPhoto((i % 14) + 1),
+                     name: k + '.jpeg' };
+    });
+    const bits = String(o.meta || '').split('·').map(t => t.trim());
+    const age = (bits[0] || '').replace(/[^0-9]/g, '');
+    return {
+      progress: {
+        uploads: uploads,
+        newInfo: { name: o.name, gender: bits[1] || '', age: age, complaint: bits[2] || '' },
+        complaint: bits[2] || ''
+      }
+    };
+  }
+
+  /* a plan item's recorder is inferred from its wording — the item IS the action IS the log */
+  recorderFor(text) {
+    const t = text.toLowerCase();
+    if (/compliance|tracking|wear/.test(t)) return 'compliance';
+    if (/arch ?wire|wire/.test(t)) return 'wire';
+    if (/elastic/.test(t)) return 'elastics';
+    if (/photo|records|progress/.test(t)) return 'photo';
+    if (/ipr/.test(t)) return 'ipr';
+    if (/overjet|overbite|measure|space/.test(t)) return 'measure';
+    return 'none';
+  }
+
+  /* the natural follow-up per visit type — seeds next session's objective */
+  nextSuggestion = {
+    wire: 'Review alignment on the new wire', elastics: 'Review overjet after the wear period',
+    adjustment: 'Follow up mechanics and assess progress', aligner: 'Deliver the next aligner set',
+    ipr: 'Assess space after IPR', progress: 'Review photos against plan objectives',
+    debond: 'Deliver retainers and instructions', retainer: 'Retention check', bonding: 'First activation after bonding',
+    records: 'Review records and start diagnosis', consultation: 'Records session'
+  };
+
+  K() { return window.OrthoKnowledge || {}; }
+
+  localPhoto(n) { return 'assets/p' + (n < 10 ? '0' + n : n) + '.jpeg'; }
+
+  initials(name) {
+    const strip = t => {
+      let s = String(t || '');
+      if (s.indexOf('ال') === 0 && s.length > 2) s = s.slice(2);
+      if (/^al[- ]/i.test(s)) s = s.slice(3);
+      return s.charAt(0);
+    };
+    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    const w = parts.filter((p, n) => n === 0 || ['بن', 'بنت', 'ابن', 'عبد', 'bin', 'bint', 'ibn', 'Al'].indexOf(p) < 0);
+    if (w.length > 1) return w[0].charAt(0) + strip(w[w.length > 2 ? 2 : 1]);
+    return String(name || '—').slice(0, 2);
+  }
+
+  initialsAvatar(name) {
+    const tints = [
+      ['#f1f5f9', '#475569'], ['#eff6ff', '#1d4ed8'], ['#ecfdf5', '#047857'],
+      ['#f5f3ff', '#6d28d9'], ['#fffbeb', '#b45309'], ['#fef2f2', '#b91c1c']
+    ];
+    const s = String(name || '');
+    let h = 0;
+    for (let n = 0; n < s.length; n++) h = (h * 31 + s.charCodeAt(n)) % 9973;
+    const t = tints[h % tints.length];
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">'
+      + '<rect width="96" height="96" fill="' + t[0] + '"/>'
+      + '<text x="48" y="48" font-family="Outfit, system-ui, sans-serif" font-size="32" font-weight="600"'
+      + ' fill="' + t[1] + '" text-anchor="middle" dominant-baseline="central">' + this.initials(name) + '</text></svg>';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+
+  realPhotos = { '2026-0131': 'assets/face-f.jpeg', '2026-0148': 'assets/face-m.jpeg' };
+
+  avatar(id, name) {
+    return this.realPhotos[id] || this.initialsAvatar(name);
+  }
+
+  dayISO(off) {
+    const d = new Date(); d.setDate(d.getDate() + off);
+    const p = n => (n < 10 ? '0' + n : '' + n);
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  shortDate(off) {
+    const d = new Date(); d.setDate(d.getDate() + off);
+    const p = n => (n < 10 ? '0' + n : '' + n);
+    return p(d.getDate()) + '/' + p(d.getMonth() + 1);
+  }
+
+  visitDef(key) {
+    const f = (this.K().visitTypes || []).filter(v => v[0] === key)[0];
+    return f ? { en: f[1], ar: f[2], mins: f[3] } : { en: '—', ar: '', mins: 20 };
+  }
+
+  stageInfo(key) {
+    const f = (this.K().stageDef || (() => null))(key);
+    return f || { key: key, en: key, ar: '', dot: '#94a3b8', bg: '#f1f5f9', fg: '#475569' };
+  }
+
+  expandFlags(codes) {
+    const out = {};
+    (codes || []).forEach(c => {
+      const k = this.flagMap[c];
+      if (!k) { if (window.console) window.console.warn('OrthoTrack: unknown gate flag "' + c + '"'); return; }
+      out[k] = true;
+    });
+    return out;
+  }
+
+  /* one place decides what "late" means:
+     a booked future visit is never late; a passed booking is late by the days since it;
+     an unbooked case is late once it exceeds its phase interval. */
+  lateness(o) {
+    if (o.next && o.next.off !== null && o.next.off !== undefined) {
+      return o.next.off >= 0 ? { days: 0, kind: 'scheduled' } : { days: -o.next.off, kind: 'missed' };
+    }
+    const ov = this.K().overdueBy || ((k, d) => d - 21);
+    const d = ov(o.stage, o.last ? o.last.d : 0);
+    return d > 0 ? { days: d, kind: 'unbooked' } : { days: 0, kind: 'open' };
+  }
+
+  build() {
+    const extras = (this.props.extraCases || (this.props.extraCase ? [this.props.extraCase] : []))
+      .slice().reverse().map((c, i) => ({
+        seeded: false, record: c[10] || null,
+        id: c[3] || 'ORT-2026-NEW' + i, name: c[0] || 'New case',
+        photo: c[1] || this.initialsAvatar(c[0] || 'New case'), fallback: this.initialsAvatar(c[0] || 'New case'), meta: c[2] || '',
+        stage: 'consultation', mo: 0, flags: {},
+        last: { d: 0, items: ['Case created in this preview'] },
+        next: { off: null, t: '', v: '', plan: ['Complete records'] }
+      }));
+    const rows = extras.concat(this.seed.map((c, i) => ({
+      seeded: true, id: 'ORT-' + c.id, name: c.n, meta: c.meta, stage: (this.K().stageKey || (k => k))(c.stage), mo: c.mo,
+      photo: this.avatar(c.id, c.n), fallback: this.initialsAvatar(c.n),
+      flags: this.expandFlags(c.f), last: c.last, next: c.next
+    })));
+    rows.forEach(o => {
+      /* a booking made from the drawer overrides the seeded appointment */
+      const bk = (this.state.sess[o.id] || {}).booked;
+      if (bk !== null && bk !== undefined) {
+        const bp = (this.state.sess[o.id] || {}).procs;
+        o.next = Object.assign({}, o.next || {}, { off: bk, t: o.next && o.next.t ? o.next.t : '10:00', v: o.next && o.next.v ? o.next.v : 'progress' });
+        if (bp && bp.length) o.next.plan = bp;
+      }
+      const l = this.lateness(o);
+      o.late = l.days; o.lateKind = l.kind;
+      o.objective = (o.next && o.next.plan && o.next.plan[0]) || '—';
+      o.offset = o.next ? o.next.off : null;
+      o.time = o.next ? o.next.t : '';
+      o.visitType = o.next ? o.next.v : '';
+      const d = this.detail[o.id] || {};
+      o.cc = d.cc || '';
+      o.alerts = d.al || [];
+      o.appliance = d.ap || [];
+      o.compliance = d.cmp || [];
+      o.carry = d.carry || [];
+      o.est = d.est || 0;
+      /* records completeness is a property of the seeded dataset; a user-created
+         case carries its own intake progress and must never inherit a seeded id's */
+      if (o.seeded) {
+        const rc = this.records[o.id];
+        o.rec = rc && rc.done < rc.total ? rc : null;
+      } else if (o.record && o.record.progress) {
+        const up = Object.keys(o.record.progress.uploads || {}).length;
+        o.rec = up < 14 ? { done: up, total: 14, missing: ['Photo set incomplete — ' + (14 - up) + ' slots empty'] } : null;
+      } else {
+        o.rec = { done: 0, total: 14, missing: ['No records started'] };
+      }
+    });
+    return rows;
+  }
+
+  go(o, screen) {
+    const info = { name: o.name, id: o.id, meta: o.meta, photo: o.photo, stage: this.stageInfo(o.stage).en };
+    if (screen === 'records') info.record = this.recordPayload(o);
+    /* a complex visit has no dedicated screen yet — the case file's log is the closest thing */
+    if (screen === 'session') { info.notice = 'The full Session screen is coming soon — this is the case file'; info.tab = 'log'; }
+    if (this.props.onNavigate) { this.props.onNavigate(screen === 'overview' ? 'casefile' : screen, info); return; }
+    if (screen === 'records') {
+      window.location.href = encodeURI('OrthoTrack Records Collection v3 EN.dc.html');
+      return;
+    }
+    /* standalone: hand the case over to the Overview screen through the hash */
+    const q = 'name=' + encodeURIComponent(o.name) + '&id=' + encodeURIComponent(o.id) + '&meta=' + encodeURIComponent(o.meta || '')
+      + '&stage=' + encodeURIComponent(info.stage || '') + '&photo=' + encodeURIComponent(o.photo || '');
+    window.location.href = encodeURI('OrthoTrack Case File EN.dc.html') + '#' + q;
+  }
+
+  componentDidMount() {
+    /* the dataset and knowledge base load from <helmet>; when embedded they may
+       arrive after mount, so wait for them and repaint once */
+    if (!window.OrthoCases || !window.OrthoKnowledge) {
+      this._k = setInterval(() => {
+        if (window.OrthoCases && window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); }
+      }, 60);
+    }
+    this._fit = () => {
+      const narrow = window.innerWidth < 1160;
+      if (narrow !== this.state.narrow) this.setState({ narrow: narrow });
+    };
+    this._fit();
+    window.addEventListener('resize', this._fit);
+    this._esc = ev => { if (ev.key === 'Escape' && this.state.openId) this.setState({ openId: null }); };
+    window.addEventListener('keydown', this._esc);
+    /* offline fallback for the remote portraits — capture phase, no inline handler */
+    this._imgErr = ev => {
+      const t = ev.target;
+      if (!t || t.tagName !== 'IMG') return;
+      const fb = t.getAttribute('data-fb');
+      if (!fb || fb.indexOf('{{') >= 0) return;
+      if (!t.getAttribute('src')) return;
+      if (t.src.indexOf(fb) < 0) t.src = fb;
+    };
+    document.addEventListener('error', this._imgErr, true);
+    this._syncImgs = () => {
+      const list = document.querySelectorAll('img[data-src]');
+      for (let n = 0; n < list.length; n++) {
+        const el = list[n];
+        const want = el.getAttribute('data-src');
+        if (!want || want.indexOf('{{') >= 0) continue;
+        if (el.getAttribute('src') !== want) el.setAttribute('src', want);
+      }
+    };
+    this._syncImgs();
+    this._obs = new window.MutationObserver(this._syncImgs);
+    this._obs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-src'] });
+    /* returning from the case file with #open=<id> reopens that session drawer */
+    const back = (window.location.hash || '').match(/open=([^&]+)/);
+    const want = this.props.openId || (back ? decodeURIComponent(back[1]) : null);
+    this.setState({ tab: want ? 'all' : (new Date().getHours() < 14 ? 'today' : 'all'), openId: want });
+  }
+  componentDidUpdate(prev) {
+    /* the host can ask for a specific drawer (e.g. Start session from the case file) */
+    if (this.props.openId && this.props.openId !== prev.openId) this.setState({ openId: this.props.openId });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._k);
+    window.removeEventListener('resize', this._fit);
+    window.removeEventListener('keydown', this._esc);
+    document.removeEventListener('error', this._imgErr, true);
+    if (this._obs) this._obs.disconnect();
+  }
+
+  sessOf(id) { return this.state.sess[id] || { ticks: {}, rec: {}, extra: [], closed: false, interval: null, procs: null, free: [], review: false, notes: {} }; }
+  patchSess(id, patch) {
+    this.setState(st => {
+      const all = Object.assign({}, st.sess);
+      all[id] = Object.assign({}, this.sessOf(id), patch);
+      return { sess: all };
+    });
+  }
+
+  drawerVals(rows) {
+    const o = rows.filter(r => r.id === this.state.openId)[0];
+    const empty = { drawerOpen: false, dAlerts: [], dAppliance: [], dLastItems: [], dCompliance: [],
+                    dPlanItems: [], dGate: [], dIntervals: [], dFlags: [], dDx: [], dPlan: [], dPhases: [],
+                    dTimelineDots: [], dProblems: [], dMeas: [], dGallery: [], dRecMissing: [] };
+    if (!o) return empty;
+    const K = this.K();
+    const st = this.stageInfo(o.stage);
+    const vd = this.visitDef(o.visitType);
+    const S = this.sessOf(o.id);
+    const isToday = o.offset === 0;
+    const clinical = o.stage === 'active' || o.stage === 'retention';
+    const live = isToday && !S.closed;
+    /* booking mode: the visit was missed or never booked — D becomes the rebook block */
+    const booking = !isToday && (o.offset === null || o.offset < 0);
+    const editable = live || booking;
+    const wires = K.archwires || [];
+    const elasticsList = ['Class II 3/16" light', 'Class II 3/16" medium', 'Class II 1/4" medium',
+                          'Class III 1/4" medium', 'Anterior vertical 1/4"', 'Settling 3/16" light'];
+
+    /* appliance — live overrides from what was recorded this session */
+    const rec = S.rec;
+    const appliance = o.appliance.map(a => {
+      if (a[0] === 'UPPER' && rec.wireU) return [a[0], rec.wireU];
+      if (a[0] === 'LOWER' && rec.wireL) return [a[0], rec.wireL];
+      if (a[0] === 'ELASTICS' && rec.elastic) return [a[0], rec.elastic];
+      return a;
+    });
+    const applianceLine = appliance.map(a => a[0].charAt(0) + a[0].slice(1).toLowerCase() + ' ' + a[1]).join(' · ');
+
+    /* photo gallery: pick from the case library or upload */
+    const library = [{ src: 'assets/face-f.jpeg', label: 'Frontal' }, { src: 'assets/face-m.jpeg', label: 'Frontal' }]
+      .concat(Array.from({ length: 14 }, (_, i) => ({ src: 'assets/p' + (i < 9 ? '0' : '') + (i + 1) + '.jpeg', label: 'Intraoral' })))
+      .concat((S.uploads || []).map(u => ({ src: u, label: 'Uploaded' })));
+    const gSlot = this.state.gallery;
+    const openGallery = v => { if (live) this.setState({ gallery: v }); };
+    const assignPhoto = src => {
+      const r = Object.assign({}, rec); const p = Object.assign({}, r.photos || {});
+      if (src) p[gSlot] = src; else delete p[gSlot];
+      r.photos = p; this.patchSess(o.id, { rec: r }); this.setState({ gallery: null });
+    };
+    const photoChip = v => {
+      const src = (rec.photos || {})[v];
+      return {
+        label: v, on: !!src, has: !!src, src: src || '',
+        bg: src ? '#ecfdf5' : '#fbfcfe', bd: src ? '#a7f3d0' : '#e2e8f0', fg: src ? '#047857' : '#94a3b8',
+        onClick: ev => { ev.stopPropagation(); openGallery(v); }
+      };
+    };
+    /* plan: carry-over first, dedup, each with its recorder */
+    const norm = t => t.replace(/\s+/g, ' ').trim();
+    const carryKeys = o.carry.map(norm);
+    const base = o.carry.map(t => ({ text: t, carried: true }))
+      .concat((o.next.plan || [])
+        .filter(t => !carryKeys.some(c => c.indexOf(norm(t)) >= 0 || norm(t).indexOf(c) >= 0))
+        .map(t => ({ text: t, carried: false })))
+      .concat(S.extra.map(t => ({ text: t, carried: false, extra: true })))
+      .filter(it => (S.dropped || []).indexOf(norm(it.text)) < 0);
+    const opt = (list, cur, key) => list.map(v => ({
+      label: v, on: cur === v,
+      bg: cur === v ? '#2563eb' : '#ffffff', fg: cur === v ? '#ffffff' : '#334155',
+      bd: cur === v ? '#2563eb' : '#e2e8f0',
+      onClick: ev => { ev.stopPropagation(); const r = Object.assign({}, rec); r[key] = cur === v ? '' : v; this.patchSess(o.id, { rec: r }); }
+    }));
+    const plan = base.map(it => {
+      const k = norm(it.text);
+      const done = !!S.ticks[k];
+      const type = this.recorderFor(it.text);
+      const open = done && live && type !== 'none';
+      return {
+        text: it.text, carried: it.carried, extra: !!it.extra,
+        tickable: live, notTickable: !live, role: live ? 'button' : 'listitem', cursor: live ? 'pointer' : 'default',
+        onRemove: ev => {
+          ev.stopPropagation(); if (!live) return;
+          const t = Object.assign({}, S.ticks); delete t[k];
+          this.patchSess(o.id, { extra: S.extra.filter(x => x !== it.text), dropped: (S.dropped || []).concat([k]), ticks: t });
+        },
+        mark: done ? '✓' : '',
+        boxBg: done ? '#2563eb' : '#ffffff', boxBd: done ? '#2563eb' : '#cbd5e1',
+        textFg: done ? '#64748b' : '#0f172a',
+        isWire: open && type === 'wire', isElastics: open && type === 'elastics',
+        isCompliance: open && type === 'compliance', isPhoto: open && type === 'photo',
+        isIPR: open && type === 'ipr', isMeasure: open && type === 'measure',
+        wiresU: opt(wires, rec.wireU, 'wireU'), wiresL: opt(wires, rec.wireL, 'wireL'),
+        elastics: opt(elasticsList, rec.elastic, 'elastic'),
+        hours: opt(['< 12h', '12–16h', '16–20h', '20h+'], rec.hours, 'hours'),
+        hygiene: opt(['Poor', 'Fair', 'Good'], rec.hygiene, 'hygiene'),
+        measureVal: rec.measure || '',
+        onMeasure: ev => { const r = Object.assign({}, rec); r.measure = ev.target.value; this.patchSess(o.id, { rec: r }); },
+        lastMeasure: o.compliance.length ? '' : '',
+        iprVal: rec.ipr || '',
+        onIpr: ev => { const r = Object.assign({}, rec); r.ipr = ev.target.value; this.patchSess(o.id, { rec: r }); },
+        photoSlots: ['Frontal', 'Right', 'Left', 'Upper', 'Lower'].map(photoChip),
+        onToggle: () => { if (!live) return; const t = Object.assign({}, S.ticks); t[k] = !t[k]; this.patchSess(o.id, { ticks: t }); }
+      };
+    });
+    const doneN = plan.filter(p => p.mark).length;
+    const undone = base.filter(it => !S.ticks[norm(it.text)]).map(it => it.text);
+
+    /* next session — interval chips from the phase recall; procedures composed from the catalogue */
+    const iv = ((K.recallIntervals || {})[o.stage] || {}).days || 42;
+    const weeks = Math.max(1, Math.round(iv / 7));
+    /* rebooking is always soon — the phase interval already ran out */
+    const ivOpts = booking ? [1, 2, 3, 4] : o.stage === 'retention' ? [3, 6, 12] : [weeks - 2, weeks, weeks + 2, weeks + 4].filter(w => w >= 1);
+    const unit = booking ? 'w' : o.stage === 'retention' ? 'mo' : 'w';
+    const chosen = S.interval === null ? (booking ? ivOpts[0] : ivOpts[1]) : S.interval;
+    const unitDays = unit === 'mo' ? 30 : 7;
+    /* a picked calendar date overrides the interval chips */
+    const custom = S.customOff !== null && S.customOff !== undefined;
+    const nextDays = custom ? S.customOff : chosen * unitDays;
+    const onNextDate = ev => {
+      if (!editable || !ev.target.value) return;
+      const t = new Date(); t.setHours(0, 0, 0, 0);
+      const d = new Date(ev.target.value + 'T00:00:00');
+      const diff = Math.round((d - t) / 86400000);
+      if (diff >= 0) this.patchSess(o.id, { customOff: diff, interval: null });
+    };
+    const catalogue = (K.procedures || {})[o.stage] || [];
+    /* default selection: today's undone items carry over; else the natural follow-up */
+    const defaultProcs = undone.length ? undone.slice() : (this.nextSuggestion[o.visitType] ? [this.nextSuggestion[o.visitType]] : []);
+    const procs = S.procs === null ? defaultProcs : S.procs;
+    const setProcs = list => this.patchSess(o.id, { procs: list });
+    const toggleProc = p => { if (!editable) return; setProcs(procs.indexOf(p) >= 0 ? procs.filter(x => x !== p) : procs.concat([p])); };
+    const nextType = booking ? vd.en : o.stage === 'retention' ? 'Retainer fit' : o.stage === 'active' ? 'Adjustment' : vd.en;
+    const notes = S.notes || {};
+    const addFree = () => {
+      const t = this.state.freeText.trim(); if (!t || !editable) return;
+      const free = (S.free || []).indexOf(t) >= 0 ? S.free : (S.free || []).concat([t]);
+      this.patchSess(o.id, { free: free, procs: procs.indexOf(t) >= 0 ? procs : procs.concat([t]) });
+      this.setState({ freeText: '' });
+    };
+    const noteTabs = [['clinical', 'Clinical note'], ['assistant', 'For assistant'], ['reception', 'For reception']];
+    /* gate — own milestone excluded */
+    const order = (K.caseStages || []).map(x => x[0]);
+    const nextStage = order[order.indexOf(o.stage) + 1];
+    const milestone = { active: 'debondDone', plan: 'planApproved', diagnosis: 'problemListApproved', records: 'recordsComplete' };
+    const gateRaw = nextStage ? (K.gateCheck || (() => []))(o.flags, nextStage) : [];
+    const ownDef = (K.stageGates || {})[nextStage] || [];
+    const ownLine = (ownDef.filter(g => g[0] === milestone[o.stage])[0] || [])[1];
+    const gate = gateRaw.filter(t => t !== ownLine).map(t => ({ text: t }));
+
+    const pct = o.stage === 'retention' ? 100 : (o.est ? Math.min(100, Math.round((o.mo / o.est) * 100)) : 0);
+    const lastFirst = (o.last.items || [])[0] || '';
+    const compChip = o.compliance[0];
+
+    /* ---- chart summary ---- */
+    const ch = this.chart[o.id] || {};
+    const toneBg = t => t === 2 ? '#fef2f2' : t === 1 ? '#fffbeb' : '#f1f5f9';
+    const toneFg = t => t === 2 ? '#b91c1c' : t === 1 ? '#b45309' : '#475569';
+    const flags = (K.medicalFlags || (() => []))(ch.med || []);
+    const phases = K.treatmentPhases || [];
+    const phaseIdx = phases.map(p => p[0]).indexOf(ch.phase);
+    const tracked = (K.trackedMeasures || (() => []))(o.meta, ch.tracked);
+    const pm = K.progressMeasures || {};
+    const measCur = S.meas || {};
+    const probs = S.probs || {};
+    const statuses = K.problemStatuses || [];
+    const stColor = { pending: '#94a3b8', progress: '#2563eb', resolved: '#059669' };
+    /* one line in today's session per summary edit — replaces its own earlier entry */
+    const logToday = (key, text) => {
+      if (!live) return {};
+      const keys = Object.assign({}, S.logKeys || {});
+      const prev = keys[key];
+      const extra = S.extra.filter(t => t !== prev).concat([text]);
+      keys[key] = text;
+      const ticks = Object.assign({}, S.ticks);
+      if (prev) delete ticks[norm(prev)];
+      ticks[norm(text)] = true;
+      return { extra: extra, logKeys: keys, ticks: ticks };
+    };
+    const mm = ch.bonded ? ch.bonded.slice(5) + '/' + ch.bonded.slice(0, 4) : '';
+    let estEnd = '';
+    if (ch.bonded && o.est) {
+      const d = new Date(ch.bonded + '-01'); d.setMonth(d.getMonth() + o.est);
+      estEnd = (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '/' + d.getFullYear();
+    }
+    const nS = ch.sessions || 0;
+    const missedAt = ch.missedAt || [];
+    const planPairs = ch.plan ? [['Extraction', ch.plan.ex], ['Appliance', ch.plan.appl], ['Mechanics', ch.plan.mech], ['Anchorage', ch.plan.anch], ['Est.', o.est ? o.est + ' mo' : '']].filter(p => p[1]) : [];
+    const summary = {
+      dSumOpen: this.state.sumOpen,
+      dSumCaret: this.state.sumOpen ? '▴' : '▾',
+      toggleSum: () => this.setState(x => ({ sumOpen: !x.sumOpen })),
+      dSumBrief: [ch.dx && ch.dx.length ? ch.dx[0][0] : '', phaseIdx >= 0 ? phases[phaseIdx][1] : '', flags.length ? flags.length + ' medical' : ''].filter(Boolean).join(' · '),
+      dHasRecGap: !!o.rec,
+      dRecCount: o.rec ? o.rec.done + ' / ' + o.rec.total + ' uploaded' : '',
+      dRecBlocks: o.rec ? (o.stage === 'records' ? 'Blocks the move to Diagnosis' : 'Blocks the move to Planning') : '',
+      dRecMissing: (o.rec ? o.rec.missing : []).map(t => ({ text: t })),
+      dOpenRecords: () => { this.setState({ openId: null }); this.go(o, 'records'); },
+      dHasFlags: flags.length > 0, dNoFlags: flags.length === 0,
+      dNoDx: !(ch.dx && ch.dx.length), dNoPlan: planPairs.length === 0,
+      dFlags: flags.map(f => ({ label: f.en, bg: toneBg(f.tone), fg: toneFg(f.tone), title: f.impact })),
+      dHasDx: !!(ch.dx && ch.dx.length),
+      dDx: (ch.dx || []).map(d => ({ label: d[0], bg: toneBg(d[1]), fg: toneFg(d[1]) })),
+      dHasPlan: planPairs.length > 0,
+      dPlan: planPairs.map(p => ({ k: p[0], v: p[1] })),
+      dHasPhase: phaseIdx >= 0,
+      dPhases: phases.map((p, i) => ({
+        label: p[1], done: i < phaseIdx, now: i === phaseIdx,
+        dot: i < phaseIdx ? '#7c3aed' : '#ffffff',
+        ring: i <= phaseIdx ? '#7c3aed' : '#e2e8f0',
+        lineL: i === 0 ? 'transparent' : i <= phaseIdx ? '#7c3aed' : '#e2e8f0',
+        lineR: i === phases.length - 1 ? 'transparent' : i < phaseIdx ? '#7c3aed' : '#e2e8f0',
+        fg: i === phaseIdx ? '#0f172a' : i < phaseIdx ? '#6d28d9' : '#94a3b8',
+        fw: i === phaseIdx ? 700 : 500, last: i === phases.length - 1
+      })),
+      dPhaseNow: phaseIdx >= 0 ? phases[phaseIdx][1] : '',
+      dPhaseAr: phaseIdx >= 0 ? phases[phaseIdx][2] : '',
+      dHasTimeline: !!ch.bonded,
+      dBonded: mm, dSessions: String(nS), dMissed: String(missedAt.length), dEstEnd: estEnd,
+      dMissedFg: missedAt.length ? '#b91c1c' : '#475569',
+      dTimelinePct: pct + '%',
+      dTimelineDots: Array.from({ length: nS }, (_, i) => ({
+        x: (((i + 1) / (nS + 1)) * pct).toFixed(1) + '%',
+        bg: missedAt.indexOf(i) >= 0 ? '#dc2626' : '#ffffff',
+        bd: missedAt.indexOf(i) >= 0 ? '#dc2626' : '#7c3aed'
+      })),
+      dHasProblems: !!(ch.problems && ch.problems.length),
+      dProblems: (ch.problems || []).map((p, i) => {
+        const st = probs[i] || p[1];
+        const def = statuses.filter(s => s[0] === st)[0] || statuses[0] || [st, st, ''];
+        return {
+          text: p[0], status: def[1], statusAr: def[2], dot: stColor[st] || '#94a3b8',
+          fg: st === 'resolved' ? '#64748b' : '#0f172a', deco: st === 'resolved' ? 'line-through' : 'none',
+          onClick: () => {
+            const order = statuses.map(s => s[0]);
+            const next = order[(order.indexOf(st) + 1) % order.length];
+            const np = Object.assign({}, probs); np[i] = next;
+            const nd = statuses.filter(s => s[0] === next)[0];
+            this.patchSess(o.id, Object.assign({ probs: np }, logToday('prob' + i, p[0] + ' → ' + (nd ? nd[1] : next))));
+          }
+        };
+      }),
+      dProblemsDone: (ch.problems || []).filter((p, i) => (probs[i] || p[1]) === 'resolved').length + ' / ' + (ch.problems || []).length,
+      dHasMeas: tracked.length > 0 && !!ch.meas,
+      dMeasLive: live,
+      dMeas: tracked.map(k => {
+        const def = pm[k] || [k, '', 'num', ''];
+        const pair = (ch.meas || {})[k] || ['', ''];
+        const cur = measCur[k] !== undefined ? measCur[k] : pair[1];
+        const editing = this.state.measEdit === k;
+        const unit = def[1] ? ' ' + def[1] : '';
+        const commit = () => {
+          const v = this.state.measDraft.trim();
+          this.setState({ measEdit: null, measDraft: '' });
+          if (!live || v === cur) return;
+          const nm = Object.assign({}, measCur); nm[k] = v;
+          this.patchSess(o.id, Object.assign({ meas: nm }, logToday('meas' + k, def[0] + ': ' + (pair[0] || '—') + ' → ' + v + unit)));
+        };
+        return {
+          key: k, label: def[0], goal: def[3],
+          base: pair[0] ? pair[0] + unit : '—',
+          cur: cur ? cur + unit : (live ? 'Record' : '—'),
+          curFg: cur ? '#0f172a' : '#2563eb', curFw: cur ? 700 : 500,
+          curBg: live ? '#ffffff' : 'transparent', curBd: live ? '#e2e8f0' : 'transparent',
+          editing: editing, notEditing: !editing, draft: this.state.measDraft,
+          onEdit: () => { if (live) this.setState({ measEdit: k, measDraft: cur || '' }); },
+          onDraft: ev => this.setState({ measDraft: ev.target.value }),
+          onKey: ev => { if (ev.key === 'Enter') commit(); if (ev.key === 'Escape') this.setState({ measEdit: null, measDraft: '' }); },
+          onBlur: commit
+        };
+      })
+    };
+
+    return Object.assign(summary, {
+      drawerOpen: true,
+      closeDrawer: () => this.setState({ openId: null, addOpen: false, lastOpen: false }),
+      dName: o.name, dId: o.id, dMeta: o.meta, dPhoto: o.photo, dFallback: o.fallback,
+      dHasCC: !!o.cc, dCC: o.cc,
+      dStage: st.en, dStageBg: st.bg, dStageFg: st.fg, dStageDot: st.dot,
+      dHasProgress: clinical && o.est > 0,
+      dProgressPct: pct + '%',
+      dProgressFill: o.stage === 'retention' ? '#0891b2' : '#7c3aed',
+      dProgressLabel: o.stage === 'retention' ? Math.max(0, o.mo - o.est) + ' mo since debond' : o.mo + ' / ' + o.est + ' mo',
+      dHasAlerts: o.alerts.length > 0,
+      dAlerts: o.alerts.map(a => ({ text: a[1], bg: a[0] === 'red' ? '#fef2f2' : '#fffbeb', fg: a[0] === 'red' ? '#b91c1c' : '#b45309' })),
+      dHasAppliance: appliance.length > 0,
+      dApplianceLine: applianceLine,
+      dAppliance: appliance.map(a => ({ arch: a[0], value: a[1] })),
+
+      dLastWhen: o.last.d + ' days ago · ' + this.shortDate(-o.last.d),
+      dLastFirst: lastFirst,
+      dLastMore: (o.last.items || []).length > 1 ? '+' + ((o.last.items || []).length - 1) : '',
+      dHasComp: !!compChip,
+      dCompLabel: compChip ? compChip[0] : '', dCompValue: compChip ? compChip[1] : '',
+      dCompFg: compChip && compChip[2] ? '#047857' : '#b45309',
+      dCompBg: compChip && compChip[2] ? '#ecfdf5' : '#fffbeb',
+      dLastOpen: this.state.lastOpen,
+      dLastCaret: this.state.lastOpen ? '▴' : '▾',
+      toggleLast: () => this.setState(x => ({ lastOpen: !x.lastOpen })),
+      dLastItems: (o.last.items || []).map(t => ({ text: t })),
+      dCompliance: o.compliance.map(c => ({ label: c[0], value: c[1], fg: c[2] ? '#047857' : '#b45309', bg: c[2] ? '#ecfdf5' : '#fffbeb' })),
+
+      dTodayHead: !isToday ? (o.offset === null ? 'Next session' : o.offset < 0 ? 'Missed session' : 'Next session')
+                 : S.closed ? 'Session closed' : 'Today\u2019s session',
+      dTodayWhen: !isToday ? (o.offset === null ? 'Not booked yet — the items below are what is needed' : o.offset < 0 ? 'Appointment missed — needs rebooking' : this.shortDate(o.offset) + ' · ' + vd.en)
+                 : [o.time, vd.en, vd.mins + ' min'].filter(Boolean).join(' · '),
+      dPlanCount: isToday ? doneN + ' / ' + plan.length : plan.length + ' items',
+      dReadOnly: !live,
+      dReadOnlyNote: !isToday
+        ? (o.offset === null ? 'Read-only — not booked yet' : o.offset < 0 ? 'Read-only — this session did not happen; rebook below' : 'Read-only — this session has not happened yet')
+        : 'Session closed — reopen it to edit',
+      dLive: live,
+      dPlanItems: plan,
+      dAddOpen: this.state.addOpen && live,
+      dCanAdd: live && !this.state.addOpen,
+      openAdd: () => this.setState({ addOpen: true, addText: '' }),
+      addText: this.state.addText,
+      onAddText: ev => this.setState({ addText: ev.target.value }),
+      onAddKey: ev => { if (ev.key === 'Enter' && this.state.addText.trim()) { this.patchSess(o.id, { extra: S.extra.concat([this.state.addText.trim()]) }); this.setState({ addOpen: false, addText: '' }); } if (ev.key === 'Escape') this.setState({ addOpen: false }); },
+      commitAdd: () => { if (this.state.addText.trim()) this.patchSess(o.id, { extra: S.extra.concat([this.state.addText.trim()]) }); this.setState({ addOpen: false, addText: '' }); },
+
+      dHasGate: gate.length > 0, dGate: gate,
+      dGateHead: clinical ? 'Missing before the next stage' : 'Required to complete this stage',
+
+      dShowNext: isToday || booking,
+      dBooking: booking,
+      dNextHead: booking ? (o.offset === null ? 'Book session' : 'Rebook') : 'Next session',
+      dProcsHead: booking ? 'Procedures for the booked session' : 'Next session procedures',
+      dIntervals: ivOpts.map(w => ({
+        label: w + unit, on: !custom && chosen === w,
+        bg: !custom && chosen === w ? '#0f172a' : '#ffffff', fg: !custom && chosen === w ? '#ffffff' : '#334155', bd: !custom && chosen === w ? '#0f172a' : '#e2e8f0',
+        onClick: () => { if (editable) this.patchSess(o.id, { interval: w, customOff: null }); }
+      })),
+      dNextType: nextType,
+      dNextDate: this.shortDate(nextDays),
+      dNextISO: this.dayISO(nextDays), dTodayISO: this.dayISO(0), onNextDate: onNextDate,
+      dNextDays: nextDays + ' days', dCustomBd: custom ? '#0f172a' : '#e2e8f0', dCustomFg: custom ? '#0f172a' : '#64748b',
+      dProcCount: String(procs.length),
+      /* carried items appear first, amber; catalogue chips follow; custom ones last */
+      /* three stable sources: carried (always shown), catalogue, custom. Toggling only changes selection. */
+      dProcs: undone.map(p => {
+        const on = procs.indexOf(p) >= 0;
+        return { label: p, carried: true, bg: on ? '#fffbeb' : '#ffffff', fg: on ? '#b45309' : '#94a3b8', bd: on ? '#fde68a' : '#e2e8f0', onClick: () => toggleProc(p) };
+      }).concat(catalogue.map(p => {
+        const on = procs.indexOf(p) >= 0;
+        return { label: p, carried: false, bg: on ? '#2563eb' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#2563eb' : '#e2e8f0', onClick: () => toggleProc(p) };
+      })).concat((S.free || []).map(p => {
+        const on = procs.indexOf(p) >= 0;
+        return { label: p, carried: false, bg: on ? '#2563eb' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#2563eb' : '#e2e8f0', onClick: () => toggleProc(p) };
+      })),
+      freeText: this.state.freeText,
+      onFreeText: ev => this.setState({ freeText: ev.target.value }),
+      onFreeKey: ev => { if (ev.key === 'Enter') addFree(); },
+      commitFree: addFree,
+      dShowReview: isToday,
+      dReview: !!S.review,
+      dReviewBg: S.review ? '#fef2f2' : '#ffffff', dReviewFg: S.review ? '#b91c1c' : '#334155', dReviewBd: S.review ? '#fecaca' : '#e2e8f0',
+      dReviewMark: S.review ? '✓' : '',
+      toggleReview: () => { if (live) this.patchSess(o.id, { review: !S.review }); },
+      dNoteTabs: noteTabs.map(t => {
+        const on = this.state.noteTab === t[0];
+        const filled = !!(notes[t[0]] || '').trim();
+        return { label: t[1], dot: filled, bg: on ? '#0f172a' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#0f172a' : '#e2e8f0',
+                 onClick: () => this.setState({ noteTab: t[0] }) };
+      }),
+      dNoteValue: notes[this.state.noteTab] || '',
+      dNotePlaceholder: { clinical: 'Saved to the case record', assistant: 'Setup needed for the next session — e.g. prepare .019×.025 SS', reception: 'Shown to reception at checkout — e.g. confirm appointment by phone' }[this.state.noteTab],
+      onNote: ev => { if (!editable) return; const n = Object.assign({}, notes); n[this.state.noteTab] = ev.target.value; this.patchSess(o.id, { notes: n }); },
+      dDocPhotos: ['Frontal', 'Right', 'Left', 'Upper', 'Lower'].map(photoChip),
+      dGalleryOpen: !!gSlot, dGallerySlot: gSlot || '',
+      dGalleryHas: !!gSlot && !!(rec.photos || {})[gSlot],
+      closeGallery: () => this.setState({ gallery: null }),
+      clearPhoto: () => assignPhoto(null),
+      dGallery: library.map(g => ({ src: g.src, label: g.label, on: !!gSlot && (rec.photos || {})[gSlot] === g.src, onClick: () => assignPhoto(g.src) })),
+      onUpload: ev => {
+        const f = ev.target.files && ev.target.files[0]; if (!f) return;
+        const rd = new FileReader();
+        rd.onload = () => { const up = (S.uploads || []).concat([rd.result]); this.patchSess(o.id, { uploads: up }); assignPhoto(rd.result); };
+        rd.readAsDataURL(f);
+      },
+      dDocCount: String(Object.keys(rec.photos || {}).filter(k => rec.photos[k]).length) + ' / 5',
+
+      dPrimary: booking ? (o.offset === null ? 'Book session' : 'Rebook') + ' · ' + this.shortDate(nextDays)
+               : !isToday ? 'Case file' : S.closed ? 'Reopen session' : 'Close session',
+      dPrimaryBg: S.closed ? '#ffffff' : '#2563eb', dPrimaryFg: S.closed ? '#0f172a' : '#ffffff',
+      dPrimaryBd: S.closed ? '#e8edf3' : '#2563eb',
+      dPrimaryAct: () => {
+        if (booking) {
+          /* a booking is the next visit date in the case store; the seed view reads it back from there */
+          if (window.OT && window.OT.store) {
+            const patch = { nextVisit: this.dayISO(nextDays) };
+            if (procs && procs.length) patch.nextTasks = procs.slice();
+            window.OT.store.update(o.id, patch);
+          }
+          this.patchSess(o.id, { booked: nextDays, interval: null, customOff: null, procs: procs });
+          return;
+        }
+        if (!isToday) { this.setState({ openId: null }); this.go(o, 'overview'); return; }
+        this.patchSess(o.id, { closed: !S.closed, interval: chosen, procs: procs });
+      },
+      dShowFull: isToday && !S.closed,
+      dOpenFull: () => { this.setState({ openId: null }); this.go(o, 'session'); },
+      dOpenCase: () => { this.setState({ openId: null }); this.go(o, 'overview'); }
+    });
+  }
+
+  renderVals() {
+    const rows = this.build();
+    const tab = this.state.tab || 'today';
+    const now = new Date();
+    const hour = now.getHours();
+    const nowMin = hour * 60 + now.getMinutes();
+    const q = this.state.query.trim().toLowerCase();
+    const match = o => !q || [o.name, o.id, o.meta].join(' ').toLowerCase().indexOf(q) >= 0;
+
+    const isDone = o => o.offset === 0 && !!(this.state.sess[o.id] || {}).closed;
+
+    const todays = rows.filter(o => o.offset === 0);
+    const remaining = todays.filter(o => !isDone(o)).length;
+    const overdue = rows.filter(o => o.late > 0);
+    const awaiting = rows.filter(o => o.stage === 'plan' && !o.flags.planApproved);
+    const blocking = rows.filter(o => !!o.rec);
+    /* the dataset has no creation date, so this cannot honestly mean "new this
+       month" — it is every case that has not started active treatment yet */
+    const fresh = rows.filter(o => o.mo === 0);
+
+    /* spotlight: the case that has sat still longest with something concrete blocking it.
+       One card, one blocker, one action — snoozing it promotes the next one. */
+    /* a case's own milestone is not a blocker — an active case has simply not
+       reached its debond yet. Same exclusion the drawer's gate list uses. */
+    const milestoneOf = { active: 'debondDone', plan: 'planApproved',
+                          diagnosis: 'problemListApproved', records: 'recordsComplete' };
+    const gateOf = o => {
+      const KB = this.K();
+      const order = (KB.caseStages || []).map(x => x[0]);
+      const nextStage = order[order.indexOf(o.stage) + 1];
+      if (!nextStage) return [];
+      const own = ((KB.stageGates || {})[nextStage] || []).filter(g => g[0] === milestoneOf[o.stage])[0];
+      return (KB.gateCheck || (() => []))(o.flags, nextStage).filter(t => !own || t !== own[1]);
+    };
+    const blocked = rows
+      .filter(o => !this.state.snoozed.includes(o.id))
+      .filter(o => !!o.rec || gateOf(o).length > 0)
+      .sort((a, b) => b.last.d - a.last.d);
+    const spot = blocked[0] || null;
+    let spotBadge = '', spotBlocker = '', spotDetail = '', spotAction = '';
+    if (spot) {
+      const gate = gateOf(spot);
+      spotBadge = 'Longest with no movement';
+      if (spot.rec) {
+        const n = spot.rec.total - spot.rec.done;
+        spotBlocker = n + (n === 1 ? ' missing record blocks' : ' missing records block') + ' the next stage';
+        spotDetail = spot.rec.missing.slice(0, 3).join(' · ') + ' — ' + spot.last.d + ' days idle';
+        spotAction = 'Open Records collection';
+      } else {
+        spotBlocker = gate[0];
+        spotDetail = (gate.length > 1 ? '+' + (gate.length - 1) + ' more · ' : '') + spot.last.d + ' days idle';
+        spotAction = 'Open the case file';
+      }
+    }
+
+    const view = this.state.view;
+    const setView = v => this.setState({ tab: 'all', view: view === v ? 'all' : v });
+
+    const primaryDefs = [
+      ['today', 'Visits left today', String(remaining), 'of ' + todays.length + ' today', '#0f172a', '#eff6ff',
+        'Show today\'s schedule', () => this.setState({ tab: 'today', scope: 'today' }), tab === 'today'],
+      ['overdue', 'Overdue', String(overdue.length), 'cases', '#b91c1c', '#fef2f2',
+        'Missed appointment or past the stage interval', () => setView('overdue'), tab === 'all' && view === 'overdue']
+    ];
+    const secondaryDefs = [
+      ['plans', 'Plans awaiting approval', String(awaiting.length), () => setView('plans'), tab === 'all' && view === 'plans'],
+      ['records', 'Records still incomplete', String(blocking.length), () => setView('records'), tab === 'all' && view === 'records'],
+      ['new', 'Not yet in treatment', String(fresh.length), () => setView('new'), tab === 'all' && view === 'new']
+    ];
+
+    const scopeRange = { today: [0, 0], tomorrow: [1, 1], week: [0, 6] }[this.state.scope];
+    const inScope = rows
+      .filter(o => o.offset !== null && o.offset >= scopeRange[0] && o.offset <= scopeRange[1])
+      .filter(match)
+      .sort((a, b) => (a.offset - b.offset) || (a.time < b.time ? -1 : 1));
+    const vf = this.state.visitFilter, sf = this.state.stageFilter;
+    const visitRows = inScope.filter(o => {
+      if (vf && o.visitType !== vf) return false;
+      if (sf && o.stage !== sf) return false;
+      if (this.state.hideDone && isDone(o)) return false;
+      return true;
+    });
+    const vtSeen = [];
+    inScope.forEach(o => { if (o.visitType && vtSeen.indexOf(o.visitType) < 0) vtSeen.push(o.visitType); });
+
+    const viewPred = {
+      all: null, overdue: o => o.late > 0,
+      plans: o => o.stage === 'plan' && !o.flags.planApproved,
+      records: o => !o.flags.recordsComplete && (o.stage === 'records' || o.stage === 'diagnosis'),
+      new: o => o.mo === 0 && o.last.d <= 30
+    }[view];
+    const shown = rows.filter(o => {
+      if (!match(o)) return false;
+      if (sf && o.stage !== sf) return false;
+      if (viewPred && !viewPred(o)) return false;
+      return true;
+    }).sort((a, b) => {
+      if (this.state.sort === 'late') return b.late - a.late;
+      if (this.state.sort === 'name') return a.name.localeCompare(b.name, 'ar');
+      const av = a.offset === null ? 999 : a.offset, bv = b.offset === null ? 999 : b.offset;
+      return av - bv;
+    });
+
+    const stageOpts = [{ value: '', label: 'All stages' }].concat(
+      (this.K().caseStages || []).map(x => ({ value: x[0], label: x[1] })));
+    const monthsLabel = o => (o.mo ? o.mo + ' mo' : 'Not started');
+    const visitCell = o => o.offset === null ? 'Not booked' : this.shortDate(o.offset);
+    const visitFg = o => o.offset === null ? '#b45309' : o.offset < 0 ? '#b91c1c' : '#0f172a';
+
+    return {
+      showAside: !this.props.embedded,
+      hasExtras: (this.props.extraCases || []).length > 0 && !!this.props.onReset,
+      extraCount: String((this.props.extraCases || []).length),
+      onResetDemo: () => { if (this.props.onReset) this.props.onReset(); },
+      soonLinks: this.soonLinks,
+      sideW: this.state.collapsed ? '76px' : '244px',
+      labelOp: this.state.collapsed ? 0 : 1,
+      sideIcon: this.state.collapsed ? '›' : '‹',
+      toggleSide: () => this.setState(st => ({ collapsed: !st.collapsed })),
+      onNewCase: () => { if (this.props.onNavigate) this.props.onNavigate('newcase'); },
+      onLang: () => {
+        if (this.props.onLang) { this.props.onLang(); return; }
+        window.location.href = encodeURI('OrthoTrack Case Dashboard v2.dc.html');
+      },
+      query: this.state.query,
+      onQuery: ev => this.setState({ query: ev.target.value }),
+
+      greeting: (hour < 12 ? 'Good morning' : 'Good afternoon') + ', Dr. Mohammed',
+      subline: remaining
+        ? remaining + ' visits left today, and ' + overdue.length + ' cases are overdue.'
+        : 'Today\'s schedule is done — ' + overdue.length + ' overdue cases are waiting on you.',
+      todayLong: this.dayISO(0),
+
+      metricsPrimary: primaryDefs.map(m => ({
+        label: m[1], n: m[2], sub: m[3], fg: m[4], tint: m[5], title: m[6], onClick: m[7],
+        bd: m[8] ? '#2563eb' : '#e8edf3', sh: m[8] ? '0 0 0 3px rgba(37,99,235,.12)' : 'none'
+      })),
+      metricsSecondary: secondaryDefs.map(m => ({
+        label: m[1], n: m[2], onClick: m[3],
+        bg: m[4] ? '#eff6ff' : '#ffffff', bd: m[4] ? '#bfdbfe' : '#e8edf3',
+        fg: m[4] ? '#1d4ed8' : '#64748b', fw: m[4] ? 700 : 500
+      })),
+
+      tabs: [['today', 'Today', String(todays.length)], ['all', 'All cases', String(rows.length)]].map(t => {
+        const on = tab === t[0];
+        return { label: t[1], n: t[2], bg: on ? '#ffffff' : 'transparent',
+                 fg: on ? '#0f172a' : '#64748b', nFg: on ? '#2563eb' : '#94a3b8',
+                 fw: on ? 700 : 500, sh: on ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+                 onClick: () => this.setState({ tab: t[0] }) };
+      }),
+      todayTab: tab === 'today', allTab: tab === 'all',
+
+      scopes: [['today', 'Today'], ['tomorrow', 'Tomorrow'], ['week', 'Week']].map(x => {
+        const on = this.state.scope === x[0];
+        return { label: x[1], bg: on ? '#ffffff' : 'transparent', fg: on ? '#0f172a' : '#64748b',
+                 fw: on ? 700 : 500, sh: on ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+                 onClick: () => this.setState({ scope: x[0] }) };
+      }),
+      scopeSub: { today: 'Today\'s visits in time order — sessions close from the Session panel',
+                  tomorrow: 'Tomorrow\'s visits — for preparation',
+                  week: 'Seven days from today' }[this.state.scope],
+
+      visits: visitRows.map(o => {
+        const vd = this.visitDef(o.visitType);
+        const tn = this.tones[this.visitTone[o.visitType] || 'slate'];
+        const done = isDone(o);
+        return {
+          time: o.time, dur: vd.mins + ' min', name: o.name, id: o.id,
+          photo: o.photo, fallback: o.fallback,
+          type: vd.en, typeBg: tn[0], typeFg: tn[1], bar: tn[2],
+          objective: o.objective, done: done, pending: !done,
+          rowBg: done ? '#fbfcfe' : '#ffffff', op: done ? 0.62 : 1,
+          timeFg: done ? '#94a3b8' : '#2563eb',
+          onRow: () => this.setState({ openId: o.id }),
+          onKey: ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); this.setState({ openId: o.id }); } },
+          onOpen: ev => { ev.stopPropagation(); this.setState({ openId: o.id }); }
+        };
+      }),
+      noVisits: visitRows.length === 0,
+      ...this.drawerVals(rows),
+
+      visitFilter: vf,
+      visitTypeOptions: [{ value: '', label: 'All visit types' }].concat(
+        vtSeen.map(k => ({ value: k, label: this.visitDef(k).en }))),
+      onVisitFilter: ev => this.setState({ visitFilter: ev.target.value }),
+      stageFilter: sf,
+      stageOptions: stageOpts,
+      onStageFilter: ev => this.setState({ stageFilter: ev.target.value }),
+      toggleHideDone: () => this.setState(st => ({ hideDone: !st.hideDone })),
+      hideDoneMark: this.state.hideDone ? '✓' : '○',
+      hideDoneBg: this.state.hideDone ? '#eff6ff' : '#ffffff',
+      hideDoneFg: this.state.hideDone ? '#1d4ed8' : '#64748b',
+      hideDoneBd: this.state.hideDone ? '#bfdbfe' : '#e2e8f0',
+      hideDoneFw: this.state.hideDone ? 700 : 500,
+      visitFiltered: !!(vf || sf || this.state.hideDone || q),
+      clearVisitFilters: () => this.setState({ visitFilter: '', stageFilter: '', hideDone: false, query: '' }),
+      visitShown: String(visitRows.length),
+      visitTotal: String(inScope.length),
+
+      hasSpotlight: !!spot,
+      spotName: spot ? spot.name : '',
+      spotId: spot ? spot.id : '',
+      spotMeta: spot ? spot.meta : '',
+      spotPhoto: spot ? spot.photo : '',
+      spotHasPhoto: !!(spot && spot.photo && spot.photo.indexOf('data:') !== 0),
+      spotNoPhoto: !!(spot && (!spot.photo || spot.photo.indexOf('data:') === 0)),
+      spotInitials: spot ? this.initials(spot.name) : '',
+      spotInitialsFg: '#475569', spotPanelBg: '#f1f5f9',
+      spotBadge: spot ? spotBadge : '',
+      spotStage: spot ? this.stageInfo(spot.stage).en : '',
+      spotStageBg: spot ? this.stageInfo(spot.stage).bg : '',
+      spotStageFg: spot ? this.stageInfo(spot.stage).fg : '',
+      spotStageDot: spot ? this.stageInfo(spot.stage).dot : '',
+      spotBlocker: spot ? spotBlocker : '',
+      spotDetail: spot ? spotDetail : '',
+      spotAction: spot ? spotAction : '',
+      spotOpen: () => { if (spot) this.go(spot, spot.rec ? 'records' : 'overview'); },
+      spotSnooze: () => { if (spot) this.setState(st => ({ snoozed: st.snoozed.concat([spot.id]) })); },
+
+      viewActive: view !== 'all',
+      viewLabel: ({ overdue: 'Overdue', plans: 'Plans awaiting approval',
+                    records: 'Records still incomplete', new: 'Not yet in treatment' })[view] || '',
+      viewCaption: view === 'all' ? 'All registered cases — the numbers above filter this list'
+                                  : 'Filtered from the bar above',
+      sort: this.state.sort,
+      sortOptions: [{ value: 'visit', label: 'Nearest visit' }, { value: 'late', label: 'Most overdue' }, { value: 'name', label: 'Name' }],
+      onSort: ev => this.setState({ sort: ev.target.value }),
+      clearFilters: () => this.setState({ view: 'all', stageFilter: '', query: '' }),
+      rows: shown.map(o => {
+        const st = this.stageInfo(o.stage);
+        return {
+          name: o.name, meta: o.meta, photo: o.photo, fallback: o.fallback, stage: st.en,
+          stageBg: st.bg, stageFg: st.fg, stageDot: st.dot,
+          visit: visitCell(o), visitFw: o.offset !== null && o.offset < 0 ? 700 : 500, visitFg: visitFg(o),
+          next: o.objective, months: monthsLabel(o),
+          onClick: () => this.setState({ openId: o.id }),
+          onFile: ev => { ev.stopPropagation(); this.go(o, 'overview'); },
+          hasRecGap: !!o.rec,
+          recLabel: o.rec ? o.rec.done + ' / ' + o.rec.total : '',
+          recTitle: o.rec ? 'Still missing: ' + o.rec.missing.join(' · ') : '',
+          onRecords: ev => { ev.stopPropagation(); this.go(o, 'records'); },
+          onKey: ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); this.setState({ openId: o.id }); } }
+        };
+      }),
+      noRows: shown.length === 0,
+      shownCount: String(shown.length),
+      totalCount: String(rows.length)
+    };
+  }
+}
+</script>
+</body>
+</html>

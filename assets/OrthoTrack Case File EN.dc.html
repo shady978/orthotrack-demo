@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>OrthoTrack — Case file</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+<link rel="stylesheet" href="assets/vendor/css/google-outfit-300-900.css">
+<script src="./ortho-knowledge-en.js"></script>
+<script src="./ortho-cases.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{direction:ltr;background:#f6f8fb;color:#0f172a;font-family:Outfit,system-ui,sans-serif;font-weight:500;line-height:1.55;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#2563eb;text-decoration:none}
+a:hover{color:#1d4ed8;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+@keyframes ocIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes ocFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#f6f8fb;display:grid;grid-template-rows:auto auto 1fr;align-content:start">
+
+  <header style="background:#ffffff;border-bottom:1px solid #e8edf3;padding:16px 28px 0;display:grid;gap:14px">
+    <sc-if value="{{ showCrumbs }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#94a3b8">
+        <a href="{{ backHref }}" onClick="{{ onBack }}" style="color:#64748b">Dashboard</a>
+        <span>›</span>
+        <span style="color:#0f172a;font-weight:600">Case file</span>
+      </div>
+    </sc-if>
+
+    <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+      <sc-if value="{{ hasCase }}" hint-placeholder-val="{{ true }}">
+        <img data-src="{{ photo }}" data-fb="{{ fallback }}" alt="{{ name }}" style="width:54px;height:54px;flex:none;border-radius:50%;object-fit:cover;background:#f1f5f9">
+      </sc-if>
+      <div style="display:grid;gap:3px;min-width:0;flex:1">
+        <div style="display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;min-width:0">
+          <span style="font-size:22px;font-weight:900;line-height:1.2">{{ name }}</span>
+          <span style="font-size:13px;font-weight:500;color:#94a3b8">{{ meta }}</span>
+          <span style="font-size:12px;font-weight:600;color:#cbd5e1;font-variant-numeric:tabular-nums">{{ caseId }}</span>
+        </div>
+        <sc-if value="{{ hasCC }}" hint-placeholder-val="{{ true }}">
+          <span style="font-size:13.5px;font-weight:300;color:#64748b">«{{ cc }}»</span>
+        </sc-if>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+        <sc-if value="{{ hasCase }}" hint-placeholder-val="{{ true }}">
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:{{ stageBg }};color:{{ stageFg }};font-size:12px;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:{{ stageDot }}"></span>{{ stage }}</span>
+        </sc-if>
+        <sc-if value="{{ hasCase }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ startSession }}" style="min-height:44px;padding:0 18px;border-radius:12px;border:none;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;cursor:pointer">Start session</button>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{ hasCase }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:2px">
+      <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Medical</span>
+      <sc-if value="{{ hasFlags }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ flags }}" as="f" hint-placeholder-count="2">
+            <span title="{{ f.title }}" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:{{ f.bg }};color:{{ f.fg }};font-size:12px;font-weight:600;cursor:help"><span style="width:14px;height:14px;border-radius:4px;background:{{ f.fg }};color:#ffffff;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">!</span>{{ f.label }}</span>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noFlags }}" hint-placeholder-val="{{ true }}">
+        <span style="font-size:12.5px;font-weight:300;color:#94a3b8">No medical alerts</span>
+      </sc-if>
+      <span style="margin-left:auto;font-size:12px;font-weight:500;color:#94a3b8">{{ updatedNote }}</span>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;gap:2px;overflow-x:auto">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+          <button type="button" onClick="{{ t.onClick }}" style="min-height:44px;padding:0 15px;border:none;border-bottom:2px solid {{ t.bd }};background:transparent;color:{{ t.fg }};font-size:13.5px;font-weight:{{ t.fw }};cursor:pointer;white-space:nowrap" style-hover="color:#0f172a">{{ t.label }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="height:14px"></div>
+    </sc-if>
+  </header>
+
+  <div style="padding:20px 28px 40px;display:grid;gap:16px;align-content:start;max-width:1180px;width:100%">
+
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:44px 26px;display:grid;gap:10px;justify-items:center;text-align:center;max-width:520px">
+        <span style="font-size:16px;font-weight:700">No case open</span>
+        <span style="font-size:13.5px;font-weight:300;color:#64748b;line-height:1.6">Pick a patient on the dashboard — the arrow at the end of each row opens their full case file.</span>
+        <a href="{{ backHref }}" style="margin-top:6px;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;border-radius:12px;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;text-decoration:none">Go to the dashboard</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;gap:16px">
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:20px 22px;display:grid;gap:14px">
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Diagnostic statement</span>
+          <p style="margin:0;font-size:17px;font-weight:500;line-height:1.6;color:#0f172a">{{ statement }}</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ dx }}" as="d" hint-placeholder-count="4">
+              <span style="padding:4px 10px;border-radius:8px;background:{{ d.bg }};color:{{ d.fg }};font-size:12px;font-weight:600">{{ d.label }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasAlerts }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:8px">
+            <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="1">
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 15px;border-radius:13px;background:{{ a.bg }}">
+                <span style="width:18px;height:18px;flex:none;border-radius:5px;background:{{ a.fg }};color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px">!</span>
+                <span style="font-size:13.5px;font-weight:500;line-height:1.55;color:{{ a.fg }}">{{ a.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:16px">
+
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:16px;align-content:start">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Progress vs plan</span>
+              <span style="margin-left:auto;font-size:12.5px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums">{{ progressLabel }}</span>
+            </div>
+            <sc-if value="{{ hasPhase }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:flex-start">
+                <sc-for list="{{ phases }}" as="s" hint-placeholder-count="5">
+                  <div style="flex:1;display:grid;gap:6px;justify-items:center;min-width:0">
+                    <div style="display:flex;align-items:center;width:100%">
+                      <span style="flex:1;height:2px;background:{{ s.lineL }}"></span>
+                      <span style="width:13px;height:13px;flex:none;border-radius:50%;border:2px solid {{ s.ring }};background:{{ s.dot }};box-sizing:border-box;display:flex;align-items:center;justify-content:center"><sc-if value="{{ s.now }}" hint-placeholder-val="{{ false }}"><span style="width:5px;height:5px;border-radius:50%;background:#7c3aed"></span></sc-if></span>
+                      <span style="flex:1;height:2px;background:{{ s.lineR }}"></span>
+                    </div>
+                    <span style="font-size:11px;font-weight:{{ s.fw }};color:{{ s.fg }};white-space:nowrap">{{ s.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <div style="display:grid;gap:6px">
+              <div style="height:7px;border-radius:999px;background:#f1f5f9;overflow:hidden"><div style="height:100%;width:{{ progressPct }};border-radius:999px;background:{{ progressFill }}"></div></div>
+              <div style="display:flex;gap:4px 14px;flex-wrap:wrap;font-size:12.5px;font-variant-numeric:tabular-nums;color:#475569">
+                <span><span style="color:#94a3b8">Bonded</span> <span style="font-weight:600">{{ bonded }}</span></span>
+                <span><span style="font-weight:600">{{ sessions }}</span> sessions</span>
+                <span style="color:{{ missedFg }}"><span style="font-weight:600">{{ missed }}</span> missed</span>
+                <span style="margin-left:auto"><span style="color:#94a3b8">Est. end</span> <span style="font-weight:600">{{ estEnd }}</span></span>
+              </div>
+            </div>
+            <sc-if value="{{ hasWires }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;gap:7px;padding-top:12px;border-top:1px solid #f1f5f9">
+                <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Wire timeline</span>
+                <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap">
+                  <sc-for list="{{ wireLine }}" as="w" hint-placeholder-count="4">
+                    <span style="display:inline-flex;align-items:center;gap:8px">
+                      <span style="padding:4px 10px;border-radius:8px;background:{{ w.bg }};color:{{ w.fg }};font-size:11.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap">{{ w.label }}</span>
+                      <sc-if value="{{ w.arrow }}" hint-placeholder-val="{{ true }}"><span style="color:#cbd5e1;font-size:12px;padding:0 2px">→</span></sc-if>
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:12px;align-content:start">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Next appointment</span>
+            <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+              <span style="font-size:26px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1;color:{{ nextFg }}">{{ nextDate }}</span>
+              <span style="font-size:13px;font-weight:600;color:#475569">{{ nextType }}</span>
+            </div>
+            <span style="font-size:12.5px;font-weight:500;color:{{ nextFg }}">{{ nextWhen }}</span>
+            <div style="display:grid;gap:7px;padding-top:12px;border-top:1px solid #f1f5f9">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Objective</span>
+              <sc-for list="{{ nextPlan }}" as="p" hint-placeholder-count="3">
+                <div style="display:flex;align-items:flex-start;gap:9px"><span style="width:5px;height:5px;flex:none;border-radius:50%;background:#cbd5e1;margin-top:8px"></span><span style="font-size:13px;font-weight:500;color:#334155;line-height:1.6">{{ p.text }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Problem list</span>
+            <span style="font-size:11.5px;font-weight:600;color:#047857;font-variant-numeric:tabular-nums">{{ problemsDone }}</span>
+            <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Ordered by priority · tap a row to change status</span>
+          </div>
+          <sc-if value="{{ hasProblems }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;gap:1px">
+              <sc-for list="{{ problems }}" as="p" hint-placeholder-count="4">
+                <button type="button" onClick="{{ p.onClick }}" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;margin:0 -10px;border:none;border-radius:10px;background:transparent;cursor:pointer;text-align:left;border-top:1px solid #f8fafc" style-hover="background:#f8fafc">
+                  <span style="width:20px;flex:none;font-size:11.5px;font-weight:700;color:#cbd5e1;font-variant-numeric:tabular-nums">{{ p.rank }}</span>
+                  <span style="width:9px;height:9px;flex:none;border-radius:50%;background:{{ p.dot }}"></span>
+                  <span style="flex:1;min-width:0;font-size:13.5px;font-weight:500;color:{{ p.fg }};text-decoration:{{ p.deco }}">{{ p.text }}</span>
+                  <span style="font-size:11.5px;font-weight:600;color:{{ p.dot }}">{{ p.status }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noProblems }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;font-weight:300;color:#94a3b8">Not set yet — the problem list is approved on the Diagnosis screen</span>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDiagnosis }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;gap:16px">
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:20px 22px;display:grid;gap:12px">
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Diagnostic statement</span>
+          <p style="margin:0;font-size:16px;font-weight:500;line-height:1.65">{{ statement }}</p>
+        </div>
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Findings by severity</span>
+            <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Approved on the Diagnosis screen — read-only here</span>
+          </div>
+          <sc-for list="{{ dxGroups }}" as="g" hint-placeholder-count="3">
+            <div style="display:grid;gap:7px;padding-top:12px;border-top:1px solid #f8fafc">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:8px;height:8px;border-radius:50%;background:{{ g.dot }}"></span>
+                <span style="font-size:12px;font-weight:700;color:{{ g.fg }}">{{ g.label }}</span>
+                <span style="font-size:11.5px;font-weight:600;color:#cbd5e1;font-variant-numeric:tabular-nums">{{ g.count }}</span>
+              </div>
+              <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="2">
+                <span style="font-size:13.5px;font-weight:500;color:#334155;padding-left:16px">{{ i.label }}</span>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:10px">
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Baseline measurements</span>
+          <sc-for list="{{ baseRows }}" as="m" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:10px;align-items:center;min-height:38px;border-top:1px solid #f8fafc;font-variant-numeric:tabular-nums">
+              <span style="font-size:13px;font-weight:500;color:#334155">{{ m.label }}</span>
+              <span style="font-size:13px;font-weight:700;text-align:center">{{ m.base }}</span>
+              <span style="font-size:12px;font-weight:500;color:#94a3b8;text-align:right">goal {{ m.goal }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;gap:16px">
+        <sc-if value="{{ hasPlan }}" hint-placeholder-val="{{ true }}">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:20px 22px;display:grid;gap:16px">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Approved plan</span>
+              <span style="padding:3px 9px;border-radius:7px;background:#ecfdf5;color:#047857;font-size:11px;font-weight:700">{{ planVersion }}</span>
+              <span style="margin-left:auto;font-size:12px;font-weight:500;color:#94a3b8">{{ planApproved }}</span>
+            </div>
+            <p style="margin:0;font-size:16px;font-weight:500;line-height:1.6">{{ planSentence }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+              <sc-for list="{{ planRows }}" as="p" hint-placeholder-count="5">
+                <div style="display:grid;gap:3px;padding:12px 14px;border-radius:12px;background:#f6f8fb">
+                  <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">{{ p.k }}</span>
+                  <span style="font-size:14px;font-weight:600;color:#0f172a">{{ p.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:14px;border-top:1px solid #f1f5f9">
+              <button type="button" onClick="{{ proposeChange }}" style="min-height:42px;padding:0 16px;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;color:#1d4ed8;font-size:13px;font-weight:700;cursor:pointer" style-hover="background:#eff6ff">Propose a change</button>
+              <a href="{{ historyHref }}" style="font-size:13px;font-weight:600">Version history</a>
+              <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Plan decisions need approval — they are not edited inline</span>
+            </div>
+            <sc-if value="{{ proposeOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;gap:9px;padding:14px 16px;border-radius:13px;background:#eff6ff;border:1px solid #bfdbfe;animation:ocFade .15s ease-out">
+                <span style="font-size:12.5px;font-weight:700;color:#1d4ed8">Proposed change to the plan</span>
+                <textarea value="{{ proposeText }}" onChange="{{ onPropose }}" rows="3" placeholder="e.g. switch to extraction of 14 and 24 — anchorage insufficient" style="width:100%;min-height:70px;padding:11px 13px;border-radius:11px;border:1px solid #bfdbfe;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;resize:vertical;outline:none;line-height:1.6"></textarea>
+                <div style="display:flex;gap:8px">
+                  <button type="button" onClick="{{ commitPropose }}" style="min-height:40px;padding:0 15px;border-radius:10px;border:none;background:#2563eb;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer">Send for approval</button>
+                  <button type="button" onClick="{{ cancelPropose }}" style="min-height:40px;padding:0 13px;border-radius:10px;border:1px solid #bfdbfe;background:#ffffff;color:#475569;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noPlan }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:34px 22px;display:grid;gap:9px;justify-items:center;text-align:center">
+            <span style="font-size:15px;font-weight:600">No approved plan yet</span>
+            <span style="font-size:13px;font-weight:300;color:#64748b">The plan is built and approved on the Treatment plan screen</span>
+          </div>
+        </sc-if>
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:11px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Treatment objectives</span>
+            <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Editable — changes are logged</span>
+          </div>
+          <sc-for list="{{ objectives }}" as="o" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:11px;min-height:42px;border-top:1px solid #f8fafc">
+              <span style="width:9px;height:9px;flex:none;border-radius:50%;background:{{ o.dot }}"></span>
+              <span style="flex:1;min-width:0;font-size:13.5px;font-weight:500;color:#334155">{{ o.text }}</span>
+              <button type="button" onClick="{{ o.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid #e2e8f0;background:#ffffff;color:{{ o.dot }};font-size:11.5px;font-weight:600;cursor:pointer" style-hover="border-color:#2563eb">{{ o.status }}</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLog }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;gap:11px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Treatment log</span>
+          <span style="font-size:11.5px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums">{{ logCount }}</span>
+          <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Newest first · tap a card for full detail</span>
+        </div>
+        <sc-if value="{{ hasLog }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;gap:9px">
+            <sc-for list="{{ log }}" as="s" hint-placeholder-count="5">
+              <div style="background:#ffffff;border:1px solid {{ s.bd }};border-radius:14px;overflow:hidden">
+                <button type="button" onClick="{{ s.onClick }}" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 18px;border:none;background:transparent;cursor:pointer;text-align:left" style-hover="background:#fbfcfe">
+                  <div style="width:76px;flex:none;display:grid;gap:1px">
+                    <span style="font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ s.dateFg }}">{{ s.date }}</span>
+                    <span style="font-size:11px;font-weight:500;color:#94a3b8">{{ s.ago }}</span>
+                  </div>
+                  <span style="width:132px;flex:none;padding:4px 11px;border-radius:999px;background:{{ s.typeBg }};color:{{ s.typeFg }};font-size:11.5px;font-weight:600;text-align:center">{{ s.type }}</span>
+                  <span style="width:190px;flex:none;font-size:12.5px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums">{{ s.wire }}</span>
+                  <span style="flex:1;min-width:0;font-size:12.5px;font-weight:500;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.summary }}</span>
+                  <sc-if value="{{ s.hasDelta }}" hint-placeholder-val="{{ false }}">
+                    <span style="flex:none;padding:3px 9px;border-radius:7px;background:#ecfdf5;color:#047857;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums">{{ s.deltaLabel }}</span>
+                  </sc-if>
+                  <span style="flex:none;width:16px;text-align:center;font-size:12px;color:#cbd5e1">{{ s.caret }}</span>
+                </button>
+                <sc-if value="{{ s.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:2px 18px 16px;display:grid;gap:14px;border-top:1px solid #f1f5f9;animation:ocFade .15s ease-out">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding-top:14px">
+                      <div style="display:grid;gap:2px"><span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">Upper</span><span style="font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">{{ s.wireU }}</span></div>
+                      <div style="display:grid;gap:2px"><span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">Lower</span><span style="font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">{{ s.wireL }}</span></div>
+                      <div style="display:grid;gap:2px"><span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">Auxiliaries</span><span style="font-size:13px;font-weight:600">{{ s.aux }}</span></div>
+                      <div style="display:grid;gap:2px"><span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">Treated by</span><span style="font-size:13px;font-weight:600">{{ s.by }}</span></div>
+                    </div>
+                    <sc-if value="{{ s.hasProcs }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:grid;gap:6px">
+                        <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">Procedures</span>
+                        <sc-for list="{{ s.procs }}" as="p" hint-placeholder-count="2">
+                          <div style="display:flex;align-items:flex-start;gap:9px"><span style="width:14px;flex:none;color:#059669;font-size:11.5px;font-weight:700;margin-top:2px">✓</span><span style="font-size:13px;font-weight:500;color:#334155">{{ p.text }}</span></div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ s.hasDeltas }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;gap:6px">
+                        <span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">Measurements</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                          <sc-for list="{{ s.deltas }}" as="d" hint-placeholder-count="2">
+                            <span style="display:inline-flex;align-items:baseline;gap:6px;padding:5px 11px;border-radius:9px;background:#f6f8fb;font-variant-numeric:tabular-nums"><span style="font-size:11px;font-weight:500;color:#94a3b8">{{ d.label }}</span><span style="font-size:13px;font-weight:700">{{ d.value }}</span><span style="font-size:11px;font-weight:600;color:{{ d.fg }}">{{ d.delta }}</span></span>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ s.hasNote }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:11px 14px;border-radius:11px;background:{{ s.noteBg }}"><span style="font-size:13px;font-weight:500;color:{{ s.noteFg }}">{{ s.note }}</span></div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noLog }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:34px 22px;display:grid;gap:9px;justify-items:center;text-align:center">
+            <span style="font-size:15px;font-weight:600">No sessions yet</span>
+            <span style="font-size:13px;font-weight:300;color:#64748b">The log starts at the bonding appointment</span>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isProgress }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;gap:16px">
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Measurements</span>
+            <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Tap a current value to record a new one</span>
+          </div>
+          <sc-if value="{{ hasMeas }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;gap:0">
+              <div style="display:grid;grid-template-columns:1.5fr 88px 1fr 92px 76px;gap:12px;align-items:center;padding-bottom:6px;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">
+                <span>Measurement</span><span style="text-align:center">Baseline</span><span style="text-align:center">Trend</span><span style="text-align:center">Current</span><span style="text-align:right">Goal</span>
+              </div>
+              <sc-for list="{{ measRows }}" as="m" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:1.5fr 88px 1fr 92px 76px;gap:12px;align-items:center;min-height:46px;border-top:1px solid #f8fafc;font-variant-numeric:tabular-nums">
+                  <span style="font-size:13.5px;font-weight:500;color:#334155">{{ m.label }}</span>
+                  <span style="font-size:13px;font-weight:500;color:#64748b;text-align:center">{{ m.base }}</span>
+                  <span style="display:flex;align-items:center;justify-content:center;gap:8px">
+                    <sc-if value="{{ m.hasSpark }}" hint-placeholder-val="{{ true }}">
+                      <svg width="110" height="26" viewBox="0 0 110 26" fill="none" style="overflow:visible"><path d="{{ m.spark }}" stroke="{{ m.sparkFg }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="{{ m.cx }}" cy="{{ m.cy }}" r="3" fill="{{ m.sparkFg }}"></circle></svg>
+                      <span style="font-size:11.5px;font-weight:600;color:{{ m.sparkFg }};white-space:nowrap">{{ m.trendText }}</span>
+                    </sc-if>
+                    <sc-if value="{{ m.noSpark }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:11.5px;font-weight:500;color:#cbd5e1">no series</span>
+                    </sc-if>
+                  </span>
+                  <sc-if value="{{ m.editing }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" value="{{ m.draft }}" onChange="{{ m.onDraft }}" onKeyDown="{{ m.onKey }}" onBlur="{{ m.onBlur }}" autoFocus="{{ true }}" style="width:100%;min-height:34px;padding:0 9px;border-radius:9px;border:1px solid #2563eb;background:#ffffff;font-family:Outfit,sans-serif;font-size:13px;font-weight:700;text-align:center;outline:none">
+                  </sc-if>
+                  <sc-if value="{{ m.notEditing }}" hint-placeholder-val="{{ true }}">
+                    <button type="button" onClick="{{ m.onEdit }}" style="min-height:34px;padding:0 9px;border-radius:9px;border:1px solid #e2e8f0;background:#ffffff;color:{{ m.curFg }};font-family:Outfit,sans-serif;font-size:13px;font-weight:700;cursor:pointer" style-hover="border-color:#2563eb">{{ m.cur }}</button>
+                  </sc-if>
+                  <span style="font-size:12px;font-weight:500;color:#94a3b8;text-align:right">{{ m.goal }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noMeas }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;font-weight:300;color:#94a3b8">Nothing tracked yet — measurements start once treatment is active</span>
+          </sc-if>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Records</span>
+            <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Baseline above · current below — tap to compare</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat({{ viewCount }},1fr);gap:10px">
+            <sc-for list="{{ views }}" as="v" hint-placeholder-count="5">
+              <button type="button" onClick="{{ v.onClick }}" style="display:grid;gap:6px;padding:0;border:none;background:transparent;cursor:pointer;text-align:left">
+                <span style="font-size:11px;font-weight:600;color:#64748b">{{ v.label }}</span>
+                <span style="display:block;aspect-ratio:1;border-radius:11px;overflow:hidden;background:#f1f5f9;border:1px solid #e8edf3"><img data-src="{{ v.base }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></span>
+                <span style="display:block;aspect-ratio:1;border-radius:11px;overflow:hidden;background:#f1f5f9;border:1px solid #e8edf3"><img data-src="{{ v.cur }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAppliance }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;gap:16px">
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">In the mouth now</span>
+            <span style="margin-left:auto;font-size:11.5px;font-weight:300;color:#94a3b8">Editable — changes are logged</span>
+          </div>
+          <sc-if value="{{ hasAppliance }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;gap:0">
+              <sc-for list="{{ appliance }}" as="a" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:14px;min-height:52px;border-top:1px solid #f8fafc">
+                  <span style="width:90px;flex:none;font-size:10px;font-weight:700;letter-spacing:0.07em;color:#94a3b8">{{ a.arch }}</span>
+                  <sc-if value="{{ a.editing }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" value="{{ a.draft }}" onChange="{{ a.onDraft }}" onKeyDown="{{ a.onKey }}" onBlur="{{ a.onBlur }}" autoFocus="{{ true }}" style="flex:1;min-height:36px;padding:0 11px;border-radius:10px;border:1px solid #2563eb;background:#ffffff;font-family:Outfit,sans-serif;font-size:14px;font-weight:600;outline:none">
+                  </sc-if>
+                  <sc-if value="{{ a.notEditing }}" hint-placeholder-val="{{ true }}">
+                    <button type="button" onClick="{{ a.onEdit }}" style="flex:1;min-height:36px;padding:0 11px;margin:0 -11px;border-radius:10px;border:1px solid transparent;background:transparent;font-family:Outfit,sans-serif;font-size:14px;font-weight:600;color:#0f172a;cursor:pointer;text-align:left;font-variant-numeric:tabular-nums" style-hover="border-color:#e2e8f0;background:#fbfcfe">{{ a.value }}</button>
+                  </sc-if>
+                  <span style="flex:none;font-size:12px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">since {{ a.since }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noAppliance }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;font-weight:300;color:#94a3b8">Nothing placed yet</span>
+          </sc-if>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;padding:18px 20px;display:grid;gap:10px">
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Change history</span>
+          <sc-for list="{{ applianceLog }}" as="h" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:14px;min-height:44px;border-top:1px solid #f8fafc">
+              <span style="width:76px;flex:none;font-size:13px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums">{{ h.date }}</span>
+              <span style="width:90px;flex:none;font-size:10px;font-weight:700;letter-spacing:0.07em;color:#94a3b8">{{ h.arch }}</span>
+              <span style="flex:1;min-width:0;font-size:13px;font-weight:500;color:#334155;font-variant-numeric:tabular-nums">{{ h.value }}</span>
+              <span style="flex:none;font-size:12px;font-weight:500;color:#94a3b8">{{ h.by }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <sc-if value="{{ viewerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeViewer }}" style="position:fixed;inset:0;z-index:50;background:rgba(15,23,42,.72);display:flex;align-items:center;justify-content:center;padding:32px;animation:ocFade .15s ease-out">
+      <div onClick="{{ stopClick }}" style="max-width:1000px;width:100%;background:#ffffff;border-radius:18px;overflow:hidden;animation:ocIn .2s cubic-bezier(.4,0,.2,1)">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #f1f5f9">
+          <div style="display:grid;gap:1px;flex:1;min-width:0">
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Compare</span>
+            <span style="font-size:15px;font-weight:700">{{ viewerLabel }}</span>
+          </div>
+          <div style="display:inline-flex;padding:3px;gap:3px;background:#f6f8fb;border-radius:11px">
+            <sc-for list="{{ viewerModes }}" as="m" hint-placeholder-count="2">
+              <button type="button" onClick="{{ m.onClick }}" style="min-height:32px;padding:0 13px;border-radius:9px;border:none;background:{{ m.bg }};color:{{ m.fg }};font-size:12.5px;font-weight:600;cursor:pointer;box-shadow:{{ m.shadow }}">{{ m.label }}</button>
+            </sc-for>
+          </div>
+          <button type="button" onClick="{{ closeViewer }}" aria-label="Close" style="width:36px;height:36px;flex:none;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-size:15px;cursor:pointer">✕</button>
+        </div>
+        <sc-if value="{{ viewerSide }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e8edf3">
+            <div style="position:relative;background:#0f172a"><img data-src="{{ viewerBase }}" alt="Baseline" style="width:100%;display:block;max-height:66vh;object-fit:contain"><span style="position:absolute;left:12px;top:12px;padding:4px 10px;border-radius:8px;background:rgba(15,23,42,.78);color:#ffffff;font-size:11.5px;font-weight:600">Baseline</span></div>
+            <div style="position:relative;background:#0f172a"><img data-src="{{ viewerCur }}" alt="Current" style="width:100%;display:block;max-height:66vh;object-fit:contain"><span style="position:absolute;left:12px;top:12px;padding:4px 10px;border-radius:8px;background:rgba(37,99,235,.9);color:#ffffff;font-size:11.5px;font-weight:600">Current</span></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ viewerOverlay }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:0;background:#0f172a">
+            <div style="position:relative;overflow:hidden;max-height:66vh">
+              <img data-src="{{ viewerBase }}" alt="Baseline" style="width:100%;display:block;max-height:66vh;object-fit:contain">
+              <span style="position:absolute;inset:0;overflow:hidden;width:{{ sliderPct }}"><img data-src="{{ viewerCur }}" alt="Current" style="width:100%;display:block;max-height:66vh;object-fit:contain"></span>
+              <span style="position:absolute;top:0;bottom:0;left:{{ sliderPct }};width:2px;background:#ffffff;box-shadow:0 0 8px rgba(0,0,0,.4)"></span>
+            </div>
+            <input type="range" min="0" max="100" value="{{ slider }}" onChange="{{ onSlider }}" aria-label="Compare position" style="width:100%;margin:14px 18px 18px;max-width:calc(100% - 36px);accent-color:#2563eb;cursor:pointer">
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 980},
+  &quot;caseId&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Case&quot;},
+  &quot;tab&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;overview&quot;, &quot;diagnosis&quot;, &quot;plan&quot;, &quot;log&quot;, &quot;progress&quot;, &quot;appliance&quot;], &quot;default&quot;: &quot;overview&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Case&quot;},
+  &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
+  &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: any) =&gt; void&quot;}
+}">
+class Component extends DCLogic {
+  state = { tab: null, openSession: null, measEdit: null, measDraft: '',
+            applEdit: null, applDraft: '', probs: {}, objs: {}, meas: {}, appl: {},
+            proposeOpen: false, proposeText: '', amendments: [],
+            viewer: null, viewerMode: 'side', slider: 50, hash: null };
+
+  tabDefs = [['overview', 'Overview'], ['diagnosis', 'Diagnosis & analysis'], ['plan', 'Treatment plan'],
+             ['log', 'Treatment log'], ['progress', 'Progress & measurements'], ['appliance', 'Appliance']];
+
+  componentDidMount() {
+    if (!window.OrthoCases || !window.OrthoKnowledge) {
+      this._k = setInterval(() => { if (window.OrthoCases && window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); } }, 60);
+    }
+    const raw = (window.location.hash || '').replace(/^#/, '');
+    if (raw.indexOf('=') > 0) {
+      const q = {};
+      raw.split('&').forEach(p => { const kv = p.split('='); if (kv[0]) q[kv[0]] = decodeURIComponent((kv[1] || '').replace(/\+/g, ' ')); });
+      this.setState({ hash: q });
+    }
+    this._syncImgs = () => {
+      document.querySelectorAll('img[data-src]').forEach(el => {
+        const want = el.getAttribute('data-src');
+        if (!want || want.indexOf('{{') >= 0) return;
+        if (el.getAttribute('src') !== want) el.setAttribute('src', want);
+      });
+    };
+    this._syncImgs();
+    this._obs = new window.MutationObserver(this._syncImgs);
+    this._obs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-src'] });
+    this._imgErr = ev => {
+      const t = ev.target; if (!t || t.tagName !== 'IMG') return;
+      const fb = t.getAttribute('data-fb');
+      if (fb && fb.indexOf('{{') < 0 && t.src.indexOf(fb) < 0) t.src = fb;
+    };
+    document.addEventListener('error', this._imgErr, true);
+  }
+  componentDidUpdate(prev) {
+    if (prev.tab !== this.props.tab && this.props.tab) this.setState({ tab: this.props.tab });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._k);
+    if (this._obs) this._obs.disconnect();
+    document.removeEventListener('error', this._imgErr, true);
+  }
+
+  K() { return window.OrthoKnowledge || {}; }
+  C() { return window.OrthoCases || {}; }
+
+  caseId() {
+    /* the hash wins: it is the standalone entry from the dashboard and it names a
+       real patient, while a prop can carry an editor default. No silent fallback —
+       an unspecified case must show the empty state, never someone else. */
+    const q = this.state.hash || {};
+    return q.id || this.props.caseId || null;
+  }
+
+  initials(name) {
+    const strip = t => {
+      let s = String(t || '');
+      if (/^al[- ]/i.test(s)) s = s.slice(3);
+      return s.charAt(0);
+    };
+    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    const w = parts.filter((p, n) => n === 0 || ['bin', 'bint', 'ibn', 'Al'].indexOf(p) < 0);
+    return w.length > 1 ? w[0].charAt(0) + strip(w[w.length > 2 ? 2 : 1]) : String(name || '—').slice(0, 2);
+  }
+
+  initialsAvatar(name) {
+    const tints = [['#f1f5f9', '#475569'], ['#eff6ff', '#1d4ed8'], ['#ecfdf5', '#047857'],
+                   ['#f5f3ff', '#6d28d9'], ['#fffbeb', '#b45309'], ['#fef2f2', '#b91c1c']];
+    const s = String(name || '');
+    let h = 0;
+    for (let n = 0; n < s.length; n++) h = (h * 31 + s.charCodeAt(n)) % 9973;
+    const t = tints[h % tints.length];
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="' + t[0]
+      + '"/><text x="48" y="48" font-family="Outfit, system-ui, sans-serif" font-size="32" font-weight="600" fill="' + t[1]
+      + '" text-anchor="middle" dominant-baseline="central">' + this.initials(name) + '</text></svg>';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+
+  fmt(d) {
+    const p = n => (n < 10 ? '0' + n : '' + n);
+    return p(d.getDate()) + '/' + p(d.getMonth() + 1);
+  }
+  fmtLong(d) {
+    const p = n => (n < 10 ? '0' + n : '' + n);
+    return p(d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+  shortDate(off) {
+    const d = new Date(); d.setDate(d.getDate() + off);
+    return this.fmt(d);
+  }
+
+  /* an edit made outside a live session becomes a dated amendment */
+  amend(text) {
+    const d = new Date();
+    this.setState(st => ({ amendments: st.amendments.concat([{ text: text, when: this.fmt(d) }]) }));
+  }
+
+  visitDef(key) {
+    const f = (this.K().visitTypes || []).filter(v => v[0] === key)[0];
+    return f ? { en: f[1], mins: f[3] } : { en: '—', mins: 20 };
+  }
+
+  statementOf(c) {
+    const ch = c.chart || {};
+    const dx = ch.dx || [];
+    if (!dx.length) return 'Diagnosis not yet recorded — findings are approved on the Diagnosis screen.';
+    const primary = dx[0][0];
+    const rest = dx.slice(1).map(d => d[0]);
+    const age = (c.meta || '').split('·')[0].trim();
+    const sex = (c.meta || '').indexOf('Female') >= 0 ? 'female' : 'male';
+    let s = age + ' ' + sex + ' presenting with ' + primary;
+    if (rest.length) s += ', on a background of ' + rest.slice(0, 3).join(', ');
+    const d = c.detail || {};
+    if (d.cc) s += '. The patient’s own complaint is ' + d.cc.charAt(0).toLowerCase() + d.cc.slice(1);
+    return s + '.';
+  }
+
+  renderVals() {
+    const K = this.K(), C = this.C();
+    const c = (C.byId || (() => null))(this.caseId());
+    const tab = this.state.tab || this.props.tab || 'overview';
+    const base = {
+      tabs: this.tabDefs.map(t => {
+        const on = tab === t[0];
+        return { label: t[1], fg: on ? '#0f172a' : '#94a3b8', fw: on ? 700 : 500,
+                 bd: on ? '#2563eb' : 'transparent', onClick: () => this.setState({ tab: t[0] }) };
+      }),
+      isOverview: tab === 'overview', isDiagnosis: tab === 'diagnosis', isPlan: tab === 'plan',
+      showCrumbs: !this.props.embedded,
+      onBack: ev => { if (this.props.onNavigate) { ev.preventDefault(); this.props.onNavigate('dashboard'); } },
+      isLog: tab === 'log', isProgress: tab === 'progress', isAppliance: tab === 'appliance',
+      backHref: 'OrthoTrack Case Dashboard v2 EN.dc.html',
+      historyHref: 'OrthoTrack Case Summary EN.dc.html',
+      hasCase: true, showTabs: true, isEmpty: false,
+      viewerOpen: false, flags: [], dx: [], alerts: [], phases: [], wireLine: [], nextPlan: [],
+      problems: [], dxGroups: [], baseRows: [], planRows: [], objectives: [], log: [],
+      measRows: [], views: [], appliance: [], applianceLog: [], viewerModes: []
+    };
+    if (!c) {
+      return Object.assign(base, {
+        hasCase: false, showTabs: false, isEmpty: true,
+        isOverview: false, isDiagnosis: false, isPlan: false, isLog: false, isProgress: false, isAppliance: false,
+        name: '', meta: '', caseId: '', hasCC: false, cc: '',
+        stage: '—', stageBg: '#f1f5f9', stageFg: '#475569', stageDot: '#94a3b8',
+        photo: this.initialsAvatar('?'), fallback: this.initialsAvatar('?'),
+        hasFlags: false, noFlags: true, updatedNote: '', statement: 'Open a case from the dashboard.',
+        startSession: () => {
+          if (this.props.onNavigate) { this.props.onNavigate('dashboard'); return; }
+          window.location.href = encodeURI('OrthoTrack Case Dashboard v2 EN.dc.html');
+        }
+      });
+    }
+
+    const ch = c.chart || {}, d = c.detail || {}, s = c.seed;
+    const st = (K.stageDef || (() => null))(c.stage) || { en: c.stage, bg: '#f1f5f9', fg: '#475569', dot: '#94a3b8' };
+    const toneBg = t => t === 2 ? '#fef2f2' : t === 1 ? '#fffbeb' : '#f1f5f9';
+    const toneFg = t => t === 2 ? '#b91c1c' : t === 1 ? '#b45309' : '#475569';
+    const flags = (K.medicalFlags || (() => []))(ch.med || []);
+    const phases = K.treatmentPhases || [];
+    const phaseIdx = phases.map(p => p[0]).indexOf(ch.phase);
+    const pm = K.progressMeasures || {};
+    const tracked = (K.trackedMeasures || (() => []))(c.meta, ch.tracked);
+    const statuses = K.problemStatuses || [];
+    const stColor = { pending: '#94a3b8', progress: '#2563eb', resolved: '#059669' };
+    const history = (C.history || (() => []))(c);
+    const est = d.est || 0;
+    const pct = c.stage === 'retention' ? 100 : (est ? Math.min(100, Math.round((c.mo / est) * 100)) : 0);
+
+    let estEnd = '—';
+    if (ch.bonded && est) {
+      const e = new Date(ch.bonded + '-01'); e.setMonth(e.getMonth() + est);
+      estEnd = this.fmtLong(e);
+    }
+
+    /* wire timeline — distinct wires in chronological order */
+    const wires = [];
+    history.slice().reverse().forEach(h => {
+      if (!h.wireU) return;
+      if (!wires.length || wires[wires.length - 1] !== h.wireU) wires.push(h.wireU);
+    });
+
+    const probs = this.state.probs;
+    const problemList = (ch.problems || []).map((p, i) => {
+      const cur = probs[i] || p[1];
+      const def = statuses.filter(x => x[0] === cur)[0] || [cur, cur, ''];
+      return {
+        rank: String(i + 1), text: p[0], status: def[1], dot: stColor[cur] || '#94a3b8',
+        fg: cur === 'resolved' ? '#64748b' : '#0f172a', deco: cur === 'resolved' ? 'line-through' : 'none',
+        onClick: () => {
+          const order = statuses.map(x => x[0]);
+          const next = order[(order.indexOf(cur) + 1) % order.length];
+          const np = Object.assign({}, probs); np[i] = next;
+          const nd = statuses.filter(x => x[0] === next)[0];
+          this.setState({ probs: np });
+          this.amend(p[0] + ' → ' + (nd ? nd[1] : next));
+        }
+      };
+    });
+
+    /* findings grouped by severity */
+    const groups = [[2, 'Severe', '#dc2626', '#b91c1c'], [1, 'Moderate', '#d97706', '#b45309'], [0, 'Mild / note', '#94a3b8', '#475569']]
+      .map(g => ({ label: g[1], dot: g[2], fg: g[3],
+                   items: (ch.dx || []).filter(x => x[1] === g[0]).map(x => ({ label: x[0] })) }))
+      .filter(g => g.items.length)
+      .map(g => Object.assign(g, { count: String(g.items.length) }));
+
+    const measCur = this.state.meas;
+    const measRow = k => {
+      const def = pm[k] || [k, '', 'num', ''];
+      const pair = (ch.meas || {})[k] || ['', ''];
+      const cur = measCur[k] !== undefined ? measCur[k] : pair[1];
+      const unit = def[1] ? ' ' + def[1] : '';
+      const a = parseFloat(pair[0]), b = parseFloat(cur);
+      /* sparkline across the reconstructed sessions */
+      let spark = 'M 0 13 L 110 13', cx = 110, cy = 13, fg = '#cbd5e1', hasSpark = false;
+      /* the series comes from the reconstructed sessions, so each measurement
+         draws its own shape — crowding resolves early, overjet late */
+      const series = history.slice().reverse()
+        .map(x => (x.deltas.filter(y => y.key === k)[0] || {}).value)
+        .filter(y => y !== undefined && y !== null);
+      if (series.length > 1) {
+        const lo = Math.min.apply(null, series), hi = Math.max.apply(null, series);
+        const rng = hi - lo || 1;
+        const pts = series.map((val, i) => [
+          ((i / (series.length - 1)) * 110).toFixed(1),
+          (23 - ((val - lo) / rng) * 20).toFixed(1)
+        ]);
+        spark = 'M ' + pts.map(p => p[0] + ' ' + p[1]).join(' L ');
+        cx = pts[pts.length - 1][0]; cy = pts[pts.length - 1][1];
+        const goalNum = parseFloat(String(def[3]).replace(/[^0-9.\-]/g, ''));
+        fg = isNaN(goalNum) || isNaN(a) || isNaN(b) ? '#2563eb'
+          : (Math.abs(b - goalNum) <= Math.abs(a - goalNum) ? '#059669' : '#dc2626');
+        hasSpark = true;
+      }
+      const editing = this.state.measEdit === k;
+      const commit = () => {
+        const v = this.state.measDraft.trim();
+        this.setState({ measEdit: null, measDraft: '' });
+        if (v === cur) return;
+        const nm = Object.assign({}, measCur); nm[k] = v;
+        this.setState({ meas: nm });
+        this.amend(def[0] + ': ' + (pair[0] || '—') + ' → ' + v + unit);
+      };
+      return {
+        label: def[0], goal: def[3],
+        base: pair[0] ? pair[0] + unit : '—',
+        cur: cur ? cur + unit : 'Record', curFg: cur ? '#0f172a' : '#2563eb',
+        spark: spark, sparkFg: fg, cx: String(cx), cy: String(cy), hasSpark: hasSpark, noSpark: !hasSpark,
+        trendText: !isNaN(a) && !isNaN(b) ? (b > a ? '+' : '') + (Math.round((b - a) * 10) / 10) + (def[1] ? ' ' + def[1] : '') : '—',
+        editing: editing, notEditing: !editing, draft: this.state.measDraft,
+        onEdit: () => this.setState({ measEdit: k, measDraft: cur || '' }),
+        onDraft: ev => this.setState({ measDraft: ev.target.value }),
+        onKey: ev => { if (ev.key === 'Enter') commit(); if (ev.key === 'Escape') this.setState({ measEdit: null, measDraft: '' }); },
+        onBlur: commit
+      };
+    };
+
+    /* appliance — current state plus the derived change history */
+    const applOverride = this.state.appl;
+    const applLog = (C.applianceLog || (() => []))(history);
+    const applRows = (d.ap || []).map((a, i) => {
+      const value = applOverride[i] !== undefined ? applOverride[i] : a[1];
+      const editing = this.state.applEdit === i;
+      const commit = () => {
+        const v = this.state.applDraft.trim();
+        this.setState({ applEdit: null, applDraft: '' });
+        if (!v || v === value) return;
+        const na = Object.assign({}, applOverride); na[i] = v;
+        this.setState({ appl: na });
+        this.amend(a[0].charAt(0) + a[0].slice(1).toLowerCase() + ': ' + value + ' → ' + v);
+      };
+      /* the change log is chronological per label, so its first row for this
+         label+value IS the first placement — no per-arch guessing */
+      const placed = applLog.slice().reverse().filter(x => x.arch === a[0] && x.value === a[1])[0];
+      return {
+        arch: a[0], value: value, since: placed ? this.fmt(placed.date) : '—',
+        editing: editing, notEditing: !editing, draft: this.state.applDraft,
+        onEdit: () => this.setState({ applEdit: i, applDraft: value }),
+        onDraft: ev => this.setState({ applDraft: ev.target.value }),
+        onKey: ev => { if (ev.key === 'Enter') commit(); if (ev.key === 'Escape') this.setState({ applEdit: null, applDraft: '' }); },
+        onBlur: commit
+      };
+    });
+
+    /* records comparison — the library stands in for the real record sets */
+    const face = (c.meta || '').indexOf('Female') >= 0 ? 'assets/face-f.jpeg' : 'assets/face-m.jpeg';
+    const noRecord = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#f6f8fb"/>'
+      + '<text x="60" y="56" font-family="Outfit, system-ui, sans-serif" font-size="10" font-weight="600" fill="#94a3b8"'
+      + ' text-anchor="middle">No current</text><text x="60" y="70" font-family="Outfit, system-ui, sans-serif" font-size="10"'
+      + ' font-weight="600" fill="#94a3b8" text-anchor="middle">record</text></svg>');
+    const viewDefs = [['Frontal', face, noRecord],
+                      ['Intraoral frontal', 'assets/p07.jpeg', 'assets/p08.jpeg'],
+                      ['Upper occlusal', 'assets/p02.jpeg', 'assets/p03.jpeg'],
+                      ['Lower occlusal', 'assets/p01.jpeg', 'assets/p04.jpeg'],
+                      ['Right buccal', 'assets/p05.jpeg', 'assets/p06.jpeg']];
+    const v = this.state.viewer;
+    const viewerDef = v !== null && v !== undefined ? viewDefs[v] : null;
+
+    /* objectives ARE the problem list — one status, shared state, so the two tabs cannot disagree */
+    const objectiveSource = (ch.problems || []).length ? (ch.problems || []).slice()
+      : ((s.next && s.next.plan) || []).map(t => [t, 'progress']);
+
+    const nextOff = s.next ? s.next.off : null;
+    const vd = this.visitDef(s.next ? s.next.v : '');
+    const planPairs = ch.plan ? [['Extraction', ch.plan.ex], ['Appliance', ch.plan.appl], ['Mechanics', ch.plan.mech],
+                                ['Anchorage', ch.plan.anch], ['Est. duration', est ? est + ' months' : '']].filter(p => p[1]) : [];
+
+    return Object.assign(base, {
+      name: c.name, meta: c.meta, caseId: c.id,
+      hasCC: !!d.cc, cc: d.cc || '',
+      photo: (this.state.hash || {}).photo || this.initialsAvatar(c.name),
+      fallback: this.initialsAvatar(c.name),
+      stage: st.en, stageBg: st.bg, stageFg: st.fg, stageDot: st.dot,
+      hasFlags: flags.length > 0, noFlags: flags.length === 0,
+      flags: flags.map(f => ({ label: f.en, bg: toneBg(f.tone), fg: toneFg(f.tone), title: f.impact })),
+      updatedNote: this.state.amendments.length
+        ? this.state.amendments.length + ' amendment' + (this.state.amendments.length > 1 ? 's' : '') + ' today'
+        : (s.last ? 'Last updated ' + this.shortDate(-s.last.d) : ''),
+      startSession: () => {
+        if (this.props.onNavigate) { this.props.onNavigate('dashboard', { openId: c.id }); return; }
+        window.location.href = encodeURI('OrthoTrack Case Dashboard v2 EN.dc.html') + '#open=' + encodeURIComponent(c.id);
+      },
+
+      statement: this.statementOf(c),
+      dx: (ch.dx || []).map(x => ({ label: x[0], bg: toneBg(x[1]), fg: toneFg(x[1]) })),
+      dxGroups: groups,
+      baseRows: tracked.map(k => {
+        const def = pm[k] || [k, '', 'num', ''];
+        const pair = (ch.meas || {})[k] || ['', ''];
+        return { label: def[0], base: pair[0] ? pair[0] + (def[1] ? ' ' + def[1] : '') : '—', goal: def[3] };
+      }),
+
+      hasAlerts: (d.al || []).length > 0,
+      alerts: (d.al || []).map(a => ({ text: a[1], bg: a[0] === 'red' ? '#fef2f2' : '#fffbeb', fg: a[0] === 'red' ? '#b91c1c' : '#b45309' })),
+
+      hasPhase: phaseIdx >= 0,
+      phases: phases.map((p, i) => ({
+        label: p[1], now: i === phaseIdx,
+        dot: i < phaseIdx ? '#7c3aed' : '#ffffff',
+        ring: i <= phaseIdx ? '#7c3aed' : '#e2e8f0',
+        lineL: i === 0 ? 'transparent' : i <= phaseIdx ? '#7c3aed' : '#e2e8f0',
+        lineR: i === phases.length - 1 ? 'transparent' : i < phaseIdx ? '#7c3aed' : '#e2e8f0',
+        fg: i === phaseIdx ? '#0f172a' : i < phaseIdx ? '#6d28d9' : '#94a3b8',
+        fw: i === phaseIdx ? 700 : 500
+      })),
+      progressPct: pct + '%',
+      progressFill: c.stage === 'retention' ? '#0891b2' : '#7c3aed',
+      progressLabel: c.stage === 'retention' ? Math.max(0, c.mo - est) + ' mo since debond' : (est ? c.mo + ' / ' + est + ' mo' : 'Before start'),
+      bonded: ch.bonded ? this.fmtLong(new Date(ch.bonded + '-01')) : '—',
+      sessions: String(ch.sessions || 0),
+      missed: String((ch.missedAt || []).length),
+      missedFg: (ch.missedAt || []).length ? '#b91c1c' : '#475569',
+      estEnd: estEnd,
+      hasWires: wires.length > 0,
+      wireLine: wires.map((w, i) => ({
+        label: w, arrow: i < wires.length - 1,
+        bg: i === wires.length - 1 ? '#f5f3ff' : '#f6f8fb',
+        fg: i === wires.length - 1 ? '#6d28d9' : '#64748b'
+      })),
+
+      nextDate: nextOff === null ? '—' : this.shortDate(nextOff),
+      nextType: vd.en,
+      nextFg: nextOff === null ? '#94a3b8' : nextOff < 0 ? '#b91c1c' : nextOff === 0 ? '#1d4ed8' : '#0f172a',
+      nextWhen: nextOff === null ? 'Not booked yet' : nextOff < 0 ? Math.abs(nextOff) + ' days overdue' : nextOff === 0 ? 'Today at ' + s.next.t : 'In ' + nextOff + ' days · ' + s.next.t,
+      nextPlan: ((s.next && s.next.plan) || []).map(t => ({ text: t })),
+
+      hasProblems: problemList.length > 0, noProblems: problemList.length === 0,
+      problems: problemList,
+      problemsDone: problemList.filter(p => p.status === 'Resolved').length + ' / ' + problemList.length,
+
+      hasPlan: planPairs.length > 0, noPlan: planPairs.length === 0,
+      planVersion: 'v1',
+      planApproved: ch.bonded ? 'Approved ' + this.fmtLong(new Date(ch.bonded + '-01')) : '',
+      planSentence: planPairs.map(p => p[1]).join(' · '),
+      planRows: planPairs.map(p => ({ k: p[0], v: p[1] })),
+      proposeOpen: this.state.proposeOpen,
+      proposeText: this.state.proposeText,
+      proposeChange: () => this.setState({ proposeOpen: true, proposeText: '' }),
+      onPropose: ev => this.setState({ proposeText: ev.target.value }),
+      cancelPropose: () => this.setState({ proposeOpen: false, proposeText: '' }),
+      commitPropose: () => {
+        const t = this.state.proposeText.trim();
+        if (t) this.amend('Plan change proposed: ' + t);
+        this.setState({ proposeOpen: false, proposeText: '' });
+      },
+      objectives: objectiveSource.map((p, i) => {
+        const cur = probs[i] || p[1] || 'progress';
+        const def = statuses.filter(x => x[0] === cur)[0] || [cur, cur, ''];
+        return {
+          text: p[0], status: def[1], dot: stColor[cur] || '#94a3b8',
+          onClick: () => {
+            const order = statuses.map(x => x[0]);
+            const next = order[(order.indexOf(cur) + 1) % order.length];
+            const np = Object.assign({}, probs); np[i] = next;
+            const nd = statuses.filter(x => x[0] === next)[0];
+            this.setState({ probs: np });
+            this.amend(p[0] + ' → ' + (nd ? nd[1] : next));
+          }
+        };
+      }),
+
+      hasLog: history.length > 0, noLog: history.length === 0,
+      logCount: history.length + ' sessions',
+      log: history.map(h => {
+        const open = this.state.openSession === h.index;
+        const days = Math.round((new Date() - h.date) / 86400000);
+        const tint = h.missed ? ['#fef2f2', '#b91c1c']
+          : (h.type === 'Bonding' || h.type === 'Debond' || h.type === 'Aligner start') ? ['#f5f3ff', '#6d28d9']
+          : h.type === 'Progress records' ? ['#eff6ff', '#1d4ed8']
+          : h.type === 'Retainer check' ? ['#ecfeff', '#0e7490']
+          : ['#ecfdf5', '#047857'];
+        const dl = h.deltas[0];
+        return {
+          date: this.fmt(h.date), ago: days + 'd ago',
+          dateFg: h.missed ? '#b91c1c' : '#0f172a',
+          type: h.missed ? 'Missed' : h.type,
+          typeBg: tint[0], typeFg: tint[1],
+          bd: h.missed ? '#fecaca' : '#e8edf3',
+          wire: h.missed ? '—'
+            : !h.wireU ? (h.appliance.length ? h.appliance[0][0] + ' ' + h.appliance[0][1] : '—')
+            : h.wireU === h.wireL ? h.wireU + ' both' : h.wireU + ' / ' + h.wireL,
+          wireU: h.wireU || '—', wireL: h.wireL || '—',
+          aux: h.missed ? '—' : (h.aux || '—'), by: h.missed ? '—' : h.by,
+          summary: h.missed ? 'Did not attend' : h.procs.slice(0, 2).join(' · '),
+          hasDelta: !!dl,
+          deltaLabel: dl ? (pm[dl.key] || [dl.key])[0] + ' ' + dl.value + ((pm[dl.key] || [])[1] ? ' ' + pm[dl.key][1] : '') : '',
+          hasProcs: h.procs.length > 0,
+          procs: h.procs.map(t => ({ text: t })),
+          hasDeltas: h.deltas.length > 0,
+          deltas: h.deltas.map(x => ({
+            label: (pm[x.key] || [x.key])[0], value: String(x.value),
+            delta: x.total === 0 ? 'baseline' : (x.total > 0 ? '+' : '') + x.total + ' total',
+            fg: x.total === 0 ? '#94a3b8' : '#047857'
+          })),
+          hasNote: !!h.note, note: h.note,
+          noteBg: h.missed ? '#fef2f2' : '#f6f8fb', noteFg: h.missed ? '#b91c1c' : '#475569',
+          caret: open ? '▴' : '▾',
+          open: open,
+          onClick: () => this.setState(x => ({ openSession: x.openSession === h.index ? null : h.index }))
+        };
+      }),
+
+      hasMeas: tracked.length > 0 && !!ch.meas && Object.keys(ch.meas).length > 0,
+      noMeas: !(tracked.length > 0 && ch.meas && Object.keys(ch.meas).length > 0),
+      measRows: tracked.map(measRow),
+
+      viewCount: String(viewDefs.length),
+      views: viewDefs.map((x, i) => ({
+        label: x[0], base: x[1], cur: x[2],
+        onClick: () => this.setState({ viewer: i, viewerMode: 'side', slider: 50 })
+      })),
+
+      hasAppliance: applRows.length > 0, noAppliance: applRows.length === 0,
+      appliance: applRows,
+      applianceLog: applLog.map(x => ({ date: this.fmt(x.date), arch: x.arch, value: x.value, by: x.by || '—' })),
+
+      viewerOpen: !!viewerDef,
+      viewerLabel: viewerDef ? viewerDef[0] : '',
+      viewerBase: viewerDef ? viewerDef[1] : '',
+      viewerCur: viewerDef ? viewerDef[2] : '',
+      viewerSide: this.state.viewerMode === 'side',
+      viewerOverlay: this.state.viewerMode === 'overlay',
+      viewerModes: [['side', 'Side by side'], ['overlay', 'Overlay']].map(m => {
+        const on = this.state.viewerMode === m[0];
+        return { label: m[1], bg: on ? '#ffffff' : 'transparent', fg: on ? '#0f172a' : '#64748b',
+                 shadow: on ? '0 1px 2px rgba(15,23,42,.09)' : 'none',
+                 onClick: () => this.setState({ viewerMode: m[0] }) };
+      }),
+      slider: this.state.slider,
+      sliderPct: this.state.slider + '%',
+      onSlider: ev => this.setState({ slider: Number(ev.target.value) }),
+      stopClick: ev => ev.stopPropagation(),
+      closeViewer: () => this.setState({ viewer: null })
+    });
+  }
+}
+</script>
+</body>
+</html>

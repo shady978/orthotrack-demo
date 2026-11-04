@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>OrthoTrack — Diagnosis</title>
+<link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+<link rel="stylesheet" href="assets/vendor/css/google-inter-300-700.css">
+<script src="ortho-knowledge-en.js"></script>
+<style>
+html,body{margin:0;padding:0}
+body{background:#f6f8fb;color:#0f172a;font-family:Inter,'Thmanyah Sans',system-ui,sans-serif;font-weight:500;line-height:1.7;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#2563eb;text-decoration:none}
+a:hover{color:#1d4ed8}
+button,input,select,textarea{font-family:inherit}
+@keyframes otIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div dir="ltr" style="min-height:100vh;display:flex;flex-direction:column;background:#f6f8fb">
+
+  <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:14px 24px 0">
+    <nav style="display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:400;padding-bottom:11px">
+      <a href="#" onClick="{{ goDash }}" style="color:#64748b">Case dashboard</a>
+     <span style="color:#cbd5e1">‹</span>
+      <a href="#" onClick="{{ goOverview }}" style="color:#64748b">{{ pName }}</a>
+     <span style="color:#cbd5e1">‹</span>
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">Diagnosis</span>
+    </nav>
+    <div style="display:flex;align-items:center;gap:13px;padding-bottom:14px">
+      <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ true }}">
+        <img src="{{ pPhoto }}" alt="{{ pName }}" style="width:42px;height:42px;flex:none;border-radius:50%;object-fit:cover;object-position:center 25%;border:1px solid #e8edf3">
+      </sc-if>
+      <sc-if value="{{ noPhoto }}" hint-placeholder-val="{{ false }}">
+       <span style="width:42px;height:42px;flex:none;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">{{ pInitial }}</span>
+      </sc-if>
+      <div style="display:grid;gap:2px;min-width:0">
+       <span style="font-size:17px;font-weight:700;line-height:1.4">{{ pName }}</span>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;font-weight:400;color:#64748b">
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">{{ pId }}</span>
+         <span style="color:#e8edf3">·</span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">{{ pMeta }}</span>
+        </div>
+      </div>
+     <span style="margin-inline-start:auto;font-size:12px;font-weight:400;color:#94a3b8">{{ savedNote }}</span>
+    </div>
+  </div>
+
+  <div style="flex:1;min-width:0;display:grid;grid-template-columns:1.5fr 1fr;gap:16px;padding:20px 24px 48px;align-items:start">
+
+    <div style="display:grid;gap:14px;min-width:0">
+
+      <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:16px;overflow:hidden;animation:otIn .22s ease-out">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#eff6ff;border-bottom:1px solid #bfdbfe">
+         <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#dbeafe;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Chief complaint</span>
+         <span style="font-size:12.5px;font-weight:400;color:#1d4ed8">One of the first two priorities — mandatory</span>
+        </div>
+        <div style="padding:16px 18px;display:grid;gap:12px">
+          <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+           <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;flex:none;border-radius:9px;background:#2563eb;color:#ffffff;font-family:Inter,sans-serif;font-size:12.5px;font-weight:700">1</span>
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:15px;font-weight:700;color:#0f172a">{{ complaint }}</span>
+            <sc-for list="{{ cplCats }}" as="cc" hint-placeholder-count="3">
+              <button type="button" onClick="{{ cc.onClick }}" dir="ltr" style="unicode-bidi:isolate;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid {{ cc.bd }};background:{{ cc.bg }};color:{{ cc.fg }};font-family:Inter,sans-serif;font-size:12px;font-weight:{{ cc.fw }};cursor:pointer">{{ cc.en }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ hasCplText }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;font-size:14px;font-weight:500;line-height:1.8;padding-inline-start:12px;border-inline-start:3px solid #bfdbfe;text-wrap:pretty">«{{ cplText }}»</p>
+          </sc-if>
+          <sc-if value="{{ noCplText }}" hint-placeholder-val="{{ true }}">
+           <span style="font-size:12.5px;font-weight:400;color:#94a3b8">The chief complaint was not recorded in the patient's words during the records stage.</span>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3;flex-wrap:wrap">
+         <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Problem list</span>
+         <span style="font-size:12.5px;font-weight:400;color:#64748b">Ordered by priority — drag to reorder</span>
+         <span style="margin-inline-start:auto;font-size:11.5px;font-weight:600;color:{{ tallyFg }};background:{{ tallyBg }};border:1px solid {{ tallyBd }};border-radius:999px;padding:2px 10px">{{ tally }}</span>
+        </div>
+
+        <sc-if value="{{ hasProblems }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <sc-for list="{{ problems }}" as="p" hint-placeholder-count="6">
+              <div draggable="true" onDragStart="{{ p.onDragStart }}" onDragOver="{{ p.onDragOver }}" onDrop="{{ p.onDrop }}" onDragEnd="{{ p.onDragEnd }}" style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:13px 18px;border-bottom:1px solid #f1f5f9;background:{{ p.rowBg }};opacity:{{ p.rowOp }};cursor:grab">
+                <div style="display:flex;align-items:center;gap:8px;flex:none;padding-top:1px">
+                 <span style="display:flex;flex-direction:column;gap:2px;color:#cbd5e1">
+                   <span style="display:block;width:11px;height:1.5px;background:currentColor;border-radius:1px"></span>
+                   <span style="display:block;width:11px;height:1.5px;background:currentColor;border-radius:1px"></span>
+                   <span style="display:block;width:11px;height:1.5px;background:currentColor;border-radius:1px"></span>
+                  </span>
+                 <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:9px;background:{{ p.rankBg }};color:{{ p.rankFg }};font-family:Inter,sans-serif;font-size:12.5px;font-weight:700">{{ p.rank }}</span>
+                </div>
+                <div style="display:grid;gap:6px;min-width:0">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                   <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:{{ p.textFg }};text-decoration:{{ p.strike }}">{{ p.text }}</span>
+                   <span dir="ltr" style="unicode-bidi:isolate;display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;background:{{ p.sevBg }};border:1px solid {{ p.sevBd }};color:{{ p.sevFg }};font-family:Inter,sans-serif;font-size:11px;font-weight:600">{{ p.severity }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:11.5px;font-weight:400;color:#94a3b8">
+                   <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#64748b">{{ p.dims }}</span>
+                   <span style="color:#e8edf3">·</span>
+                   <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums">{{ p.sourceText }}</span>
+                  </div>
+                  <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+                    <p style="margin:2px 0 0;font-size:13px;font-weight:400;line-height:1.75;color:#475569;text-wrap:pretty">{{ p.desc }}</p>
+                  </sc-if>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;flex:none">
+                  <button type="button" onClick="{{ p.onToggle }}" style="min-height:32px;padding:0 10px;border-radius:10px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-size:12px;font-weight:500;cursor:pointer" style-hover="color:#0f172a;border-color:#cbd5e1">{{ p.moreLabel }}</button>
+                  <button type="button" onClick="{{ p.onAccept }}" style="min-height:32px;padding:0 12px;border-radius:10px;border:1px solid {{ p.accBd }};background:{{ p.accBg }};color:{{ p.accFg }};font-size:12px;font-weight:{{ p.accFw }};cursor:pointer">Confirmed</button>
+                  <button type="button" onClick="{{ p.onReject }}" style="min-height:32px;padding:0 12px;border-radius:10px;border:1px solid {{ p.rejBd }};background:{{ p.rejBg }};color:{{ p.rejFg }};font-size:12px;font-weight:{{ p.rejFw }};cursor:pointer">Excluded</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ noProblems }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:34px 18px;display:grid;gap:8px;justify-items:center;text-align:center">
+           <span style="width:40px;height:40px;border-radius:13px;background:#f1f5f9"></span>
+           <span style="font-size:14px;font-weight:700">No problems suggested yet</span>
+           <span style="font-size:12.5px;font-weight:400;color:#64748b;max-width:380px;line-height:1.7">The list is generated from the measurements and occlusion entered at the records stage. Complete <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif">Measurements</span> and <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif">Occlusion</span> or add an item manually from the side.</span>
+            <button type="button" onClick="{{ goRecords }}" style="margin-top:6px;min-height:40px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#0f172a;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#f6f8fb">Open the records</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:14px;min-width:0">
+
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+         <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#f5f3ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#7c3aed"></span></span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Dimensions</span>
+         <span style="font-size:12.5px;font-weight:400;color:#64748b">Each dimension is analysed separately</span>
+        </div>
+        <div style="padding:14px 18px">
+          <div style="display:grid;grid-template-columns:auto repeat(3,1fr);gap:1px;background:#f1f5f9;border:1px solid #f1f5f9;border-radius:12px;overflow:hidden">
+           <span style="background:#ffffff;padding:9px 10px"></span>
+            <sc-for list="{{ cols }}" as="c" hint-placeholder-count="3">
+             <span dir="ltr" style="unicode-bidi:isolate;background:#ffffff;padding:9px 8px;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#64748b;text-align:center">{{ c.en }}</span>
+            </sc-for>
+            <sc-for list="{{ cells }}" as="cl" hint-placeholder-count="12">
+             <span style="background:{{ cl.bg }};padding:11px 8px;display:flex;align-items:center;justify-content:{{ cl.just }};gap:7px">
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:{{ cl.labelFg }};white-space:nowrap">{{ cl.label }}</span>
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ cl.fg }}">{{ cl.n }}</span>
+              </span>
+            </sc-for>
+          </div>
+          <p style="margin:12px 0 0;font-size:12px;font-weight:400;color:#94a3b8;line-height:1.7;text-wrap:pretty">Dental, medical and alignment items are listed alongside the three dimensions, not inside them.</p>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+         <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#fffbeb;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#d97706"></span></span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Added findings</span>
+         <span style="font-size:12.5px;font-weight:400;color:#64748b">What the measurements do not reveal</span>
+        </div>
+        <div style="padding:14px 18px;display:grid;gap:14px">
+          <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+            <div style="display:grid;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">{{ g.en }}</span>
+               <span style="font-size:11.5px;font-weight:400;color:#cbd5e1">{{ g.ar }}</span>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5">
+                  <button type="button" onClick="{{ it.onClick }}" dir="ltr" style="unicode-bidi:isolate;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid {{ it.bd }};background:{{ it.bg }};color:{{ it.fg }};font-family:Inter,sans-serif;font-size:12px;font-weight:{{ it.fw }};cursor:pointer">{{ it.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid {{ gateBd }};border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:{{ gateHeadBg }};border-bottom:1px solid {{ gateBd }}">
+         <span style="width:34px;height:34px;flex:none;border-radius:11px;background:{{ gateIconBg }};display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:{{ gateDot }}"></span></span>
+         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Next stage</span>
+        </div>
+        <div style="padding:16px 18px;display:grid;gap:13px">
+         <span style="font-size:14px;font-weight:700;color:{{ gateTitleFg }}">{{ gateTitle }}</span>
+          <p style="margin:0;font-size:13px;font-weight:400;color:#475569;line-height:1.75;text-wrap:pretty">{{ gateBody }}</p>
+          <sc-if value="{{ hasBlocking }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gap:7px;padding:12px 14px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca">
+             <span style="font-size:12.5px;font-weight:700;color:#b91c1c">Items that block starting until they are controlled</span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ blocking }}" as="b" hint-placeholder-count="1">
+                 <span dir="ltr" style="unicode-bidi:isolate;display:inline-flex;padding:3px 10px;border-radius:999px;background:#ffffff;border:1px solid #fecaca;color:#b91c1c;font-family:Inter,sans-serif;font-size:11.5px;font-weight:600">{{ b.label }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <button type="button" onClick="{{ onPlan }}" title="{{ planTitle }}" style="min-height:44px;padding:0 18px;border-radius:12px;border:none;background:{{ planBg }};color:{{ planFg }};font-size:14px;font-weight:700;cursor:{{ planCursor }};transition:transform .15s">{{ planLabel }}</button>
+          <p style="margin:0;font-size:11.5px;font-weight:400;color:#94a3b8;line-height:1.7;text-wrap:pretty">{{ ruleNote }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 940},
+  &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
+  &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string) =&gt; void&quot;},
+  &quot;onDiagnosisChange&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(snap: any) =&gt; void&quot;},
+  &quot;overrideName&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overrideId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overrideMeta&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overridePhoto&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;overrideRecord&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;any&quot;}
+}">
+class Component extends DCLogic {
+  get K() { return window.OrthoKnowledge || {}; }
+
+  state = { status: {}, order: null, open: {}, manual: {}, cplCat: null, drag: null, saved: 'Saved automatically' };
+
+  componentDidMount() {
+    if (!window.OrthoKnowledge) {
+      this._k = setInterval(() => { if (window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); } }, 60);
+    }
+  }
+
+  componentWillUnmount() { clearInterval(this._k); clearTimeout(this._saveT); }
+
+  get rec() { return this.props.overrideRecord || {}; }
+  get progress() { return this.rec.progress || {}; }
+
+  /* generated problems, plus the doctor\'s manual additions, in the saved order */
+  computed() {
+    const K = this.K;
+    const gen = K.problemList ? K.problemList(this.progress.values, this.progress.exam) : [];
+    const manual = Object.keys(this.state.manual)
+      .filter(k => this.state.manual[k])
+      .map(k => {
+        const parts = k.split('::');
+        return { id: 'man-' + k, text: parts[1], group: parts[0], severity: 'Recorded', tone: 1, source: 'clinical finding', desc: '', row: null, col: null };
+      });
+    const all = gen.concat(manual);
+    const order = this.state.order;
+    if (!order) return all;
+    const idx = id => { const i = order.indexOf(id); return i < 0 ? 9999 : i; };
+    return all.slice().sort((a, b) => idx(a.id) - idx(b.id));
+  }
+
+  push() {
+    if (!this.props.onDiagnosisChange) return;
+    clearTimeout(this._saveT);
+    const snap = { status: this.state.status, order: this.state.order, manual: this.state.manual, cplCat: this.state.cplCat };
+    this._saveT = setTimeout(() => this.props.onDiagnosisChange(snap), 240);
+  }
+
+  set(patch) { this.setState(patch, () => this.push()); }
+
+  mark(id, v) {
+    this.set({ status: Object.assign({}, this.state.status, { [id]: this.state.status[id] === v ? null : v }) });
+  }
+
+  reorder(fromId, toId) {
+    if (!fromId || fromId === toId) return;
+    const ids = this.computed().map(p => p.id);
+    const from = ids.indexOf(fromId), to = ids.indexOf(toId);
+    if (from < 0 || to < 0) return;
+    ids.splice(to, 0, ids.splice(from, 1)[0]);
+    this.set({ order: ids });
+  }
+
+  sevTone(t) {
+    return [
+      { bg: '#f1f5f9', bd: '#e8edf3', fg: '#64748b' },
+      { bg: '#fffbeb', bd: '#fde68a', fg: '#b45309' },
+      { bg: '#fef2f2', bd: '#fecaca', fg: '#b91c1c' },
+      { bg: '#fef2f2', bd: '#fecaca', fg: '#b91c1c' }
+    ][t] || { bg: '#f1f5f9', bd: '#e8edf3', fg: '#64748b' };
+  }
+
+  hydrate() {
+    if (this._hydrated) return;
+    const d = this.rec.diagnosis;
+    if (!d) return;
+    this._hydrated = true;
+    setTimeout(() => this.setState({
+      status: d.status || {}, order: d.order || null,
+      manual: d.manual || {}, cplCat: d.cplCat || null
+    }), 0);
+  }
+
+  renderVals() {
+    this.hydrate();
+    const K = this.K;
+    const list = this.computed();
+    const st = this.state.status;
+    const accepted = list.filter(p => st[p.id] === 'ok').length;
+    const rejected = list.filter(p => st[p.id] === 'no').length;
+    const pending = list.length - accepted - rejected;
+    const rows = K.gridRows || [];
+    const cols = K.gridCols || [];
+    const groups = K.manualProblemDefs || [];
+    const blockDefs = K.blockingProblems || [];
+
+    const acceptedItems = list.filter(p => st[p.id] === 'ok');
+    const blocking = acceptedItems.filter(p => blockDefs.indexOf(p.text) > -1).map(p => ({ label: p.text }));
+
+    const name = this.props.overrideName || 'إيهاب محمد حسني';
+    const photo = this.props.overridePhoto || '';
+    const complaint = this.rec.complaint || (this.props.overrideMeta || '').split(' · ').pop() || 'Spacing';
+    const cplText = this.rec.complaintText || '';
+
+    const cells = [];
+    rows.forEach(r => {
+      cols.forEach(c => {
+        const n = list.filter(p => p.row === r[0] && p.col === c[0] && st[p.id] !== 'no').length;
+        cells.push({
+          n: String(n),
+          label: c === cols[0] ? r[1] : '',
+          just: c === cols[0] ? 'space-between' : 'center',
+          labelFg: '#64748b',
+          bg: n ? (n > 1 ? '#fef2f2' : '#fffbeb') : '#ffffff',
+          fg: n ? (n > 1 ? '#b91c1c' : '#b45309') : '#cbd5e1'
+        });
+      });
+    });
+
+    return {
+      pName: name,
+      pId: this.props.overrideId || 'ORT-2026-0148',
+      pMeta: this.props.overrideMeta || '14y · Male',
+      pPhoto: photo,
+      hasPhoto: !!photo,
+      noPhoto: !photo,
+      pInitial: (name || '?').slice(0, 1),
+      savedNote: this.state.saved,
+
+      goDash: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); },
+      goOverview: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('overview'); },
+      goRecords: () => { if (this.props.onNavigate) this.props.onNavigate('records'); },
+
+      complaint: complaint,
+      cplText: cplText,
+      hasCplText: !!cplText,
+      noCplText: !cplText,
+      cplCats: (K.complaintCategories || []).map(c => {
+        const on = this.state.cplCat === c[0];
+        return {
+          en: c[1], onClick: () => this.set({ cplCat: on ? null : c[0] }),
+          bg: on ? '#dbeafe' : '#ffffff', bd: on ? '#2563eb' : '#bfdbfe',
+          fg: on ? '#1d4ed8' : '#64748b', fw: on ? 700 : 500
+        };
+      }),
+
+      hasProblems: list.length > 0,
+      noProblems: list.length === 0,
+      tally: accepted + ' Confirmed · ' + pending + ' Pending',
+      tallyFg: pending ? '#b45309' : '#047857',
+      tallyBg: pending ? '#fffbeb' : '#ecfdf5',
+      tallyBd: pending ? '#fde68a' : '#a7f3d0',
+
+      problems: list.map((p, i) => {
+        const s = st[p.id];
+        const sev = this.sevTone(p.tone);
+        const open = !!this.state.open[p.id];
+        const src = p.source === 'measurement'
+          ? p.cite + ' ' + p.value + (p.unit || '') + ' · norm ' + p.norm
+          : p.source;
+        return {
+          rank: String(i + 2),
+          text: p.text,
+          severity: p.severity,
+          dims: p.row ? [p.row, p.col].join(' · ') : (p.group || 'finding'),
+          sourceText: src,
+          desc: p.desc || 'A clinically recorded item — not generated from the measurements.',
+          open: open,
+          moreLabel: open ? 'Hide' : 'Why',
+          onToggle: () => this.setState(s2 => ({ open: Object.assign({}, s2.open, { [p.id]: !s2.open[p.id] }) })),
+          onAccept: () => this.mark(p.id, 'ok'),
+          onReject: () => this.mark(p.id, 'no'),
+          onDragStart: () => this.setState({ drag: p.id }),
+          onDragOver: ev => ev.preventDefault(),
+          onDrop: ev => { ev.preventDefault(); this.reorder(this.state.drag, p.id); },
+          onDragEnd: () => this.setState({ drag: null }),
+          rowBg: s === 'ok' ? '#f8fefb' : s === 'no' ? '#fafafa' : '#ffffff',
+          rowOp: s === 'no' ? 0.55 : 1,
+          rankBg: s === 'ok' ? '#ecfdf5' : '#f1f5f9',
+          rankFg: s === 'ok' ? '#047857' : '#64748b',
+          textFg: s === 'no' ? '#94a3b8' : '#0f172a',
+          strike: s === 'no' ? 'line-through' : 'none',
+          sevBg: sev.bg, sevBd: sev.bd, sevFg: sev.fg,
+          accBg: s === 'ok' ? '#059669' : '#ffffff',
+          accBd: s === 'ok' ? '#059669' : '#e8edf3',
+          accFg: s === 'ok' ? '#ffffff' : '#64748b',
+          accFw: s === 'ok' ? 700 : 500,
+          rejBg: s === 'no' ? '#f1f5f9' : '#ffffff',
+          rejBd: s === 'no' ? '#cbd5e1' : '#e8edf3',
+          rejFg: s === 'no' ? '#475569' : '#64748b',
+          rejFw: s === 'no' ? 700 : 500
+        };
+      }),
+
+      cols: cols.map(c => ({ en: c[1] })),
+      cells: cells,
+
+      groups: groups.map(g => ({
+        en: g[1], ar: g[2],
+        items: g[3].map(l => {
+          const key = g[0] + '::' + l;
+          const on = !!this.state.manual[key];
+          return {
+            label: l,
+            onClick: () => this.set({ manual: Object.assign({}, this.state.manual, { [key]: !on }) }),
+            bg: on ? '#eff6ff' : '#ffffff', bd: on ? '#2563eb' : '#e8edf3',
+            fg: on ? '#1d4ed8' : '#64748b', fw: on ? 700 : 500
+          };
+        })
+      })),
+
+      hasBlocking: blocking.length > 0,
+      blocking: blocking,
+      gateHeadBg: pending ? '#fffbeb' : '#ecfdf5',
+      gateIconBg: pending ? '#fffbeb' : '#ecfdf5',
+      gateDot: accepted === 0 && pending === 0 ? '#94a3b8' : (pending ? '#d97706' : '#059669'),
+      gateTitleFg: accepted === 0 && pending === 0 ? '#0f172a' : (pending ? '#92400e' : '#065f46'),
+      gateBd: accepted === 0 && pending === 0 ? '#e8edf3' : (pending ? '#fde68a' : '#a7f3d0'),
+      gateTitle: accepted === 0 && pending === 0
+        ? "No items confirmed yet"
+        : pending ? pending + " items still undecided" : accepted + " items confirmed — the list is complete",
+      gateBody: accepted === 0 && pending === 0
+        ? "The list is generated from the measurements and occlusion. Complete the records or add an item manually, then approve the items so they carry into the treatment objectives."
+        : pending
+          ? "Navigation is allowed and what is missing is recorded, but any undecided item will not become a treatment objective in the next stage."
+          : "Every confirmed item generates a matching treatment objective, in the same priority order shown here.",
+      planReady: accepted > 0,
+      planTitle: accepted > 0 ? '' : "Complete the problem list first",
+      onPlan: () => { if (accepted > 0 && this.props.onNavigate) this.props.onNavigate('plan'); },
+      planLabel: accepted > 0 ? "Go to Treatment plan" : "Complete the problem list first",
+      planBg: accepted > 0 ? '#2563eb' : '#f1f5f9',
+      planFg: accepted > 0 ? '#ffffff' : '#94a3b8',
+      planCursor: accepted > 0 ? 'pointer' : 'not-allowed',
+      ruleNote: (K.priorityRule || {}).ar || ''
+    };
+  }
+}
+
+</script>
+</body>
+</html>

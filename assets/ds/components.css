@@ -1,0 +1,640 @@
+/*
+ * OrthoTrack Design System v1 - components
+ * Uses only --ot-* tokens (tokens.css) and logical properties.
+ * Every selector starts with .ot- so linking this file cannot restyle existing screens.
+ */
+
+/* ---------- Scoped reset ---------- */
+.ot-btn,
+.ot-input,
+.ot-select,
+.ot-textarea,
+.ot-chip,
+.ot-tab,
+.ot-card,
+.ot-drawer,
+.ot-toast,
+.ot-stage,
+.ot-flag,
+.ot-list-row,
+.ot-empty,
+.ot-field,
+.ot-progress,
+.ot-avatar {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: var(--ot-font-sans);
+}
+
+/* ---------- Icon ---------- */
+.ot-icon {
+  inline-size: var(--ot-icon-md);
+  block-size: var(--ot-icon-md);
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ot-icon--sm {
+  inline-size: var(--ot-icon-sm);
+  block-size: var(--ot-icon-sm);
+}
+
+/* ---------- Caps label (11px, the only use of 11px) ---------- */
+.ot-caps {
+  font-size: var(--ot-text-11);
+  font-weight: var(--ot-weight-semibold);
+  letter-spacing: var(--ot-tracking-caps);
+  text-transform: uppercase;
+  color: var(--ot-text-muted);
+}
+
+/* ---------- Buttons ---------- */
+.ot-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ot-space-4);
+  min-block-size: var(--ot-touch-min);
+  padding-inline: var(--ot-space-6);
+  padding-block: 0;
+  border: var(--ot-border-w) solid transparent;
+  border-radius: var(--ot-radius-md);
+  font-size: var(--ot-text-14);
+  font-weight: var(--ot-weight-semibold);
+  line-height: var(--ot-leading-heading);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--ot-dur-fast) var(--ot-ease), border-color var(--ot-dur-fast) var(--ot-ease);
+}
+.ot-btn--primary {
+  background: var(--ot-primary);
+  color: var(--ot-surface);
+}
+.ot-btn--primary:hover {
+  background: var(--ot-primary-hover);
+}
+.ot-btn--secondary {
+  background: var(--ot-surface);
+  color: var(--ot-ink);
+  border-color: var(--ot-border);
+}
+.ot-btn--secondary:hover {
+  background: var(--ot-page);
+  border-color: var(--ot-border-strong);
+}
+.ot-btn--ghost {
+  background: transparent;
+  color: var(--ot-primary-hover);
+}
+.ot-btn--ghost:hover {
+  background: var(--ot-primary-tint);
+}
+.ot-btn--danger {
+  background: var(--ot-surface);
+  color: var(--ot-danger-text);
+  border-color: var(--ot-danger-border);
+}
+.ot-btn--danger:hover {
+  background: var(--ot-danger-tint);
+}
+.ot-btn--sm {
+  min-block-size: var(--ot-touch-min);
+  padding-inline: var(--ot-space-5);
+  font-size: var(--ot-text-13);
+}
+.ot-btn--icon {
+  inline-size: var(--ot-touch-min);
+  padding-inline: 0;
+  color: var(--ot-text-muted);
+  background: var(--ot-surface);
+  border-color: var(--ot-border);
+}
+.ot-btn--icon:hover {
+  background: var(--ot-page);
+  border-color: var(--ot-border-strong);
+}
+.ot-btn--block {
+  inline-size: 100%;
+}
+@media (min-width: 601px) {
+  .ot-btn--sm {
+    min-block-size: 36px;
+  }
+  .ot-btn--icon {
+    block-size: 36px;
+  }
+}
+/* disabled goes last so it wins over the variant hover rules */
+.ot-btn:disabled,
+.ot-btn[aria-disabled="true"] {
+  background: var(--ot-subtle);
+  color: var(--ot-icon);
+  border-color: var(--ot-border);
+  cursor: not-allowed;
+}
+
+/* ---------- Inputs ---------- */
+.ot-input,
+.ot-select,
+.ot-textarea {
+  display: block;
+  inline-size: 100%;
+  min-block-size: var(--ot-input-h);
+  padding-inline: var(--ot-space-6);
+  padding-block: 0;
+  border: var(--ot-border-w) solid var(--ot-border);
+  border-radius: var(--ot-radius-md);
+  background: var(--ot-surface);
+  color: var(--ot-ink);
+  font-size: var(--ot-input-font-size);
+  font-weight: var(--ot-weight-medium);
+  line-height: var(--ot-leading-body);
+}
+.ot-textarea {
+  min-block-size: 96px;
+  padding-block: var(--ot-space-5);
+  resize: vertical;
+}
+.ot-input::placeholder,
+.ot-textarea::placeholder {
+  color: var(--ot-icon);
+}
+.ot-input:focus,
+.ot-select:focus,
+.ot-textarea:focus {
+  outline: none;
+  border-color: var(--ot-primary);
+}
+.ot-input[aria-invalid="true"],
+.ot-select[aria-invalid="true"],
+.ot-textarea[aria-invalid="true"] {
+  border-color: var(--ot-danger-dot);
+  background: var(--ot-danger-tint);
+}
+.ot-input:disabled,
+.ot-select:disabled,
+.ot-textarea:disabled {
+  background: var(--ot-subtle);
+  color: var(--ot-icon);
+  cursor: not-allowed;
+}
+
+/* ---------- Field (label + help + error) ---------- */
+.ot-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ot-space-3);
+  min-inline-size: 0;
+}
+.ot-field__label {
+  font-size: var(--ot-text-13);
+  font-weight: var(--ot-weight-semibold);
+  color: var(--ot-ink);
+}
+.ot-field__help {
+  font-size: var(--ot-text-12);
+  color: var(--ot-text-muted);
+}
+.ot-field__error {
+  font-size: var(--ot-text-12);
+  font-weight: var(--ot-weight-medium);
+  color: var(--ot-danger-text);
+}
+
+/* ---------- Card ---------- */
+.ot-card {
+  min-inline-size: 0;
+  background: var(--ot-surface);
+  border: var(--ot-border-w) solid var(--ot-border);
+  border-radius: var(--ot-radius-lg);
+  padding: var(--ot-space-7);
+  box-shadow: var(--ot-shadow-card);
+}
+.ot-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ot-space-5);
+  margin-block-end: var(--ot-space-6);
+  font-size: var(--ot-text-14);
+  font-weight: var(--ot-weight-bold);
+  color: var(--ot-ink);
+}
+
+/* ---------- Chip (selectable) ---------- */
+.ot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ot-space-3);
+  min-block-size: var(--ot-touch-min);
+  padding-inline: var(--ot-space-5);
+  border: var(--ot-border-w) solid var(--ot-border);
+  border-radius: var(--ot-radius-pill);
+  background: var(--ot-surface);
+  color: var(--ot-text-2);
+  font: inherit;
+  font-size: var(--ot-text-13);
+  font-weight: var(--ot-weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--ot-dur-fast) var(--ot-ease), border-color var(--ot-dur-fast) var(--ot-ease);
+}
+.ot-chip:hover {
+  border-color: var(--ot-border-strong);
+}
+.ot-chip[aria-pressed="true"] {
+  background: var(--ot-primary-tint);
+  border-color: var(--ot-primary-border);
+  color: var(--ot-primary-hover);
+  font-weight: var(--ot-weight-bold);
+}
+
+/* ---------- Stage badge (PROPOSAL palette, owner to approve) ---------- */
+.ot-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ot-space-3);
+  max-inline-size: 100%;
+  padding-block: var(--ot-space-1);
+  padding-inline: var(--ot-space-4);
+  border: var(--ot-border-w) solid var(--ot-border-strong);
+  border-radius: var(--ot-radius-pill);
+  background: var(--ot-stage-exit-bg);
+  color: var(--ot-stage-exit-text);
+  font-size: var(--ot-text-12);
+  font-weight: var(--ot-weight-semibold);
+  line-height: var(--ot-leading-heading);
+  white-space: nowrap;
+}
+.ot-stage::before {
+  content: "";
+  inline-size: var(--ot-size-dot);
+  block-size: var(--ot-size-dot);
+  flex: none;
+  border-radius: var(--ot-radius-pill);
+  background: var(--_dot);
+}
+.ot-stage--consultation { --_dot: var(--ot-stage-consultation-dot); background: var(--ot-stage-consultation-bg); border-color: var(--ot-stage-consultation-border); color: var(--ot-stage-consultation-text); }
+.ot-stage--growth-watch { --_dot: var(--ot-stage-growth-watch-dot); background: var(--ot-stage-growth-watch-bg); border-color: var(--ot-stage-growth-watch-border); color: var(--ot-stage-growth-watch-text); }
+.ot-stage--records      { --_dot: var(--ot-stage-records-dot); background: var(--ot-stage-records-bg); border-color: var(--ot-stage-records-border); color: var(--ot-stage-records-text); }
+.ot-stage--diagnosis    { --_dot: var(--ot-stage-diagnosis-dot); background: var(--ot-stage-diagnosis-bg); border-color: var(--ot-stage-diagnosis-border); color: var(--ot-stage-diagnosis-text); }
+.ot-stage--plan         { --_dot: var(--ot-stage-plan-dot); background: var(--ot-stage-plan-bg); border-color: var(--ot-stage-plan-border); color: var(--ot-stage-plan-text); }
+.ot-stage--active       { --_dot: var(--ot-stage-active-dot); background: var(--ot-stage-active-bg); border-color: var(--ot-stage-active-border); color: var(--ot-stage-active-text); }
+.ot-stage--retention    { --_dot: var(--ot-stage-retention-dot); background: var(--ot-stage-retention-bg); border-color: var(--ot-stage-retention-border); color: var(--ot-stage-retention-text); }
+.ot-stage--completed    { --_dot: var(--ot-stage-completed-dot); background: var(--ot-stage-completed-bg); border-color: var(--ot-stage-completed-border); color: var(--ot-stage-completed-text); }
+/* exits: outlined, no dot, one icon each */
+.ot-stage--exit {
+  background: var(--ot-stage-exit-bg);
+  border-color: var(--ot-stage-exit-border);
+  color: var(--ot-stage-exit-text);
+}
+.ot-stage--exit::before {
+  display: none;
+}
+
+/* ---------- Flag ---------- */
+.ot-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ot-space-3);
+  max-inline-size: 100%;
+  padding-block: var(--ot-space-1);
+  padding-inline: var(--ot-space-4);
+  border: var(--ot-border-w) solid transparent;
+  border-radius: var(--ot-radius-pill);
+  font-size: var(--ot-text-12);
+  font-weight: var(--ot-weight-semibold);
+  line-height: var(--ot-leading-heading);
+  white-space: nowrap;
+}
+.ot-flag--no-show        { background: var(--ot-danger-tint); border-color: var(--ot-danger-border); color: var(--ot-danger-text); }
+.ot-flag--overdue        { background: var(--ot-warn-tint); border-color: var(--ot-warn-border); color: var(--ot-warn-text); }
+.ot-flag--active-disease { background: var(--ot-warn-tint); border-color: var(--ot-warn-border); color: var(--ot-warn-text); }
+.ot-flag--no-appointment { background: var(--ot-slate-tint); border-color: var(--ot-slate-border); color: var(--ot-slate-text); }
+.ot-flag--needs-review   { background: var(--ot-violet-tint); border-color: var(--ot-violet-border); color: var(--ot-violet-text); }
+
+/* ---------- Tabs (underline) ---------- */
+.ot-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: var(--ot-space-9);
+  max-inline-size: 100%;
+  overflow-x: auto;
+  border-block-end: var(--ot-border-w) solid var(--ot-border);
+}
+.ot-tab {
+  flex: none;
+  min-block-size: var(--ot-touch-min);
+  padding-inline: 0;
+  padding-block: 0;
+  border: 0;
+  border-block-end: var(--ot-focus-w) solid transparent;
+  margin-block-end: calc(var(--ot-border-w) * -1);
+  background: transparent;
+  color: var(--ot-text-muted);
+  font: inherit;
+  font-size: var(--ot-text-14);
+  font-weight: var(--ot-weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ot-tab:hover {
+  color: var(--ot-ink);
+}
+.ot-tab[aria-selected="true"] {
+  color: var(--ot-ink);
+  font-weight: var(--ot-weight-semibold);
+  border-block-end-color: var(--ot-primary);
+}
+
+/* ---------- Drawer (bottom sheet <=600px, side panel above) ---------- */
+.ot-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: var(--ot-scrim);
+  animation: ot-fade var(--ot-dur-fast) var(--ot-ease);
+}
+.ot-drawer {
+  position: fixed;
+  z-index: 41;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  background: var(--ot-surface);
+  color: var(--ot-ink);
+  box-shadow: var(--ot-shadow-overlay);
+  overflow: hidden;
+  /* bottom sheet (default, phone) */
+  inset-inline: 0;
+  inset-block-end: 0;
+  max-block-size: 85vh;
+  border-start-start-radius: var(--ot-radius-lg);
+  border-start-end-radius: var(--ot-radius-lg);
+  animation: ot-sheet var(--ot-dur-base) var(--ot-ease);
+}
+.ot-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ot-space-5);
+  padding: var(--ot-space-7);
+  border-block-end: var(--ot-border-w) solid var(--ot-border);
+}
+.ot-drawer__title {
+  font-size: var(--ot-text-16);
+  font-weight: var(--ot-weight-bold);
+  line-height: var(--ot-leading-heading);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.ot-drawer__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ot-space-6);
+  padding: var(--ot-space-7);
+  min-block-size: 0;
+  overflow-y: auto;
+}
+.ot-drawer__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: var(--ot-space-4);
+  padding: var(--ot-space-6) var(--ot-space-7);
+  border-block-start: var(--ot-border-w) solid var(--ot-border);
+}
+@media (min-width: 601px) {
+  .ot-drawer {
+    inset-block: 0;
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    inline-size: min(var(--ot-drawer-w), 100vw);
+    max-block-size: none;
+    border-radius: 0;
+    animation-name: ot-fade;
+  }
+}
+
+/* ---------- Toast (one implementation, stacked) ---------- */
+.ot-toast-stack {
+  position: fixed;
+  z-index: 50;
+  inset-inline: var(--ot-space-6);
+  inset-block-end: var(--ot-space-8);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--ot-space-5);
+  pointer-events: none;
+}
+@media (min-width: 601px) {
+  .ot-toast-stack {
+    inset-inline: auto var(--ot-space-8);
+    inline-size: var(--ot-toast-w);
+  }
+}
+.ot-toast {
+  --_mark-bg: var(--ot-primary-tint);
+  --_mark-fg: var(--ot-primary-hover);
+  --_bd: var(--ot-border);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ot-space-5);
+  padding: var(--ot-space-6) var(--ot-space-7);
+  border: var(--ot-border-w) solid var(--_bd);
+  border-radius: var(--ot-radius-lg);
+  background: var(--ot-surface);
+  box-shadow: var(--ot-shadow-overlay);
+  color: var(--ot-ink);
+  font-size: var(--ot-text-14);
+  line-height: var(--ot-leading-body);
+  pointer-events: auto;
+  animation: ot-toast var(--ot-dur-base) var(--ot-ease);
+}
+.ot-toast__mark {
+  display: grid;
+  place-items: center;
+  inline-size: var(--ot-size-mark);
+  block-size: var(--ot-size-mark);
+  flex: none;
+  border-radius: var(--ot-radius-md);
+  background: var(--_mark-bg);
+  color: var(--_mark-fg);
+}
+.ot-toast__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ot-space-1);
+  min-inline-size: 0;
+  flex: 1;
+}
+.ot-toast__title {
+  font-weight: var(--ot-weight-semibold);
+  overflow-wrap: anywhere;
+}
+.ot-toast__text {
+  font-size: var(--ot-text-13);
+  color: var(--ot-text-2);
+  overflow-wrap: anywhere;
+}
+.ot-toast--info    { --_bd: var(--ot-primary-border); --_mark-bg: var(--ot-primary-tint); --_mark-fg: var(--ot-primary-hover); }
+.ot-toast--success { --_bd: var(--ot-success-border); --_mark-bg: var(--ot-success-tint); --_mark-fg: var(--ot-success-dot); }
+.ot-toast--warn    { --_bd: var(--ot-warn-border); --_mark-bg: var(--ot-warn-tint); --_mark-fg: var(--ot-warn-dot); }
+.ot-toast--danger  { --_bd: var(--ot-danger-border); --_mark-bg: var(--ot-danger-tint); --_mark-fg: var(--ot-danger-dot); }
+
+/* ---------- Empty state ---------- */
+.ot-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--ot-space-5);
+  padding-block: var(--ot-space-10);
+  padding-inline: var(--ot-space-8);
+  border: var(--ot-border-w) solid var(--ot-border);
+  border-radius: var(--ot-radius-lg);
+  background: var(--ot-surface);
+  text-align: center;
+}
+.ot-empty__title {
+  font-size: var(--ot-text-16);
+  font-weight: var(--ot-weight-semibold);
+  color: var(--ot-ink);
+}
+.ot-empty__text {
+  max-inline-size: 40ch;
+  font-size: var(--ot-text-14);
+  color: var(--ot-text-muted);
+}
+
+/* ---------- Progress ---------- */
+.ot-progress {
+  display: block;
+  inline-size: 100%;
+  block-size: var(--ot-size-progress);
+  overflow: hidden;
+  border-radius: var(--ot-radius-pill);
+  background: var(--ot-subtle);
+}
+.ot-progress__bar {
+  display: block;
+  block-size: 100%;
+  inline-size: var(--ot-progress, 0%);
+  border-radius: var(--ot-radius-pill);
+  background: var(--ot-violet-dot);
+  transition: inline-size var(--ot-dur-base) var(--ot-ease);
+}
+.ot-progress--retention .ot-progress__bar {
+  background: var(--ot-cyan-dot);
+}
+
+/* ---------- Avatar ---------- */
+.ot-avatar {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--ot-avatar);
+  block-size: var(--ot-avatar);
+  flex: none;
+  border-radius: var(--ot-radius-pill);
+  background: var(--ot-primary-tint);
+  color: var(--ot-primary-hover);
+  font-size: var(--ot-text-12);
+  font-weight: var(--ot-weight-bold);
+}
+
+/* ---------- List row (case row: avatar / name / meta / stage / action) ---------- */
+.ot-list-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "avatar body tags action";
+  align-items: center;
+  gap: var(--ot-space-5) var(--ot-space-7);
+  min-block-size: var(--ot-touch-min);
+  padding-block: var(--ot-space-6);
+  padding-inline: 0;
+  border-block-end: var(--ot-border-w) solid var(--ot-border);
+  background: var(--ot-surface);
+}
+.ot-list-row > .ot-avatar { grid-area: avatar; }
+.ot-list-row__body {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ot-space-1);
+  min-inline-size: 0;
+}
+.ot-list-row__name {
+  font-size: var(--ot-text-14);
+  font-weight: var(--ot-weight-semibold);
+  color: var(--ot-ink);
+  overflow-wrap: anywhere;
+}
+.ot-list-row__meta {
+  font-size: var(--ot-text-12);
+  color: var(--ot-text-muted);
+  overflow-wrap: anywhere;
+}
+/* Badges (stage + flags). Separate from the action so the action never wraps. */
+.ot-list-row__tags {
+  grid-area: tags;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: end;
+  gap: var(--ot-space-3);
+  min-inline-size: 0;
+}
+.ot-list-row__actions {
+  grid-area: action;
+  display: flex;
+  align-items: center;
+  gap: var(--ot-space-4);
+}
+@media (max-width: 600px) {
+  .ot-list-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "avatar body action"
+      ".      tags tags";
+    align-items: start;
+  }
+  .ot-list-row__tags { justify-content: start; }
+}
+
+/* ---------- Focus ring: every interactive ot- element ---------- */
+.ot-btn:focus-visible,
+.ot-input:focus-visible,
+.ot-select:focus-visible,
+.ot-textarea:focus-visible,
+.ot-chip:focus-visible,
+.ot-tab:focus-visible,
+.ot-list-row:focus-visible {
+  outline: var(--ot-focus-w) solid var(--ot-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 var(--ot-focus-halo) var(--ot-focus-ring);
+}
+
+/* ---------- Motion ---------- */
+@keyframes ot-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ot-sheet {
+  from { opacity: 0; translate: 0 var(--ot-space-7); }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes ot-toast {
+  from { opacity: 0; translate: 0 var(--ot-space-5); }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ot-scrim,
+  .ot-drawer,
+  .ot-toast,
+  .ot-progress__bar {
+    animation: none;
+    transition: none;
+  }
+}

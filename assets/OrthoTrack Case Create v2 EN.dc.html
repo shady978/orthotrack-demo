@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>OrthoTrack — New case</title>
+<link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+<link rel="stylesheet" href="assets/vendor/css/google-inter-300-700-400-600.css">
+<script src="ortho-knowledge-en.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{direction:ltr;background:#f6f8fb;color:#0f172a;font-family:Inter,'Thmanyah Sans',system-ui,sans-serif;font-weight:500;line-height:1.7;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#2563eb;text-decoration:none}
+a:hover{color:#1d4ed8;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+@keyframes otIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes otRow{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;background:#f6f8fb">
+
+  <sc-if value="{{ showAside }}" hint-placeholder-val="{{ true }}">
+  <aside style="width:{{ sideW }};flex:none;position:sticky;top:0;height:100vh;align-self:flex-start;background:#ffffff;border-inline-end:1px solid #e8edf3;display:flex;flex-direction:column;padding:18px 12px;gap:5px;transition:width .28s cubic-bezier(.4,0,.2,1);overflow:hidden">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 18px;min-height:44px">
+      <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#2563eb"></div>
+     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.04em;color:#0f172a;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">OrthoTrack</span>
+    </div>
+    <a href="#" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;background:#eff6ff;color:#1d4ed8;text-decoration:none">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
+     <span style="font-size:14.5px;font-weight:700;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Case dashboard</span>
+    </a>
+    <a href="#" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;color:#64748b;text-decoration:none" style-hover="background:#f6f8fb;color:#0f172a">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><circle cx="9" cy="5.6" r="3.3"></circle><rect x="2.6" y="11" width="12.8" height="5" rx="2.5"></rect></svg></span>
+     <span style="font-size:14.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Patients</span>
+    </a>
+    <a href="#" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;color:#64748b;text-decoration:none" style-hover="background:#f6f8fb;color:#0f172a">
+     <span style="width:26px;flex:none;display:flex;justify-content:center;position:relative"><svg width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.6" y="3.6" width="10.8" height="10.8" rx="2.4" transform="rotate(45 9 9)"></rect></svg><span style="position:absolute;top:-1px;inset-inline-end:1px;width:7px;height:7px;border-radius:50%;background:#d97706;border:1.5px solid #ffffff"></span></span>
+     <span style="font-size:14.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Diagnosis queue</span>
+    </a>
+    <a href="#" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;color:#64748b;text-decoration:none" style-hover="background:#f6f8fb;color:#0f172a">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="currentColor"><rect x="3" y="3.5" width="12" height="2.4" rx="1.2"></rect><rect x="3" y="8" width="12" height="2.4" rx="1.2"></rect><rect x="3" y="12.5" width="8" height="2.4" rx="1.2"></rect></svg></span>
+     <span style="font-size:14.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Treatment plans</span>
+    </a>
+    <div style="flex:1"></div>
+    <a href="#" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;color:#64748b;text-decoration:none" style-hover="background:#f6f8fb;color:#0f172a">
+     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="9" r="6"></circle><circle cx="9" cy="9" r="2" fill="currentColor" stroke="none"></circle></svg></span>
+     <span style="font-size:14.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Settings</span>
+    </a>
+    <button type="button" onClick="{{ toggleSide }}" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;border:none;background:transparent;color:#94a3b8;cursor:pointer;text-align:start" style-hover="background:#f6f8fb;color:#0f172a">
+     <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:17px;font-weight:500">{{ sideIcon }}</span>
+     <span style="font-size:14px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Collapse menu</span>
+    </button>
+    <div style="display:flex;align-items:center;gap:11px;padding:12px 8px 2px;border-top:1px solid #e8edf3;margin-top:5px">
+      <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">MS</div>
+      <div style="display:grid;gap:0;min-width:0;opacity:{{ labelOp }};transition:opacity .2s">
+       <span style="font-size:13.5px;font-weight:500;white-space:nowrap">Dr Mohamed Shady</span>
+       <span style="font-size:11.5px;font-weight:400;color:#94a3b8;white-space:nowrap">Orthodontist</span>
+      </div>
+    </div>
+  </aside>
+  </sc-if>
+
+  <div style="flex:1;min-width:660px;display:flex;flex-direction:column">
+    <div style="height:56px;flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px">
+      <nav style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;color:#64748b;min-width:0">
+        <a href="#" onClick="{{ onBreadcrumb }}" style="color:#64748b">Case dashboard</a>
+       <span style="color:#cbd5e1">‹</span>
+       <span style="font-weight:500;color:#0f172a">New case</span>
+      </nav>
+     <span style="font-size:12px;font-weight:400;color:#94a3b8;flex:none">{{ savedNote }}</span>
+    </div>
+
+    <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:14px 24px 0">
+      <div style="display:flex;align-items:center;gap:13px;min-width:0;min-height:46px">
+        <div style="width:42px;height:42px;flex:none;border-radius:50%;background:{{ avBg }};border:1px solid {{ avBd }};color:{{ avFg }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">{{ avatar }}</div>
+        <div style="display:grid;gap:2px;min-width:0">
+          <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+           <span style="font-size:17px;font-weight:700;line-height:1.4;color:{{ hdrFg }}">{{ hdrName }}</span>
+            <sc-if value="{{ showMinor }}" hint-placeholder-val="{{ false }}">
+             <span style="display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:11.5px;font-weight:500;animation:otIn .2s ease-out">Minor · guardian</span>
+            </sc-if>
+            <sc-if value="{{ showFlags }}" hint-placeholder-val="{{ false }}">
+             <span style="display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;background:#fffbeb;border:1px solid #fde68a;color:#b45309;font-size:11.5px;font-weight:500;animation:otIn .2s ease-out">{{ flagText }}</span>
+            </sc-if>
+            <sc-if value="{{ showClean }}" hint-placeholder-val="{{ false }}">
+             <span style="display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;font-size:11.5px;font-weight:500;animation:otIn .2s ease-out">✓ No medical history</span>
+            </sc-if>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:400;color:#64748b">
+           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#94a3b8;font-variant-numeric:tabular-nums">{{ hdrId }}</span>
+           <span style="color:#e8edf3">·</span>
+           <span>{{ hdrAge }}</span>
+            <sc-if value="{{ hasComplaint }}" hint-placeholder-val="{{ false }}">
+             <span style="color:#e8edf3">·</span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a">{{ hdrComplaint }}</span>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:stretch;gap:8px;margin-top:14px;padding-bottom:14px">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+          <button type="button" onClick="{{ s.onClick }}" style="flex:1;min-width:0;display:grid;gap:9px;padding:0;border:none;background:transparent;cursor:pointer;text-align:start">
+            <div style="display:flex;align-items:center;gap:9px;min-width:0">
+             <span style="width:24px;height:24px;flex:none;border-radius:50%;background:{{ s.numBg }};border:1.5px solid {{ s.numBd }};color:{{ s.numFg }};font-family:Inter,sans-serif;font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;justify-content:center">{{ s.num }}</span>
+              <div style="display:grid;gap:0;min-width:0">
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:{{ s.enFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.en }}</span>
+               <span style="font-size:11px;font-weight:400;color:{{ s.arFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.ar }}</span>
+              </div>
+            </div>
+            <div style="height:3px;border-radius:2px;background:{{ s.barBg }}"></div>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <main style="flex:1;min-width:0;max-width:1200px;padding:20px 24px 88px;display:grid;gap:16px;align-content:start">
+
+      <sc-if value="{{ isPatient }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;gap:16px;animation:otIn .2s ease-out">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+             <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f172a">Patient record</span>
+             <span style="font-size:12px;font-weight:400;color:#64748b">Patient file</span>
+             <span style="margin-inline-start:auto;font-size:11.5px;font-weight:400;color:{{ reqFg }}">{{ reqText }}</span>
+            </div>
+
+            <div style="padding:20px 0 4px">
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Identity</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Identity</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:500;color:#94a3b8">required</span>
+            </div>
+              <div style="padding:0 20px 18px;display:grid;gap:14px">
+                <div style="display:grid;gap:7px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">Full name <span style="color:#dc2626">*</span></label>
+                  <input type="text" value="{{ fName }}" onChange="{{ onName }}" placeholder="First, father's and family name" style="width:100%;min-height:58px;padding:0 18px;border-radius:14px;border:1px solid {{ nameBd }};background:#ffffff;font-size:21px;font-weight:700;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                  <sc-if value="{{ dupOpen }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a;flex-wrap:wrap;animation:otIn .18s ease-out">
+                     <span style="width:22px;height:22px;flex:none;border-radius:7px;background:#ffffff;color:#d97706;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">!</span>
+                      <div style="display:grid;gap:0;min-width:0;flex:1">
+                       <span style="font-size:12.5px;font-weight:700;color:#0f172a"><span dir="rtl" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',sans-serif;font-weight:500;line-height:1.7">A similar file exists — إيهاب محمد حسني</span></span>
+                       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11.5px;font-weight:500;color:#b45309">2011-04-18 · file 005025 · 1 active case</span>
+                      </div>
+                      <button type="button" style="flex:none;min-height:36px;padding:0 13px;border-radius:10px;border:1px solid #fde68a;background:#ffffff;font-size:12.5px;font-weight:700;color:#b45309;cursor:pointer" style-hover="background:#fef3c7">Use the file</button>
+                      <button type="button" onClick="{{ dismissDup }}" style="flex:none;min-height:36px;padding:0 13px;border-radius:10px;border:1px solid transparent;background:transparent;font-size:12.5px;font-weight:500;color:#64748b;cursor:pointer" style-hover="background:#ffffff">A different patient</button>
+                    </div>
+                  </sc-if>
+                </div>
+                <div style="display:grid;grid-template-columns:210px 240px 1fr;gap:14px;align-items:end">
+                  <div style="display:grid;gap:7px">
+                    <label style="font-size:12.5px;font-weight:700;color:#475569">Date of birth <span style="color:#dc2626">*</span></label>
+                    <input type="date" dir="ltr" value="{{ fDob }}" onChange="{{ onDob }}" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;font-family:Inter,sans-serif;text-align:left;font-variant-numeric:tabular-nums;" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                  </div>
+                  <div style="display:grid;gap:7px">
+                    <label style="font-size:12.5px;font-weight:700;color:#475569">Sex <span style="color:#dc2626">*</span></label>
+                    <div style="display:inline-flex;padding:4px;gap:4px;background:#f1f5f9;border-radius:12px">
+                      <button type="button" onClick="{{ onMale }}" style="flex:1;min-height:38px;border-radius:9px;border:none;background:{{ maleBg2 }};color:{{ maleFg }};font-family:Inter,sans-serif;font-size:13px;font-weight:{{ maleFw }};cursor:pointer;box-shadow:{{ maleSh }}">Male</button>
+                      <button type="button" onClick="{{ onFemale }}" style="flex:1;min-height:38px;border-radius:9px;border:none;background:{{ femBg2 }};color:{{ femFg }};font-family:Inter,sans-serif;font-size:13px;font-weight:{{ femFw }};cursor:pointer;box-shadow:{{ femSh }}">Female</button>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:9px;min-height:46px;flex-wrap:wrap">
+                   <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:12px;background:{{ ageBg }};border:1px solid {{ ageBd }};font-size:13px;font-weight:500;color:{{ ageFg }}">{{ ageText }}</span>
+                  </div>
+                </div>
+              </div>
+
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Contact</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Contact</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:500;color:#cbd5e1">Optional</span>
+            </div>
+              <div style="padding:0 20px 18px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+                <div style="display:grid;gap:7px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">Mobile number</label>
+                  <input type="tel" dir="ltr" value="{{ fPhone }}" onChange="{{ onPhone }}" placeholder="+20 100 000 0000" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;font-family:Inter,sans-serif;text-align:left;font-variant-numeric:tabular-nums;" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                </div>
+                <div style="display:grid;gap:7px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">Email</label>
+                  <input type="email" dir="ltr" value="{{ fEmail }}" onChange="{{ onEmail }}" placeholder="name@example.com" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;font-family:Inter,sans-serif;text-align:left;" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                </div>
+                <div style="display:grid;gap:7px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">City · country</label>
+                  <input type="text" value="{{ fCity }}" onChange="{{ onCity }}" placeholder="Cairo · Egypt" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                </div>
+              </div>
+
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Administrative</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Administrative</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:500;color:#cbd5e1">Optional</span>
+            </div>
+              <div style="padding:0 20px 20px;display:grid;grid-template-columns:210px 1fr;gap:14px">
+                <div style="display:grid;gap:7px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">External file number</label>
+                  <input type="text" dir="ltr" value="{{ fExt }}" onChange="{{ onExt }}" placeholder="005025" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;font-family:Inter,sans-serif;text-align:left;font-variant-numeric:tabular-nums;" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                </div>
+                <div style="display:grid;gap:7px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">Referring dentist</label>
+                  <input type="text" value="{{ fRef }}" onChange="{{ onRef }}" placeholder="Clinician or clinic name" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid #e8edf3;background:{{ gBandBg }};padding:18px 0 4px;transition:background .2s">
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Guardian</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Guardian</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:600;color:{{ gTagFg }};background:{{ gTagBg }};border:1px solid {{ gTagBd }};border-radius:999px;padding:2px 9px">{{ gTag }}</span>
+            </div>
+              <sc-if value="{{ isMinor }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:0 20px 20px;display:grid;grid-template-columns:1fr 210px 210px;gap:14px;animation:otIn .18s ease-out">
+                  <div style="display:grid;gap:7px">
+                    <label style="font-size:12.5px;font-weight:700;color:#475569">Guardian name <span style="color:#dc2626">*</span></label>
+                    <input type="text" value="{{ fGName }}" onChange="{{ onGName }}" placeholder="Full name" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                  </div>
+                  <div style="display:grid;gap:7px">
+                    <label style="font-size:12.5px;font-weight:700;color:#475569">Relationship</label>
+                    <select value="{{ fGRel }}" onChange="{{ onGRel }}" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;cursor:pointer" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                      <option value="">Choose…</option>
+                      <option value="Father">Father</option>
+                      <option value="Mother">Mother</option>
+                      <option value="Grandparent">Grandparent</option>
+                      <option value="Legal guardian">Legal guardian</option>
+                      <option value="Other">Other — type it</option>
+                    </select>
+                    <sc-if value="{{ gRelOther }}" hint-placeholder-val="{{ false }}">
+                      <input type="text" value="{{ fGRelOther }}" onChange="{{ onGRelOther }}" placeholder="Type the relationship" style="width:100%;min-height:42px;padding:0 12px;border-radius:12px;border:1px solid #2563eb;background:#ffffff;font-size:14px;font-weight:500;color:#0f172a;outline:none">
+                    </sc-if>
+                  </div>
+                  <div style="display:grid;gap:7px">
+                    <label style="font-size:12.5px;font-weight:700;color:#475569">Guardian mobile <span style="color:#dc2626">*</span></label>
+                    <input type="tel" dir="ltr" value="{{ fGPhone }}" onChange="{{ onGPhone }}" placeholder="+20 100 000 0000" style="width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:14.5px;font-weight:500;color:#0f172a;outline:none;font-family:Inter,sans-serif;text-align:left;font-variant-numeric:tabular-nums;" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ notMinor }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:0 20px 20px">
+                  <div style="min-height:73px;border-radius:12px;border:1px dashed #e8edf3;display:flex;align-items:center;justify-content:center;padding:14px">
+                   <span style="font-size:12.5px;font-weight:400;color:#cbd5e1">{{ gEmpty }}</span>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isHistory }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gap:16px;animation:otIn .2s ease-out">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+             <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#fffbeb;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#d97706"></span></span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f172a">Medical &amp; dental history</span>
+             <span style="font-size:12px;font-weight:400;color:#64748b">Medical and dental history</span>
+             <span style="margin-inline-start:auto;display:flex;align-items:center;gap:9px">
+                <sc-if value="{{ hasBlockers }}" hint-placeholder-val="{{ false }}">
+                 <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11.5px;font-weight:600;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:999px;padding:2px 10px">{{ blockerCount }}</span>
+                </sc-if>
+               <span style="font-size:11.5px;font-weight:600;color:{{ histFg }};background:{{ histBg }};border:1px solid {{ histBd }};border-radius:999px;padding:2px 10px">{{ histTag }}</span>
+              </span>
+            </div>
+
+            <div style="padding:20px 0 4px">
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Screening</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Initial screening</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:500;color:#94a3b8">One question that replaces eleven</span>
+            </div>
+              <div style="padding:0 20px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+                <div style="display:grid;gap:3px;flex:1;min-width:280px">
+                 <span style="font-size:19px;font-weight:700;line-height:1.45">Is the patient healthy with no medical or dental history?</span>
+                 <span style="font-size:12.5px;font-weight:400;color:#64748b">«Yes" answers all eleven questions with "No" in one step — and you can still add any item using the search below.</span>
+                </div>
+                <div style="display:inline-flex;padding:4px;gap:4px;background:#f1f5f9;border-radius:12px;flex:none">
+                  <button type="button" onClick="{{ onClean }}" style="min-height:44px;padding:0 26px;border-radius:9px;border:none;background:{{ cleanYBg2 }};color:{{ cleanYFg }};font-size:14.5px;font-weight:{{ cleanYFw }};cursor:pointer;box-shadow:{{ cleanYSh }}">Yes — healthy</button>
+                  <button type="button" onClick="{{ onNotClean }}" style="min-height:44px;padding:0 26px;border-radius:9px;border:none;background:{{ cleanNBg2 }};color:{{ cleanNFg }};font-size:14.5px;font-weight:{{ cleanNFw }};cursor:pointer;box-shadow:{{ cleanNSh }}">No — there is</button>
+                </div>
+              </div>
+
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Find a condition</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Search for a condition, drug or allergy</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:500;color:#94a3b8">Enter adds the first result</span>
+            </div>
+              <div style="padding:0 20px 20px;display:grid;gap:12px">
+                <div style="position:relative">
+                  <input type="text" value="{{ q }}" onChange="{{ onQ }}" onKeyDown="{{ onQKey }}" placeholder="e.g. bis · nickel · thumb · TMJ · diabetes" style="width:100%;min-height:58px;padding:0 52px 0 18px;border-radius:14px;border:1px solid {{ qBd }};background:#ffffff;font-size:18px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                 <span style="position:absolute;inset-inline-start:20px;top:50%;transform:translateY(-50%);width:15px;height:15px;border:2px solid {{ qIconFg }};border-radius:50%"></span>
+                </div>
+
+                <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:1px solid #e8edf3;border-radius:14px;overflow:hidden;animation:otIn .15s ease-out">
+                    <sc-for list="{{ results }}" as="r" hint-placeholder-count="5">
+                      <button type="button" onClick="{{ r.onAdd }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:12px 15px;border:none;border-bottom:1px solid #f1f5f9;background:#ffffff;cursor:pointer;text-align:start" style-hover="background:#f6f8fb">
+                       <span style="width:24px;height:24px;flex:none;border-radius:8px;background:{{ r.tagBg }};border:1px solid {{ r.tagBd }};color:{{ r.tagFg }};font-family:Inter,sans-serif;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">{{ r.mark }}</span>
+                       <span dir="ltr" style="unicode-bidi:isolate;flex:none;font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:#0f172a">{{ r.en }}</span>
+                       <span style="font-size:12px;font-weight:400;color:#64748b;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.ar }}</span>
+                       <span dir="ltr" style="unicode-bidi:isolate;margin-inline-start:auto;flex:none;font-family:Inter,sans-serif;font-size:11px;font-weight:500;color:#94a3b8">{{ r.group }}</span>
+                      </button>
+                    </sc-for>
+                    <button type="button" onClick="{{ onAddCustom }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:12px 15px;border:none;background:#f6f8fb;cursor:pointer;text-align:start" style-hover="background:#eff6ff">
+                     <span style="width:24px;height:24px;flex:none;border-radius:8px;background:#ffffff;border:1px dashed #cbd5e1;color:#64748b;font-size:13px;font-weight:500;display:inline-flex;align-items:center;justify-content:center">+</span>
+                     <span style="font-size:13px;font-weight:500;color:#0f172a">Add "<span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600">{{ q }}</span>» as a custom item</span>
+                    </button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:1px dashed #cbd5e1;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#f6f8fb">
+                   <span style="flex:1;min-width:200px;font-size:13px;font-weight:400;color:#64748b">No matching result — you can add it as a custom item.</span>
+                    <button type="button" onClick="{{ onAddCustom }}" style="min-height:42px;padding:0 16px;border-radius:12px;border:none;background:#2563eb;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer">Add "{{ q }}»</button>
+                  </div>
+                </sc-if>
+              </div>
+
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Recorded</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Recorded and its effect on treatment</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:{{ recFg }}" dir="ltr">{{ recTag }}</span>
+            </div>
+              <div style="padding:0 20px 20px">
+                <sc-if value="{{ hasPicked }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:1px solid #e8edf3;border-radius:14px;overflow:hidden">
+                    <sc-for list="{{ picked }}" as="p" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:flex-start;gap:13px;padding:13px 16px;border-bottom:1px solid #f1f5f9;background:{{ p.rowBg }};animation:otRow .18s ease-out">
+                       <span style="width:24px;height:24px;flex:none;margin-top:2px;border-radius:8px;background:{{ p.markBg }};border:1px solid {{ p.markBd }};color:{{ p.markFg }};font-family:Inter,sans-serif;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">{{ p.mark }}</span>
+                        <div style="flex:1;min-width:0;display:grid;gap:3px">
+                          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:14.5px;font-weight:600;color:#0f172a">{{ p.en }}</span>
+                           <span style="font-size:12px;font-weight:400;color:#64748b">{{ p.ar }}</span>
+                           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:500;color:#94a3b8;background:#f6f8fb;border:1px solid #e8edf3;border-radius:999px;padding:1px 8px">{{ p.group }}</span>
+                          </div>
+                          <sc-if value="{{ p.hasImpact }}" hint-placeholder-val="{{ true }}">
+                           <span style="font-size:12.5px;font-weight:500;color:{{ p.impactFg }};line-height:1.65">{{ p.impact }}</span>
+                          </sc-if>
+                          <sc-if value="{{ p.hasFields }}" hint-placeholder-val="{{ false }}">
+                            <div style="margin-top:6px;padding:14px;border-radius:12px;background:#f6f8fb;border:1px solid #eef2f7;display:grid;gap:12px;animation:otIn .18s ease-out">
+                              <div style="display:flex;align-items:center;gap:9px">
+                               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Details</span>
+                               <span style="flex:1;height:1px;background:#e8edf3"></span>
+                               <span style="font-size:10.5px;font-weight:500;color:#94a3b8">{{ p.fieldsDone }}</span>
+                              </div>
+                              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px">
+                                <sc-for list="{{ p.fields }}" as="fd" hint-placeholder-count="3">
+                                  <div style="display:grid;gap:5px;align-content:start">
+                                    <label style="font-size:11.5px;font-weight:700;color:#475569">{{ fd.label }}</label>
+                                    <sc-if value="{{ fd.isSelect }}" hint-placeholder-val="{{ false }}">
+                                      <select value="{{ fd.value }}" onChange="{{ fd.onInput }}" style="width:100%;min-height:40px;padding:0 10px;border-radius:10px;border:1px solid {{ fd.bd }};background:#ffffff;font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#0f172a;cursor:pointer;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                                        <sc-for list="{{ fd.options }}" as="o" hint-placeholder-count="4">
+                                          <option value="{{ o.v }}">{{ o.v }}</option>
+                                        </sc-for>
+                                      </select>
+                                    </sc-if>
+                                    <sc-if value="{{ fd.isText }}" hint-placeholder-val="{{ true }}">
+                                      <input type="text" value="{{ fd.value }}" onChange="{{ fd.onInput }}" placeholder="{{ fd.ph }}" style="width:100%;min-height:40px;padding:0 11px;border-radius:10px;border:1px solid {{ fd.bd }};background:#ffffff;font-size:13px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                                    </sc-if>
+                                    <sc-if value="{{ fd.hasNote }}" hint-placeholder-val="{{ false }}">
+                                     <span style="display:flex;align-items:flex-start;gap:6px;padding:8px 10px;border-radius:10px;background:{{ fd.noteBg }};border:1px solid {{ fd.noteBd }};font-size:11.5px;font-weight:500;color:{{ fd.noteFg }};line-height:1.6">
+                                       <span style="flex:none;font-weight:700">{{ fd.noteMark }}</span>{{ fd.note }}
+                                      </span>
+                                    </sc-if>
+                                  </div>
+                                </sc-for>
+                              </div>
+                            </div>
+                          </sc-if>
+                          <input type="text" value="{{ p.note }}" onChange="{{ p.onNote }}" placeholder="{{ p.notePh }}" style="width:100%;max-width:560px;min-height:38px;margin-top:2px;padding:0 12px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                        </div>
+                        <button type="button" onClick="{{ p.onRemove }}" title="Remove" style="width:34px;height:34px;flex:none;border-radius:10px;border:1px solid transparent;background:transparent;color:#94a3b8;font-size:13px;cursor:pointer" style-hover="background:#fef2f2;color:#b91c1c;border-color:#fecaca">✕</button>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ noPicked }}" hint-placeholder-val="{{ true }}">
+                  <div style="min-height:92px;border-radius:14px;border:1px dashed #e8edf3;display:grid;place-content:center;justify-items:center;gap:5px;padding:18px;text-align:center">
+                   <span style="font-size:13px;font-weight:500;color:#cbd5e1">No items recorded</span>
+                   <span style="font-size:12px;font-weight:400;color:#cbd5e1">Items you add via the search appear here, ordered by their effect on treatment</span>
+                  </div>
+                </sc-if>
+              </div>
+
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Interview</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Interview questions</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:600;color:{{ qsTagFg }};background:{{ qsTagBg }};border:1px solid {{ qsTagBd }};border-radius:999px;padding:2px 9px">{{ qsTag }}</span>
+            </div>
+              <div style="padding:0 20px 20px">
+                <div style="border:1px solid #e8edf3;border-radius:14px;overflow:hidden">
+                  <button type="button" onClick="{{ toggleQs }}" style="width:100%;display:flex;align-items:center;gap:11px;padding:13px 16px;background:{{ qsHeadBg }};border:none;border-bottom:{{ qsHeadBorder }};cursor:pointer;text-align:start">
+                   <span style="font-family:Inter,sans-serif;font-size:15px;font-weight:500;color:#94a3b8;width:12px">{{ qsChev }}</span>
+                   <span style="flex:1;min-width:0;font-size:13.5px;font-weight:500;color:#0f172a">{{ qsTitle }}</span>
+                   <span dir="ltr" style="unicode-bidi:isolate;flex:none;font-family:Inter,sans-serif;font-size:11.5px;font-weight:500;color:#94a3b8">{{ qsHint }}</span>
+                  </button>
+                  <sc-if value="{{ qsOpen }}" hint-placeholder-val="{{ true }}">
+                    <div>
+                      <sc-for list="{{ questions }}" as="q" hint-placeholder-count="11">
+                        <div style="padding:12px 16px;border-bottom:1px solid #f1f5f9;display:grid;gap:9px;background:{{ q.rowBg }}">
+                          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                           <span dir="ltr" style="unicode-bidi:isolate;width:26px;flex:none;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#cbd5e1">{{ q.num }}</span>
+                           <span style="flex:1;min-width:240px;font-size:13.5px;font-weight:500;line-height:1.6">{{ q.ar }}</span>
+                            <div style="display:inline-flex;padding:4px;gap:4px;background:#f1f5f9;border-radius:12px;flex:none">
+                              <button type="button" onClick="{{ q.onYes }}" style="min-height:36px;padding:0 18px;border-radius:9px;border:none;background:{{ q.yBg2 }};color:{{ q.yFg }};font-size:13px;font-weight:{{ q.yFw }};cursor:pointer;box-shadow:{{ q.ySh }}">Yes</button>
+                              <button type="button" onClick="{{ q.onNo }}" style="min-height:36px;padding:0 18px;border-radius:9px;border:none;background:{{ q.nBg2 }};color:{{ q.nFg }};font-size:13px;font-weight:{{ q.nFw }};cursor:pointer;box-shadow:{{ q.nSh }}">No</button>
+                            </div>
+                          </div>
+                          <sc-if value="{{ q.open }}" hint-placeholder-val="{{ false }}">
+                            <textarea rows="2" value="{{ q.detail }}" onChange="{{ q.onDetail }}" placeholder="{{ q.ph }}" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid #d97706;background:#fffbeb;font-size:13.5px;font-weight:500;color:#0f172a;line-height:1.7;resize:vertical;outline:none" style-focus="box-shadow:0 0 0 3px rgba(217,119,6,0.18)"></textarea>
+                          </sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCase }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gap:16px;animation:otIn .2s ease-out">
+          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+             <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f172a">Case</span>
+             <span style="font-size:12px;font-weight:400;color:#64748b">Case details</span>
+             <span style="margin-inline-start:auto;font-size:11.5px;font-weight:600;color:{{ caseFg }};background:{{ caseBg }};border:1px solid {{ caseBd }};border-radius:999px;padding:2px 10px">{{ caseTag }}</span>
+            </div>
+
+            <div style="padding:20px 0 4px">
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Chief complaint</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Complaint in the patient's words</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:500;color:#94a3b8">Every text is kept in the record</span>
+            </div>
+              <div style="padding:0 20px 20px;display:grid;gap:10px">
+               <span style="font-size:19px;font-weight:700;line-height:1.45">What is the patient complaining of?</span>
+                <textarea rows="3" value="{{ fComplaintText }}" onChange="{{ onComplaintText }}" placeholder="«I don't like the look of my front teeth, they have gaps and it shows when I talk"" style="width:100%;padding:15px 18px;border-radius:14px;border:1px solid #e8edf3;background:#ffffff;font-size:17px;font-weight:500;color:#0f172a;line-height:1.8;resize:vertical;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)"></textarea>
+               <span style="font-size:12px;font-weight:400;color:#64748b">Write it in their exact words — it is compared later with the treatment result to measure patient satisfaction.</span>
+              </div>
+
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Classify</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Classification — what the diagnostic engine needs</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-size:11px;font-weight:500;color:#94a3b8">Required</span>
+            </div>
+              <div style="padding:0 20px 20px;display:grid;gap:18px">
+                <div style="display:grid;gap:7px;max-width:440px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">Chief complaint <span style="color:#dc2626">*</span></label>
+                  <select value="{{ fComplaint }}" onChange="{{ onComplaint }}" style="width:100%;min-height:46px;padding:0 12px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-family:Inter,sans-serif;font-size:14.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                    <option value="">Choose the complaint…</option>
+                    <option value="Crowding">Crowding</option>
+                    <option value="Spacing">Spacing</option>
+                    <option value="Upper teeth protrusion">Upper teeth protrusion</option>
+                    <option value="Crossbite">Crossbite</option>
+                    <option value="Open bite">Open bite</option>
+                    <option value="Deep bite">Deep bite</option>
+                    <option value="Impacted tooth">Impacted tooth</option>
+                    <option value="Jaw asymmetry">Jaw asymmetry</option>
+                    <option value="TMJ pain">TMJ pain</option>
+                    <option value="Relapse after previous treatment">Relapse after previous treatment</option>
+                    <option value="Esthetic concern">Esthetic concern</option>
+                    <option value="Difficulty chewing">Difficulty chewing</option>
+                    <option value="Other">Other — type it</option>
+                  </select>
+                  <sc-if value="{{ cxOther }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" value="{{ fComplaintOther }}" onChange="{{ onComplaintOther }}" placeholder="Type the chief complaint" style="width:100%;min-height:44px;padding:0 13px;border-radius:12px;border:1px solid #2563eb;background:#ffffff;font-size:14px;font-weight:500;color:#0f172a;outline:none">
+                  </sc-if>
+                </div>
+                <div style="display:grid;gap:9px">
+                  <label style="font-size:12.5px;font-weight:700;color:#475569">Secondary complaints</label>
+                  <div style="display:flex;gap:7px;flex-wrap:wrap">
+                    <sc-for list="{{ secondary }}" as="c" hint-placeholder-count="12">
+                      <button type="button" onClick="{{ c.onClick }}" style="min-height:38px;padding:0 14px;border-radius:999px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-family:Inter,sans-serif;font-size:12.5px;font-weight:{{ c.fw }};cursor:pointer">{{ c.label }}</button>
+                    </sc-for>
+                    <sc-for list="{{ secondaryCustom }}" as="c" hint-placeholder-count="0">
+                      <button type="button" onClick="{{ c.onRemove }}" title="Remove" style="min-height:38px;padding:0 12px;border-radius:999px;border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px">{{ c.label }}<span style="color:#93c5fd;font-weight:500">✕</span></button>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;max-width:520px">
+                    <input type="text" value="{{ secDraft }}" onChange="{{ onSecDraft }}" onKeyDown="{{ onSecKey }}" placeholder="Complaint not listed? Type it and press Enter" style="flex:1;min-height:42px;padding:0 13px;border-radius:12px;border:1px dashed #cbd5e1;background:#f6f8fb;font-size:13.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-style:solid;border-color:#2563eb;background:#ffffff;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                    <button type="button" onClick="{{ onSecAdd }}" style="min-height:42px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13px;font-weight:700;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb;border-color:#cbd5e1">Add</button>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:300px 260px;gap:16px;align-items:start">
+                  <div style="display:grid;gap:7px">
+                    <label style="font-size:12.5px;font-weight:700;color:#475569">Provisional case type</label>
+                    <select value="{{ fType }}" onChange="{{ onType }}" style="width:100%;min-height:46px;padding:0 12px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-family:Inter,sans-serif;font-size:14.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none" style-focus="border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.15)">
+                      <option value="">Awaiting diagnosis</option>
+                      <option value="Class I malocclusion">Class I malocclusion</option>
+                      <option value="Class II malocclusion">Class II malocclusion</option>
+                      <option value="Class III malocclusion">Class III malocclusion</option>
+                      <option value="Severe crowding">Severe crowding</option>
+                      <option value="Anterior open bite">Anterior open bite</option>
+                      <option value="Skeletal asymmetry">Skeletal asymmetry</option>
+                      <option value="Other">Other — type it</option>
+                    </select>
+                    <sc-if value="{{ typeOther }}" hint-placeholder-val="{{ false }}">
+                      <input type="text" value="{{ fTypeOther }}" onChange="{{ onTypeOther }}" placeholder="Type the case type" style="width:100%;min-height:44px;padding:0 13px;border-radius:12px;border:1px solid #2563eb;background:#ffffff;font-size:14px;font-weight:500;color:#0f172a;outline:none">
+                    </sc-if>
+                  </div>
+                  <div style="display:grid;gap:7px">
+                    <label style="font-size:12.5px;font-weight:700;color:#475569">Case priority</label>
+                    <div style="display:inline-flex;padding:4px;gap:4px;background:#f1f5f9;border-radius:12px">
+                      <sc-for list="{{ triage }}" as="t" hint-placeholder-count="3">
+                        <button type="button" onClick="{{ t.onClick }}" style="flex:1;min-height:38px;border-radius:9px;border:none;background:{{ t.bg2 }};color:{{ t.fg }};font-size:13px;font-weight:{{ t.fw }};cursor:pointer;box-shadow:{{ t.sh }}">{{ t.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+               <span style="font-size:12px;font-weight:400;color:#64748b">The case type is finalised after diagnosis — leave it empty if unsure, and it shows in the table as "Awaiting diagnosis".</span>
+              </div>
+
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 12px">
+             <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Initial attachments</span>
+             <span style="font-size:11.5px;font-weight:400;color:#94a3b8">Initial attachments</span>
+             <span style="flex:1;height:1px;background:#eef2f7"></span>
+             <span style="flex:none;font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:{{ attFg }}" dir="ltr">{{ attTag }}</span>
+            </div>
+              <div style="padding:0 20px 20px;display:grid;gap:10px">
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                  <sc-for list="{{ slots }}" as="s" hint-placeholder-count="6">
+                    <button type="button" onClick="{{ s.onClick }}" style="min-height:96px;padding:14px;border-radius:14px;border:2px dashed {{ s.bd }};background:{{ s.bg }};cursor:pointer;display:grid;gap:5px;justify-items:center;align-content:center;text-align:center" style-hover="border-color:#2563eb">
+                     <span style="width:32px;height:32px;border-radius:10px;background:#ffffff;border:1px solid {{ s.bd }};color:{{ s.iconFg }};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500">{{ s.icon }}</span>
+                     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:#0f172a">{{ s.en }}</span>
+                     <span style="font-size:11px;font-weight:400;color:{{ s.noteFg }}">{{ s.note }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+               <span style="font-size:12px;font-weight:400;color:{{ stageNoteFg }}">{{ stageNote }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gap:16px;animation:otIn .2s ease-out">
+          <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#ffffff;border:1px solid #a7f3d0;border-radius:16px;padding:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+             <span style="width:32px;height:32px;flex:none;border-radius:50%;background:#059669;color:#ffffff;font-size:15px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">✓</span>
+              <div style="display:grid;gap:2px;min-width:0">
+               <span style="font-size:15px;font-weight:700">Case created</span>
+               <span style="font-size:13px;font-weight:400;color:#64748b">Case number <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">{{ caseId }}</span> · Stage <span style="font-weight:500;color:#0f172a">{{ initialStage }}</span></span>
+              </div>
+              <button type="button" onClick="{{ onOpenRecords }}" style="margin-inline-start:auto;min-height:44px;padding:0 20px;border-radius:12px;background:#2563eb;color:#ffffff;border:1px solid #2563eb;font-size:14px;font-weight:700;display:inline-flex;align-items:center;cursor:pointer" style-hover="background:#1d4ed8">Open the case file</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasImpacts }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#ffffff;border:1px solid #fde68a;border-radius:16px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:11px;padding:13px 18px;background:#fffbeb;border-bottom:1px solid #fde68a">
+               <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#fffbeb;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#d97706"></span></span>
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f172a">Carried into diagnosis</span>
+               <span style="font-size:12px;font-weight:400;color:#64748b">items carry over to diagnosis as constraints</span>
+              </div>
+              <sc-for list="{{ impacts }}" as="i" hint-placeholder-count="2">
+                <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 18px;border-bottom:1px solid #f1f5f9">
+                 <span style="width:20px;height:20px;flex:none;margin-top:2px;border-radius:12px;background:{{ i.markBg }};border:1px solid {{ i.markBd }};color:{{ i.markFg }};font-family:Inter,sans-serif;font-size:10.5px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">{{ i.mark }}</span>
+                  <div style="display:grid;gap:2px;min-width:0">
+                   <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;color:#0f172a">{{ i.en }}</span>
+                   <span style="font-size:12.5px;font-weight:400;color:{{ i.impactFg }};line-height:1.65">{{ i.impact }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-for list="{{ review }}" as="r" hint-placeholder-count="3">
+            <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:11px;padding:12px 18px;background:#f6f8fb;border-bottom:1px solid #e8edf3">
+               <span style="width:34px;height:34px;flex:none;border-radius:11px;background:{{ r.accentBg }};display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:{{ r.accent }}"></span></span>
+               <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#0f172a">{{ r.en }}</span>
+               <span style="font-size:12px;font-weight:400;color:#64748b">{{ r.ar }}</span>
+                <button type="button" onClick="{{ r.onEdit }}" style="margin-inline-start:auto;min-height:34px;padding:0 13px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb;border-color:#cbd5e1">Edit</button>
+              </div>
+              <sc-for list="{{ r.rows }}" as="x" hint-placeholder-count="5">
+                <div style="display:flex;align-items:flex-start;gap:14px;padding:11px 18px;border-bottom:1px solid #f1f5f9">
+                 <span style="width:190px;flex:none;font-size:13px;font-weight:400;color:#64748b">{{ x.k }}</span>
+                 <span style="flex:1;min-width:0;font-size:13.5px;font-weight:{{ x.fw }};color:{{ x.fg }};line-height:1.65">{{ x.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+    </main>
+
+    <div style="position:sticky;bottom:0;z-index:30;background:#ffffff;border-top:1px solid #e8edf3;padding:11px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 -6px 20px rgba(15,23,42,0.06)">
+     <span style="width:22px;height:22px;flex:none;border-radius:50%;background:{{ barDot }};color:#ffffff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">{{ barIcon }}</span>
+      <div style="display:grid;gap:1px;min-width:0">
+       <span style="font-size:13.5px;font-weight:700;color:#0f172a">{{ barTitle }}</span>
+       <span style="font-size:12px;font-weight:400;color:#64748b">{{ barNote }}</span>
+      </div>
+      <div style="margin-inline-start:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <sc-if value="{{ hasPrev }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ prevStep }}" style="min-height:42px;padding:0 16px;border-radius:12px;background:#ffffff;color:#0f172a;border:1px solid #e8edf3;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#f6f8fb;border-color:#cbd5e1">Back</button>
+        </sc-if>
+        <button type="button" onClick="{{ nextStep }}" style="min-height:42px;padding:0 20px;border-radius:12px;background:{{ nextBg }};color:{{ nextFg }};border:1px solid {{ nextBd }};font-size:14px;font-weight:700;cursor:{{ nextCursor }}">{{ nextLabel }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900},
+  &quot;embedded&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;boolean&quot;},
+  &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string) =&gt; void&quot;},
+  &quot;onCaseCreated&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(caseTuple: any[]) =&gt; void&quot;}
+}">
+class Component extends DCLogic {
+  stepDefs = [
+    ['Patient', 'Patient identity'],
+    ['History', 'Medical and dental history'],
+    ['Case', 'Case details'],
+    ['Review', 'Review and save']
+  ];
+
+  // [en, ar, group, impact, tone]  tone: 2=hard constraint, 1=caution, 0=note, -1=no impact
+  get K() { return window.OrthoKnowledge || {}; }
+  get catalog() { return this.K.conditions || []; }
+  get fieldSets() { return this.K.fieldSets || {}; }
+
+  get qDefs() { return this.K.interviewQuestions || []; }
+
+  get secondaryDefs() { return this.K.complaints || []; }
+
+  get slotDefs() { return (this.K.attachments || []).map(function (a) { return [a[0], a[1]]; }); }
+
+  state = {
+    collapsed: false, step: 0, f: {}, gender: null, triage: 'Normal', attach: {}, dupDismissed: false, saved: false,
+    savedNote: 'Draft — saved automatically',
+    clean: null, yn: {}, detail: {}, qsOpen: true, fieldVals: {},
+    q: '', picked: [], customs: [], notes: {},
+    secChips: {}, secCustom: [], secDraft: ''
+  };
+
+  componentDidMount() {
+    if (!window.OrthoKnowledge) {
+      this._t = setInterval(function () {
+        if (window.OrthoKnowledge) { clearInterval(this._t); this.forceUpdate(); }
+      }.bind(this), 60);
+    }
+  }
+
+  componentWillUnmount() { clearInterval(this._t); }
+
+  set(k, v) { this.setState(s => ({ f: Object.assign({}, s.f, { [k]: v }) })); }
+  fld(k) { return this.state.f[k] || ''; }
+
+  age() {
+    const d = this.fld('dob');
+    if (!d) return null;
+    const b = new Date(d);
+    if (isNaN(b.getTime())) return null;
+    const now = new Date('2026-08-26');
+    let y = now.getFullYear() - b.getFullYear();
+    let m = now.getMonth() - b.getMonth();
+    if (now.getDate() < b.getDate()) m--;
+    if (m < 0) { y--; m += 12; }
+    return { y, m };
+  }
+
+  seg(on) {
+    return on ? { bg: '#ffffff', bd: '#e8edf3', fg: '#0f172a', fw: 700 }
+              : { bg: 'transparent', bd: 'transparent', fg: '#64748b', fw: 500 };
+  }
+
+  toneStyle(t) {
+    if (t === 2) return { bg: '#fef2f2', bd: '#fecaca', fg: '#b91c1c', mark: '!', rowBg: '#fffbfb', impact: '#b91c1c' };
+    if (t === 1) return { bg: '#fffbeb', bd: '#fde68a', fg: '#b45309', mark: '!', rowBg: '#ffffff', impact: '#b45309' };
+    if (t === 0) return { bg: '#eff6ff', bd: '#bfdbfe', fg: '#1d4ed8', mark: 'i', rowBg: '#ffffff', impact: '#1d4ed8' };
+    return { bg: '#f6f8fb', bd: '#e8edf3', fg: '#94a3b8', mark: '·', rowBg: '#ffffff', impact: '#64748b' };
+  }
+
+  fieldsFor(idx) {
+    const set = this.fieldSets[this.catalog[idx][5]] || [];
+    return set.map(fd => {
+      const k = 'f' + idx + '-' + fd[0];
+      const val = this.state.fieldVals[k] || '';
+      const filled = val !== '' && val !== '—';
+      const nd = (fd[4] || {})[val];
+      const tone = nd ? nd[1] : -1;
+      return {
+        label: fd[1], value: val,
+        isSelect: fd[2] === 's', isText: fd[2] !== 's',
+        ph: fd[2] === 's' ? '' : fd[3],
+        options: (fd[2] === 's' ? fd[3] : []).map(o => ({ v: o })),
+        bd: nd ? (tone === 2 ? '#fecaca' : '#fde68a') : filled ? '#a7f3d0' : '#e8edf3',
+        hasNote: !!nd, note: nd ? nd[0] : '',
+        noteMark: tone === 2 ? '✕' : tone === 1 ? '!' : 'i',
+        noteFg: tone === 2 ? '#b91c1c' : tone === 1 ? '#b45309' : '#1d4ed8',
+        noteBg: tone === 2 ? '#fef2f2' : tone === 1 ? '#fffbeb' : '#eff6ff',
+        noteBd: tone === 2 ? '#fecaca' : tone === 1 ? '#fde68a' : '#bfdbfe',
+        filled,
+        onInput: e => this.setState(st => ({ fieldVals: Object.assign({}, st.fieldVals, { [k]: e.target.value }) }))
+      };
+    });
+  }
+
+  constraints() {
+    var b = this.K.buildConstraints;
+    return b ? b(this.state.picked, this.state.fieldVals) : [];
+  }
+
+  derived() {
+    return this.constraints().filter(function (c) { return c.field; }).map(function (c) {
+      return { en: c.source, sub: c.field + ': ' + c.value, impact: c.text, tone: c.tone, blocks: c.blocks };
+    });
+  }
+
+  blocked() {
+    var f = this.K.blockedCapabilities;
+    return f ? f(this.constraints()) : {};
+  }
+
+  matches() {
+    const q = this.state.q.trim().toLowerCase();
+    if (q.length < 2) return [];
+    return this.catalog
+      .map((c, i) => ({ c, i }))
+      .filter(x => this.state.picked.indexOf(x.i) < 0 &&
+        (x.c[0].toLowerCase().indexOf(q) >= 0 || x.c[1].indexOf(this.state.q.trim()) >= 0 || x.c[2].toLowerCase().indexOf(q) >= 0))
+      .slice(0, 6);
+  }
+
+  addIdx(i) {
+    this.setState(s => ({ picked: s.picked.indexOf(i) < 0 ? s.picked.concat([i]) : s.picked, q: '' }));
+  }
+
+  addCustom = () => {
+    const t = this.state.q.trim();
+    if (!t) return;
+    this.setState(s => ({ customs: s.customs.indexOf(t) < 0 ? s.customs.concat([t]) : s.customs, q: '' }));
+  };
+
+  renderVals() {
+    const st = this.state.step;
+    const a = this.age();
+    const minor = a !== null && a.y < 18;
+    const name = this.fld('name');
+    const hasName = name.trim().length > 2;
+    const complaint = this.fld('complaint');
+
+    const reqLeft = [hasName, a !== null, this.state.gender !== null]
+      .concat(minor ? [!!this.fld('gname').trim(), !!this.fld('gphone').trim()] : [])
+      .filter(x => !x).length;
+    const patientOk = reqLeft === 0;
+    const answered = this.qDefs.filter(d => this.state.yn[d[0]] !== undefined).length;
+    const historyOk = this.state.clean === true || answered === this.qDefs.length;
+    const caseOk = complaint !== '' && (complaint !== 'Other' || this.fld('complaintOther').trim() !== '');
+    const stepOk = [patientOk, historyOk, caseOk, true];
+
+    const pickedRows = this.state.picked
+      .map(i => ({ i, c: this.catalog[i] }))
+      .sort((x, y) => y.c[4] - x.c[4]);
+
+    const allPicked = pickedRows.map(x => {
+      const ts = this.toneStyle(x.c[4]);
+      const k = 'c' + x.i;
+      const flds = this.fieldsFor(x.i);
+      const fDone = flds.filter(z => z.filled).length;
+      return {
+        en: x.c[0], ar: x.c[1], group: x.c[2],
+        hasFields: flds.length > 0, fields: flds,
+        fieldsDone: fDone + ' / ' + flds.length,
+        notePh: flds.length ? 'Additional note' : 'Details — dose, date, treating physician',
+        hasImpact: x.c[3] !== '', impact: x.c[3], impactFg: ts.impact,
+        mark: ts.mark, markBg: ts.bg, markBd: ts.bd, markFg: ts.fg, rowBg: ts.rowBg,
+        note: this.state.notes[k] || '',
+        onNote: e => this.setState(s => ({ notes: Object.assign({}, s.notes, { [k]: e.target.value }) })),
+        onRemove: () => this.setState(s => ({ picked: s.picked.filter(z => z !== x.i) }))
+      };
+    }).concat(this.state.customs.map(t => {
+      const ts = this.toneStyle(-1);
+      return {
+        en: t, ar: 'Custom item', group: 'Custom',
+        hasFields: false, fields: [], fieldsDone: '', notePh: 'Item details',
+        hasImpact: false, impact: '', impactFg: ts.impact,
+        mark: '+', markBg: '#eff6ff', markBd: '#bfdbfe', markFg: '#1d4ed8', rowBg: '#ffffff',
+        note: this.state.notes['x' + t] || '',
+        onNote: e => this.setState(s => ({ notes: Object.assign({}, s.notes, { ['x' + t]: e.target.value }) })),
+        onRemove: () => this.setState(s => ({ customs: s.customs.filter(z => z !== t) }))
+      };
+    }));
+
+    const derivedRows = this.derived();
+    const impactRows = pickedRows.filter(x => x.c[4] >= 1).map(x => {
+      const ts = this.toneStyle(x.c[4]);
+      return { en: x.c[0], impact: x.c[3], impactFg: ts.impact, mark: ts.mark, markBg: ts.bg, markBd: ts.bd, markFg: ts.fg };
+    }).concat(derivedRows.map(d => {
+      const ts = this.toneStyle(d.tone);
+      return { en: d.en + ' — ' + d.sub, impact: d.impact, impactFg: ts.impact, mark: ts.mark, markBg: ts.bg, markBd: ts.bd, markFg: ts.fg };
+    }));
+
+    const yesQs = this.qDefs.filter(d => this.state.yn[d[0]] === true).length;
+    const totalRecorded = this.state.picked.length + this.state.customs.length;
+    const blockers = pickedRows.filter(x => x.c[4] === 2).length + derivedRows.filter(d => d.tone === 2).length;
+    const res = this.matches();
+    const qLen = this.state.q.trim().length;
+
+    const cS = this.seg(this.state.clean === true), nS = this.seg(this.state.clean === false);
+    const mS = this.seg(this.state.gender === 'Male'), fS = this.seg(this.state.gender === 'Female');
+
+    const secList = this.state.secCustom.concat(Object.keys(this.state.secChips).filter(k => this.state.secChips[k]));
+    const finalComplaint = complaint === 'Other' ? this.fld('complaintOther') : complaint;
+    const finalType = this.fld('type') === 'Other' ? this.fld('typeOther') : this.fld('type');
+    const anyAttach = Object.keys(this.state.attach).filter(k => this.state.attach[k]).length > 0;
+    const rowsOf = arr => arr.map(x => ({ k: x[0], v: x[1] || '— Not recorded', fw: x[1] ? 500 : 300, fg: x[1] ? '#0f172a' : '#94a3b8' }));
+
+    const initials = hasName ? name.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('.') : '?';
+
+    return {
+      showAside: !this.props.embedded,
+      onBreadcrumb: ev => { if (ev) ev.preventDefault(); if (this.props.onNavigate) this.props.onNavigate('dashboard'); else window.location.href = 'OrthoTrack Case Dashboard v2.dc.html'; },
+      onOpenRecords: () => { if (this.props.onNavigate) this.props.onNavigate('overview', { name: hasName ? name : 'New patient', id: 'ORT-2026-0149',
+        meta: (a ? a.y + 'y' : '') + (this.state.gender ? ' · ' + this.state.gender : '') + (finalComplaint ? ' · ' + finalComplaint : ''),
+        photo: 'assets/p02.jpeg', stage: anyAttach ? 'Records' : 'Consultation', priority: this.state.triage }); else window.location.href = 'OrthoTrack Records Collection v3.dc.html'; },
+      sideW: this.state.collapsed ? '76px' : '244px',
+      labelOp: this.state.collapsed ? 0 : 1,
+      sideIcon: this.state.collapsed ? '›' : '‹',
+      toggleSide: () => this.setState(s => ({ collapsed: !s.collapsed })),
+      savedNote: this.state.savedNote,
+
+      avatar: initials,
+      avBg: hasName ? '#eff6ff' : '#f6f8fb',
+      avBd: hasName ? '#bfdbfe' : '#e8edf3',
+      avFg: hasName ? '#1d4ed8' : '#cbd5e1',
+      hdrName: hasName ? name : 'New patient',
+      hdrFg: hasName ? '#0f172a' : '#cbd5e1',
+      hdrId: this.state.saved ? 'ORT-2026-0149' : 'Case number after saving',
+      hdrAge: a === null ? 'Age not set' : a.y + ' years' + (this.state.gender ? ' · ' + this.state.gender : ''),
+      showMinor: minor,
+      showFlags: blockers > 0 || yesQs > 0,
+      flagText: blockers > 0 ? blockers + ' treatment constraint' : yesQs + ' positive answer',
+      showClean: this.state.clean === true && totalRecorded === 0,
+      hasComplaint: finalComplaint !== '',
+      hdrComplaint: finalComplaint,
+
+      steps: this.stepDefs.map((s, i) => {
+        const cur = i === st, ok = stepOk[i] && i < st;
+        return {
+          num: String(i + 1), en: s[0], ar: s[1],
+          numBg: cur ? '#2563eb' : ok ? '#ecfdf5' : '#ffffff',
+          numBd: cur ? '#2563eb' : ok ? '#a7f3d0' : '#e8edf3',
+          numFg: cur ? '#ffffff' : ok ? '#047857' : '#94a3b8',
+          enFg: cur ? '#0f172a' : '#475569',
+          arFg: cur ? '#64748b' : '#94a3b8',
+          barBg: cur ? '#2563eb' : ok ? '#a7f3d0' : '#e8edf3',
+          onClick: () => this.setState({ step: i })
+        };
+      }),
+      isPatient: st === 0, isHistory: st === 1, isCase: st === 2, isReview: st === 3,
+
+      fName: name, onName: e => this.set('name', e.target.value),
+      nameBd: '#e8edf3',
+      fDob: this.fld('dob'), onDob: e => this.set('dob', e.target.value),
+
+      ageText: a === null ? 'Age is calculated from the date of birth' : a.y + ' years ' + a.m + ' months' + (minor ? ' · Minor' : ' · Adult'),
+      ageFg: a === null ? '#94a3b8' : minor ? '#1d4ed8' : '#475569',
+      ageBg: a === null ? '#f6f8fb' : minor ? '#eff6ff' : '#f6f8fb',
+      ageBd: a === null ? '#e8edf3' : minor ? '#bfdbfe' : '#e8edf3',
+      reqText: reqLeft ? reqLeft + ' required field remaining' : '✓ All required fields complete',
+      reqFg: reqLeft ? '#b45309' : '#047857',
+      notMinor: !minor,
+      gEmpty: a === null ? 'Appears automatically if the age is under 18' : 'Not required — the patient is an adult',
+      gBandBg: minor ? '#fcfdff' : '#ffffff',
+      gTag: minor ? 'Required' : a === null ? 'By age' : 'Not required',
+      gTagFg: minor ? '#1d4ed8' : '#94a3b8',
+      gTagBg: minor ? '#eff6ff' : '#f6f8fb',
+      gTagBd: minor ? '#bfdbfe' : '#e8edf3',
+      maleBg2: this.state.gender === 'Male' ? '#ffffff' : 'transparent',
+      maleSh: this.state.gender === 'Male' ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+      maleFg: mS.fg, maleFw: mS.fw,
+      femBg2: this.state.gender === 'Female' ? '#ffffff' : 'transparent',
+      femSh: this.state.gender === 'Female' ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+      femFg: fS.fg, femFw: fS.fw,
+      onMale: () => this.setState({ gender: 'Male' }),
+      onFemale: () => this.setState({ gender: 'Female' }),
+      fPhone: this.fld('phone'), onPhone: e => this.set('phone', e.target.value),
+      fEmail: this.fld('email'), onEmail: e => this.set('email', e.target.value),
+      fCity: this.fld('city'), onCity: e => this.set('city', e.target.value),
+      fExt: this.fld('ext'), onExt: e => this.set('ext', e.target.value),
+      fRef: this.fld('ref'), onRef: e => this.set('ref', e.target.value),
+      isMinor: minor,
+      fGName: this.fld('gname'), onGName: e => this.set('gname', e.target.value),
+
+      fGRel: this.fld('grel'), onGRel: e => this.set('grel', e.target.value),
+      gRelOther: this.fld('grel') === 'Other',
+      fGRelOther: this.fld('grelOther'), onGRelOther: e => this.set('grelOther', e.target.value),
+      fGPhone: this.fld('gphone'), onGPhone: e => this.set('gphone', e.target.value),
+
+      dupOpen: hasName && name.indexOf('إيهاب') === 0 && !this.state.dupDismissed,
+      dismissDup: () => this.setState({ dupDismissed: true }),
+
+      cleanYBg2: this.state.clean === true ? '#ffffff' : 'transparent',
+      cleanYSh: this.state.clean === true ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+      cleanYFg: cS.fg, cleanYFw: cS.fw,
+      cleanNBg2: this.state.clean === false ? '#ffffff' : 'transparent',
+      cleanNSh: this.state.clean === false ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+      cleanNFg: nS.fg, cleanNFw: nS.fw,
+      onClean: () => {
+        const all = {};
+        this.qDefs.forEach(d => { all[d[0]] = false; });
+        this.setState({ clean: true, yn: all, qsOpen: false });
+      },
+      onNotClean: () => this.setState({ clean: false, yn: {}, qsOpen: true }),
+
+      q: this.state.q,
+      onQ: e => this.setState({ q: e.target.value }),
+      onQKey: e => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        const m = this.matches();
+        if (m.length) this.addIdx(m[0].i); else this.addCustom();
+      },
+      qBd: qLen >= 2 ? '#2563eb' : '#e8edf3',
+      hasResults: res.length > 0,
+      noResults: qLen >= 2 && res.length === 0,
+      results: res.map(x => {
+        const ts = this.toneStyle(x.c[4]);
+        return { en: x.c[0], ar: x.c[1], group: x.c[2], bg: '#ffffff',
+          mark: ts.mark, tagBg: ts.bg, tagBd: ts.bd, tagFg: ts.fg,
+          onAdd: () => this.addIdx(x.i) };
+      }),
+      onAddCustom: this.addCustom,
+
+      hasPicked: allPicked.length > 0,
+      noPicked: allPicked.length === 0,
+      picked: allPicked,
+      recTag: totalRecorded ? totalRecorded + ' recorded' : 'none yet',
+      recFg: totalRecorded ? '#475569' : '#cbd5e1',
+      hasBlockers: blockers > 0,
+      blockerCount: blockers + ' treatment constraint',
+      derivedCount: derivedRows.length,
+      histTag: this.state.clean === null ? 'Not started' : historyOk ? '✓ Complete' : (this.qDefs.length - answered) + ' question remaining',
+      histFg: this.state.clean === null ? '#94a3b8' : historyOk ? '#047857' : '#b45309',
+      histBg: this.state.clean === null ? '#f6f8fb' : historyOk ? '#ecfdf5' : '#fffbeb',
+      histBd: this.state.clean === null ? '#e8edf3' : historyOk ? '#a7f3d0' : '#fde68a',
+      qIconFg: qLen >= 2 ? '#2563eb' : '#cbd5e1',
+      qsTitle: this.state.clean === true && yesQs === 0 ? 'All eleven questions answered "No"' : yesQs ? yesQs + ' a positive answer needing detail' : 'eleven interview questions',
+      qsHint: answered + ' / ' + this.qDefs.length,
+
+      qsOpen: this.state.qsOpen,
+      qsChev: this.state.qsOpen ? '−' : '+',
+      qsHeadBg: this.state.qsOpen ? '#f6f8fb' : '#ffffff',
+      qsHeadBorder: this.state.qsOpen ? '1px solid #e8edf3' : 'none',
+      qsTag: historyOk ? '✓' : (this.qDefs.length - answered) + ' remaining',
+      qsTagFg: historyOk ? '#047857' : '#b45309',
+      qsTagBg: historyOk ? '#ecfdf5' : '#fffbeb',
+      qsTagBd: historyOk ? '#a7f3d0' : '#fde68a',
+      toggleQs: () => this.setState(s => ({ qsOpen: !s.qsOpen })),
+      questions: this.qDefs.map((d, i) => {
+        const k = d[0], v = this.state.yn[k];
+        const y = this.seg(v === true), n = this.seg(v === false);
+        return {
+          num: String(i + 1).padStart(2, '0'), ar: d[1], ph: d[2],
+          open: v === true, detail: this.state.detail[k] || '',
+          rowBg: v === true ? '#fffbeb' : '#ffffff',
+          yBg2: v === true ? '#ffffff' : 'transparent',
+          ySh: v === true ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+          yFg: y.fg, yFw: y.fw,
+          nBg2: v === false ? '#ffffff' : 'transparent',
+          nSh: v === false ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+          nFg: n.fg, nFw: n.fw,
+          onYes: () => this.setState(s => ({ yn: Object.assign({}, s.yn, { [k]: true }), clean: false })),
+          onNo: () => this.setState(s => ({ yn: Object.assign({}, s.yn, { [k]: false }) })),
+          onDetail: e => this.setState(s => ({ detail: Object.assign({}, s.detail, { [k]: e.target.value }) }))
+        };
+      }),
+
+      fComplaintText: this.fld('complaintText'), onComplaintText: e => this.set('complaintText', e.target.value),
+      fComplaint: complaint, onComplaint: e => this.set('complaint', e.target.value),
+      cxBd: caseOk ? '#a7f3d0' : '#e8edf3',
+      cxOther: complaint === 'Other',
+      fComplaintOther: this.fld('complaintOther'), onComplaintOther: e => this.set('complaintOther', e.target.value),
+      secondary: this.secondaryDefs.map(o => {
+        const on = !!this.state.secChips[o];
+        return { label: o,
+          bg: on ? '#eff6ff' : '#ffffff', bd: on ? '#bfdbfe' : '#e8edf3',
+          fg: on ? '#1d4ed8' : '#475569', fw: on ? 700 : 500,
+          onClick: () => this.setState(s => ({ secChips: Object.assign({}, s.secChips, { [o]: !s.secChips[o] }) })) };
+      }),
+      secondaryCustom: this.state.secCustom.map(label => ({ label,
+        onRemove: () => this.setState(s => ({ secCustom: s.secCustom.filter(x => x !== label) })) })),
+      secDraft: this.state.secDraft,
+      onSecDraft: e => this.setState({ secDraft: e.target.value }),
+      onSecKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.addSec(); } },
+      onSecAdd: () => this.addSec(),
+      fType: this.fld('type'), onType: e => this.set('type', e.target.value),
+      typeOther: this.fld('type') === 'Other',
+      fTypeOther: this.fld('typeOther'), onTypeOther: e => this.set('typeOther', e.target.value),
+      triage: ['Normal', 'Monitor', 'Urgent'].map(t => {
+        const on = this.state.triage === t, c = this.seg(on);
+        return { label: t, bg2: on ? '#ffffff' : 'transparent', sh: on ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
+          fg: c.fg, fw: c.fw, onClick: () => this.setState({ triage: t }) };
+      }),
+      caseTag: caseOk ? '✓ Complete' : 'The chief complaint is required',
+      caseFg: caseOk ? '#047857' : '#b45309',
+      caseBg: caseOk ? '#ecfdf5' : '#fffbeb',
+      caseBd: caseOk ? '#a7f3d0' : '#fde68a',
+      attTag: anyAttach ? Object.keys(this.state.attach).filter(k => this.state.attach[k]).length + ' / 6' : 'optional',
+      attFg: anyAttach ? '#475569' : '#cbd5e1',
+      stageNote: anyAttach
+        ? 'Because attachments exist, the case starts directly at the "Records" stage.'
+        : 'With no attachments, the case starts at the "Consultation" stage and records can be uploaded later.',
+      stageNoteFg: anyAttach ? '#047857' : '#64748b',
+      slots: this.slotDefs.map(s => {
+        const on = !!this.state.attach[s[0]];
+        return { en: s[0], note: on ? 'Uploaded — click to replace' : s[1],
+          bd: on ? '#a7f3d0' : '#cbd5e1', bg: on ? '#ecfdf5' : '#f6f8fb',
+          icon: on ? '✓' : '+', iconFg: on ? '#047857' : '#64748b',
+          noteFg: on ? '#047857' : '#64748b',
+          onClick: () => this.setState(s2 => ({ attach: Object.assign({}, s2.attach, { [s[0]]: !s2.attach[s[0]] }) })) };
+      }),
+
+      saved: this.state.saved,
+      caseId: 'ORT-2026-0149',
+      initialStage: anyAttach ? 'Records' : 'Consultation',
+      hasImpacts: impactRows.length > 0,
+      impacts: impactRows,
+      review: [
+        { en: 'Patient', ar: 'Patient identity', accent: '#2563eb', accentBg: '#eff6ff', onEdit: () => this.setState({ step: 0 }),
+          rows: rowsOf([
+            ['Full name', name],
+            ['Date of birth · age', this.fld('dob') ? this.fld('dob') + (a ? ' · ' + a.y + ' years' : '') : ''],
+            ['Sex', this.state.gender],
+            ['Guardian', minor ? [this.fld('gname'), this.fld('grel') === 'Other' ? this.fld('grelOther') : this.fld('grel'), this.fld('gphone')].filter(Boolean).join(' · ') : 'Not required — adult'],
+            ['Contact', [this.fld('phone'), this.fld('email')].filter(Boolean).join(' · ')],
+            ['City · external file', [this.fld('city'), this.fld('ext')].filter(Boolean).join(' · ')],
+            ['Referring dentist', this.fld('ref')]
+          ]) },
+        { en: 'History', ar: 'Medical and dental history', accent: '#d97706', accentBg: '#fffbeb', onEdit: () => this.setState({ step: 1 }),
+          rows: rowsOf([
+            ['General condition', this.state.clean === true && totalRecorded === 0 ? 'Healthy — no medical or dental history' : this.state.clean === null ? '' : totalRecorded + ' items recorded'],
+            ['items recorded', allPicked.map(p => p.en).join(' · ')],
+            ['treatment constraints', blockers ? impactRows.filter((r, i) => pickedRows[i] && pickedRows[i].c[4] === 2).map(r => r.en).join(' · ') : 'None'],
+            ['positive answers', yesQs ? this.qDefs.filter(d => this.state.yn[d[0]] === true).map(d => d[1].replace('Is there ', '').replace('?', '') + (this.state.detail[d[0]] ? ' — ' + this.state.detail[d[0]] : '')).join(' · ') : 'None'],
+            ['Questions answered', answered + ' of ' + this.qDefs.length]
+          ]) },
+        { en: 'Case', ar: 'Case details', accent: '#059669', accentBg: '#ecfdf5', onEdit: () => this.setState({ step: 2 }),
+          rows: rowsOf([
+            ['In the patient\'s words', this.fld('complaintText')],
+            ['Chief complaint', finalComplaint],
+            ['Secondary complaints', secList.join(' · ')],
+            ['Provisional case type', finalType || 'Awaiting diagnosis'],
+            ['Priority', this.state.triage],
+            ['Initial attachments', Object.keys(this.state.attach).filter(k => this.state.attach[k]).join(' · ')],
+            ['Initial stage', anyAttach ? 'Records — attachments exist' : 'Consultation — no attachments yet']
+          ]) }
+      ],
+
+      barDot: st === 3 ? (this.state.saved ? '#059669' : '#2563eb') : stepOk[st] ? '#059669' : '#d97706',
+      barIcon: st === 3 ? (this.state.saved ? '✓' : '4') : stepOk[st] ? '✓' : String(st + 1),
+      barTitle: st === 3
+        ? (this.state.saved ? 'Case saved' : 'Review the details, then save')
+        : stepOk[st] ? this.stepDefs[st][1] + ' — Complete' : this.stepDefs[st][1] + ' — missing',
+      barNote: st === 3
+        ? (this.state.saved ? 'The case number is generated now and cannot be changed' : 'The case number is generated only on final save')
+        : 'Step ' + (st + 1) + ' of 4 — the draft is saved automatically and does not appear in the case table',
+      hasPrev: st > 0,
+      prevStep: () => this.setState(s => ({ step: Math.max(0, s.step - 1) })),
+      nextStep: () => {
+        if (st === 3) {
+          if (!this.state.saved) {
+            this.setState({ saved: true, savedNote: 'Saved · ORT-2026-0149' });
+            if (this.props.onCaseCreated) {
+              this.props.onCaseCreated([
+                hasName ? name : 'New patient', 'assets/p02.jpeg',
+                (a ? a.y + 'y' : '') + (this.state.gender ? ' · ' + this.state.gender : '') + (finalComplaint ? ' · ' + finalComplaint : ''),
+                'ORT-2026-0149', anyAttach ? 'Records' : 'Consultation', 'slate',
+                anyAttach ? 'Complete the uploaded records' : 'Upload photos and radiographs', 1, '2026-08-27', this.state.triage,
+                {
+                  dob: this.fld('dob'), gender: this.state.gender || '',
+                  ageText: a ? (a.y + ' years ' + a.m + ' months') : '',
+                  guardianName: this.fld('gname'), guardianPhone: this.fld('gphone'),
+                  city: this.fld('city'), ext: this.fld('ext'),
+                  phone: this.fld('phone'), email: this.fld('email'),
+                  complaintText: this.fld('complaintText'), complaint: finalComplaint,
+                  secondary: secList, type: finalType, priority: this.state.triage,
+                  conditions: allPicked.map(p => p.en), yesCount: yesQs,
+                  clean: this.state.clean === true && totalRecorded === 0
+                }
+              ]);
+            }
+          }
+          return;
+        }
+        if (!stepOk[st]) return;
+        this.setState(s => ({ step: Math.min(3, s.step + 1) }));
+      },
+      nextLabel: st === 3 ? (this.state.saved ? '✓ Saved' : 'Save the case') : 'Next',
+      nextBg: st === 3 ? (this.state.saved ? '#ecfdf5' : '#2563eb') : stepOk[st] ? '#2563eb' : '#f1f5f9',
+      nextFg: st === 3 ? (this.state.saved ? '#047857' : '#ffffff') : stepOk[st] ? '#ffffff' : '#94a3b8',
+      nextBd: st === 3 ? (this.state.saved ? '#a7f3d0' : '#2563eb') : stepOk[st] ? '#2563eb' : '#e8edf3',
+      nextCursor: st === 3 || stepOk[st] ? 'pointer' : 'not-allowed'
+    };
+  }
+
+  addSec() {
+    const t = this.state.secDraft.trim();
+    if (!t) return;
+    this.setState(s => ({ secCustom: s.secCustom.indexOf(t) < 0 ? s.secCustom.concat([t]) : s.secCustom, secDraft: '' }));
+  }
+}
+</script>
+</body>
+</html>

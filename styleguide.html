@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OrthoTrack DS v1 styleguide</title>
+<link rel="stylesheet" href="assets/vendor/css/google-inter-300-700.css">
+<link rel="stylesheet" href="assets/vendor/css/thmanyah-sans.css">
+<link rel="stylesheet" href="assets/ds/tokens.css">
+<link rel="stylesheet" href="assets/ds/components.css">
+<style>
+  /* Styleguide page chrome only. Components never depend on this block. */
+  body {
+    margin: 0;
+    background: var(--ot-page);
+    color: var(--ot-ink);
+    font-family: var(--ot-font-sans);
+    font-size: var(--ot-text-14);
+    line-height: var(--ot-leading-body);
+  }
+  .sg-wrap {
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--ot-space-9);
+    max-inline-size: 1040px;
+    margin-inline: auto;
+    padding-block: var(--ot-space-8) var(--ot-space-10);
+    padding-inline: var(--ot-space-6);
+    min-inline-size: 0;
+  }
+  .sg-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ot-space-6);
+    min-inline-size: 0;
+  }
+  .sg-h1 {
+    margin: 0;
+    font-size: var(--ot-text-22);
+    font-weight: var(--ot-weight-bold);
+    line-height: var(--ot-leading-heading);
+    overflow-wrap: anywhere;
+  }
+  .sg-sample {
+    display: grid;
+    gap: var(--ot-space-2);
+    margin: 0;
+    font-size: var(--ot-text-16);
+    min-inline-size: 0;
+  }
+  .sg-sample span { overflow-wrap: anywhere; }
+  .sg-section {
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--ot-space-7);
+    padding: var(--ot-space-7);
+    background: var(--ot-surface);
+    border: var(--ot-border-w) solid var(--ot-border);
+    border-radius: var(--ot-radius-lg);
+    min-inline-size: 0;
+  }
+  .sg-h2 {
+    margin: 0;
+    font-size: var(--ot-text-18);
+    font-weight: var(--ot-weight-bold);
+    line-height: var(--ot-leading-heading);
+  }
+  .sg-h3 {
+    margin: 0;
+    font-size: var(--ot-text-13);
+    font-weight: var(--ot-weight-semibold);
+    color: var(--ot-text-2);
+  }
+  .sg-note {
+    margin: 0;
+    font-size: var(--ot-text-13);
+    color: var(--ot-text-muted);
+    overflow-wrap: anywhere;
+  }
+  .sg-proposal {
+    display: inline-flex;
+    align-items: center;
+    max-inline-size: 100%;
+    padding-block: var(--ot-space-1);
+    padding-inline: var(--ot-space-4);
+    border-radius: var(--ot-radius-pill);
+    background: var(--ot-warn-tint);
+    border: var(--ot-border-w) solid var(--ot-warn-border);
+    color: var(--ot-warn-text);
+    font-size: var(--ot-text-12);
+    font-weight: var(--ot-weight-semibold);
+  }
+  .sg-stack { display: grid; gap: var(--ot-space-5); min-inline-size: 0; }
+  .sg-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ot-space-5);
+    min-inline-size: 0;
+  }
+  .sg-grid {
+    display: grid;
+    gap: var(--ot-space-6);
+    grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+    min-inline-size: 0;
+  }
+  .sg-cell { display: grid; gap: var(--ot-space-3); align-content: start; justify-items: start; min-inline-size: 0; }
+  .sg-token {
+    font-size: var(--ot-text-12);
+    color: var(--ot-text-2);
+    overflow-wrap: anywhere;
+  }
+  .sg-meta {
+    font-size: var(--ot-text-12);
+    color: var(--ot-text-muted);
+    overflow-wrap: anywhere;
+  }
+  .sg-swatches {
+    display: grid;
+    gap: var(--ot-space-6);
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
+  }
+  .sg-swatch { display: grid; gap: var(--ot-space-3); min-inline-size: 0; }
+  .sg-chip {
+    block-size: 56px;
+    border-radius: var(--ot-radius-md);
+    border: var(--ot-border-w) solid var(--ot-border);
+  }
+  .sg-hex { font-size: var(--ot-text-13); font-weight: var(--ot-weight-semibold); color: var(--ot-ink); }
+  .sg-type-row {
+    display: grid;
+    gap: var(--ot-space-2);
+    padding-block: var(--ot-space-5);
+    border-block-end: var(--ot-border-w) solid var(--ot-border);
+    min-inline-size: 0;
+  }
+  .sg-type-row:last-child { border-block-end: 0; }
+  .sg-bar {
+    block-size: var(--ot-space-6);
+    border-radius: var(--ot-radius-sm);
+    background: var(--ot-primary-border);
+    max-inline-size: 100%;
+  }
+  .sg-spacing { display: grid; gap: var(--ot-space-3); justify-items: start; min-inline-size: 0; }
+  .sg-radius {
+    inline-size: 96px;
+    block-size: 64px;
+    border: var(--ot-border-w) solid var(--ot-primary-border);
+    background: var(--ot-primary-tint);
+  }
+  .sg-shadow {
+    block-size: 72px;
+    border-radius: var(--ot-radius-lg);
+    background: var(--ot-surface);
+    box-shadow: var(--ot-shadow-overlay);
+  }
+  .sg-scrim-chip { block-size: 56px; border-radius: var(--ot-radius-md); background: var(--ot-scrim); }
+  .sg-frame {
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--ot-space-6);
+    border: var(--ot-border-w) dashed var(--ot-border-strong);
+    border-radius: var(--ot-radius-lg);
+    background: var(--ot-page);
+    overflow: hidden;
+  }
+  /* Inside the frame the drawer and toasts sit in flow instead of the viewport. */
+  .sg-frame .ot-drawer {
+    position: relative;
+    inset: auto;
+    inline-size: auto;
+    max-block-size: none;
+    animation: none;
+    border: var(--ot-border-w) solid var(--ot-border);
+    border-radius: var(--ot-radius-lg);
+    z-index: 41;
+  }
+  .sg-frame .ot-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: auto;
+    animation: none;
+  }
+  .sg-frame .ot-toast-stack {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    inline-size: min(var(--ot-toast-w), 100%);
+  }
+  .sg-frame .ot-toast { animation: none; }
+  .sg-sheet-body { display: grid; gap: var(--ot-space-6); min-inline-size: 0; }
+  .sg-today { padding: 0; overflow: hidden; }
+  .sg-today__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ot-space-5);
+    padding: var(--ot-space-6) var(--ot-space-7);
+    border-block-end: var(--ot-border-w) solid var(--ot-border);
+  }
+  .sg-today__list { padding-inline: var(--ot-space-7); }
+  .sg-today__list .ot-list-row:last-child { border-block-end: 0; }
+  .sg-tabs-wrap { min-inline-size: 0; max-inline-size: 100%; }
+  .sg-strong { font-weight: var(--ot-weight-semibold); color: var(--ot-ink); }
+</style>
+</head>
+<body>
+<main class="sg-wrap">
+
+  <header class="sg-top">
+    <div class="sg-stack">
+      <h1 class="sg-h1">OrthoTrack Design System v1</h1>
+      <p class="sg-note">Styleguide. Built only from values already in the prototype. Source: docs/DESIGN_SYSTEM.md section 10.</p>
+    </div>
+    <button class="ot-btn ot-btn--secondary" id="dirToggle" type="button" aria-pressed="false">Switch to RTL</button>
+  </header>
+
+  <p class="sg-sample" aria-label="Sample text in English and Arabic">
+    <span lang="en">Mariam Adel · Next visit 4 Nov 2026</span>
+    <span lang="ar">مريم عادل · الزيارة الجاية 4 Nov 2026</span>
+  </p>
+
+  <!-- 1. Colors -->
+  <section class="sg-section" aria-labelledby="s-colors">
+    <h2 class="sg-h2" id="s-colors">1. Colors</h2>
+    <p class="sg-note">Hex is read from the token at runtime. Contrast is vs white (#ffffff) and vs the page (#f6f8fb). AA for normal text needs 4.5:1.</p>
+    <div id="swatches" class="sg-stack"></div>
+  </section>
+
+  <!-- 2. Typography -->
+  <section class="sg-section" aria-labelledby="s-type">
+    <h2 class="sg-h2" id="s-type">2. Typography</h2>
+    <p class="sg-note">Font: Inter for Latin, Thmanyah Sans for Arabic. Scale: 11 (caps labels only), 12, 13, 14 (body), 16, 18, 22, 28. Weights 400, 500, 600, 700.</p>
+    <div class="sg-stack">
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-11 · caps label · 600 · .06em · uppercase</span><span class="ot-caps">Records collection</span></div>
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-12</span><span style="font-size: var(--ot-text-12)">Next visit 4 Nov 2026 · Mariam Adel</span></div>
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-13</span><span style="font-size: var(--ot-text-13)">Next visit 4 Nov 2026 · Mariam Adel</span></div>
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-14 · body default · line-height 1.55</span><span style="font-size: var(--ot-text-14)">Youssef Hassan has a plan waiting for approval.</span></div>
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-16</span><span style="font-size: var(--ot-text-16)">Youssef Hassan · 16px</span></div>
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-18</span><span style="font-size: var(--ot-text-18); font-weight: var(--ot-weight-bold)">Session notes · 18px bold</span></div>
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-22 · heading line-height 1.25</span><span style="font-size: var(--ot-text-22); font-weight: var(--ot-weight-bold); line-height: var(--ot-leading-heading)">Nour Ibrahim</span></div>
+      <div class="sg-type-row"><span class="sg-meta">--ot-text-28</span><span style="font-size: var(--ot-text-28); font-weight: var(--ot-weight-bold); line-height: var(--ot-leading-heading)">Karim Mostafa</span></div>
+      <div class="sg-type-row"><span class="sg-meta">Weights 400 / 500 / 600 / 700</span>
+        <span class="sg-row">
+          <span style="font-weight: var(--ot-weight-regular)">Regular 400</span>
+          <span style="font-weight: var(--ot-weight-medium)">Medium 500</span>
+          <span style="font-weight: var(--ot-weight-semibold)">Semibold 600</span>
+          <span style="font-weight: var(--ot-weight-bold)">Bold 700</span>
+        </span>
+      </div>
+      <div class="sg-type-row"><span class="sg-meta">Arabic (Thmanyah Sans fallback)</span><span lang="ar" style="font-size: var(--ot-text-16)">مريم عادل · يوسف حسن · الزيارة الجاية 4 Nov 2026</span></div>
+    </div>
+  </section>
+
+  <!-- 3. Spacing, radius, elevation, sizes, motion -->
+  <section class="sg-section" aria-labelledby="s-space">
+    <h2 class="sg-h2" id="s-space">3. Spacing, radius, elevation, sizes, motion</h2>
+    <h3 class="sg-h3">Spacing (--ot-space-1 to 10)</h3>
+    <div class="sg-grid" id="spacing"></div>
+    <h3 class="sg-h3">Radius</h3>
+    <div class="sg-row">
+      <div class="sg-spacing"><div class="sg-radius" style="border-radius: var(--ot-radius-sm)"></div><span class="sg-meta">sm · 8px</span></div>
+      <div class="sg-spacing"><div class="sg-radius" style="border-radius: var(--ot-radius-md)"></div><span class="sg-meta">md · 12px (buttons, inputs)</span></div>
+      <div class="sg-spacing"><div class="sg-radius" style="border-radius: var(--ot-radius-lg)"></div><span class="sg-meta">lg · 16px (cards)</span></div>
+      <div class="sg-spacing"><div class="sg-radius" style="border-radius: var(--ot-radius-pill)"></div><span class="sg-meta">pill · 999px</span></div>
+    </div>
+    <h3 class="sg-h3">Elevation and scrim</h3>
+    <div class="sg-grid">
+      <div class="sg-cell"><div class="sg-shadow"></div><span class="sg-meta">overlay · 0 10px 30px .13</span></div>
+      <div class="sg-cell"><div class="sg-scrim-chip"></div><span class="sg-meta">scrim · rgba(15,23,42,.38)</span></div>
+      <div class="sg-cell"><div class="ot-card">Card: border only, no shadow</div><span class="sg-meta">card · shadow none</span></div>
+    </div>
+    <h3 class="sg-h3">Sizes and motion</h3>
+    <div class="sg-grid">
+      <div class="sg-cell"><span class="sg-meta">Touch target min</span><span class="sg-token">--ot-touch-min · 44px</span></div>
+      <div class="sg-cell"><span class="sg-meta">Input height</span><span class="sg-token">--ot-input-h · 46px</span></div>
+      <div class="sg-cell"><span class="sg-meta">Input font</span><span class="sg-token">--ot-input-font-size · 14px, 16px at max-width 600px</span></div>
+      <div class="sg-cell"><span class="sg-meta">Drawer width (side panel)</span><span class="sg-token">--ot-drawer-w · 420px</span></div>
+      <div class="sg-cell"><span class="sg-meta">Motion</span><span class="sg-token">--ot-dur-fast .15s · --ot-dur-base .2s</span></div>
+    </div>
+  </section>
+
+  <!-- 4. Buttons -->
+  <section class="sg-section" aria-labelledby="s-btn">
+    <h2 class="sg-h2" id="s-btn">4. Buttons</h2>
+    <p class="sg-note">Focus: Tab to any control to see the ring. Disabled row below each variant.</p>
+    <div class="sg-stack">
+      <h3 class="sg-h3">Default</h3>
+      <div class="sg-row">
+        <button class="ot-btn ot-btn--primary" type="button">Start session</button>
+        <button class="ot-btn ot-btn--secondary" type="button">Export PDF</button>
+        <button class="ot-btn ot-btn--ghost" type="button">Clear filters</button>
+        <button class="ot-btn ot-btn--danger" type="button">Stop treatment</button>
+        <button class="ot-btn ot-btn--primary ot-btn--sm" type="button">Small primary</button>
+        <button class="ot-btn ot-btn--secondary ot-btn--sm" type="button">Small secondary</button>
+        <button class="ot-btn ot-btn--icon" type="button" aria-label="Close"><svg class="ot-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+      </div>
+      <h3 class="sg-h3">Disabled</h3>
+      <div class="sg-row">
+        <button class="ot-btn ot-btn--primary" type="button" disabled>Start session</button>
+        <button class="ot-btn ot-btn--secondary" type="button" disabled>Export PDF</button>
+        <button class="ot-btn ot-btn--ghost" type="button" disabled>Clear filters</button>
+        <button class="ot-btn ot-btn--danger" type="button" disabled>Stop treatment</button>
+        <button class="ot-btn ot-btn--icon" type="button" aria-label="Close" disabled><svg class="ot-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+      </div>
+      <h3 class="sg-h3">Block</h3>
+      <button class="ot-btn ot-btn--primary ot-btn--block" type="button">Save and continue</button>
+    </div>
+  </section>
+
+  <!-- 5. Inputs -->
+  <section class="sg-section" aria-labelledby="s-inputs">
+    <h2 class="sg-h2" id="s-inputs">5. Inputs, select, textarea, field</h2>
+    <div class="sg-grid">
+      <label class="ot-field">
+        <span class="ot-field__label">Patient name</span>
+        <input class="ot-input" type="text" value="Mariam Adel">
+        <span class="ot-field__help">As on the national ID.</span>
+      </label>
+      <label class="ot-field">
+        <span class="ot-field__label">Search</span>
+        <input class="ot-input" type="search" placeholder="Search by name">
+      </label>
+      <label class="ot-field">
+        <span class="ot-field__label">Stage</span>
+        <select class="ot-select">
+          <option>Active treatment</option>
+          <option>Treatment plan</option>
+          <option>Retention</option>
+        </select>
+      </label>
+      <label class="ot-field">
+        <span class="ot-field__label">Date of birth</span>
+        <input class="ot-input" type="text" value="18 Apr 2011" disabled>
+      </label>
+      <label class="ot-field">
+        <span class="ot-field__label">Phone</span>
+        <input class="ot-input" type="tel" value="" aria-invalid="true" aria-describedby="err-phone">
+        <span class="ot-field__error" id="err-phone">Enter a phone number.</span>
+      </label>
+      <label class="ot-field" style="grid-column: 1 / -1">
+        <span class="ot-field__label">Session note</span>
+        <textarea class="ot-textarea" rows="3">Bracket reattached on 4 Nov 2026. Patient reports no pain.</textarea>
+        <span class="ot-field__help">Dates only, no times.</span>
+      </label>
+    </div>
+  </section>
+
+  <!-- 6. Card, chips, tabs -->
+  <section class="sg-section" aria-labelledby="s-misc">
+    <h2 class="sg-h2" id="s-misc">6. Card, chips, tabs, progress, avatar</h2>
+    <div class="sg-grid">
+      <div class="ot-card">
+        <div class="ot-card__header"><span>Case summary</span><span class="ot-caps">Plan</span></div>
+        <p class="sg-note">Youssef Hassan. Plan approved on 4 Nov 2026.</p>
+      </div>
+      <div class="sg-stack">
+        <span class="sg-h3">Chips (aria-pressed)</span>
+        <div class="sg-row" role="group" aria-label="Visit type">
+          <button class="ot-chip" type="button" aria-pressed="true">Check-up</button>
+          <button class="ot-chip" type="button" aria-pressed="false">Adjustment</button>
+          <button class="ot-chip" type="button" aria-pressed="false">Emergency</button>
+        </div>
+      </div>
+      <div class="sg-stack">
+        <span class="sg-h3">Progress</span>
+        <div class="ot-progress" role="progressbar" aria-label="Plan progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"><span class="ot-progress__bar" style="--ot-progress: 35%"></span></div>
+        <div class="ot-progress" role="progressbar" aria-label="Treatment progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70"><span class="ot-progress__bar" style="--ot-progress: 70%"></span></div>
+        <div class="ot-progress ot-progress--retention" role="progressbar" aria-label="Retention progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><span class="ot-progress__bar" style="--ot-progress: 50%"></span></div>
+      </div>
+      <div class="sg-stack">
+        <span class="sg-h3">Avatar</span>
+        <div class="sg-row">
+          <span class="ot-avatar" aria-hidden="true">MA</span>
+          <span class="ot-avatar" aria-hidden="true">YH</span>
+          <span class="ot-avatar" aria-hidden="true">NI</span>
+        </div>
+      </div>
+    </div>
+    <div class="sg-stack sg-tabs-wrap">
+      <span class="sg-h3">Tabs (underline, aria-selected)</span>
+      <div class="ot-tabs" role="tablist" aria-label="Case sections">
+        <button class="ot-tab" type="button" role="tab" aria-selected="false">Overview</button>
+        <button class="ot-tab" type="button" role="tab" aria-selected="true">Records</button>
+        <button class="ot-tab" type="button" role="tab" aria-selected="false">Diagnosis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Stage badges -->
+  <section class="sg-section" aria-labelledby="s-stage">
+    <h2 class="sg-h2" id="s-stage">7. Stage badges (11 stages)</h2>
+    <p class="sg-proposal" role="note">Approved by owner — 4 Nov 2026</p>
+    <p class="sg-note">Pipeline: consultation, growth-watch, records, diagnosis, plan, active, retention, completed. Exits: paused, referred, no-treatment (outlined, one icon each).</p>
+    <div class="sg-grid">
+      <div class="sg-cell"><span class="ot-stage ot-stage--consultation">Consultation</span><span class="sg-meta">consultation · slate</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--growth-watch">Growth watch</span><span class="sg-meta">growth-watch · cyan</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--records">Records</span><span class="sg-meta">records · blue</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--diagnosis">Diagnosis</span><span class="sg-meta">diagnosis · violet</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--plan">Treatment plan</span><span class="sg-meta">plan · amber</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--active">Active treatment</span><span class="sg-meta">active · emerald</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--retention">Retention</span><span class="sg-meta">retention · cyan</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--completed">Completed</span><span class="sg-meta">completed · ink, filled</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--exit"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10M11 3v10"/></svg>Paused</span><span class="sg-meta">exit · pause bars</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--exit"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg>Referred out</span><span class="sg-meta">exit · arrow out</span></div>
+      <div class="sg-cell"><span class="ot-stage ot-stage--exit"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M4 12 12 4"/></svg>No treatment needed</span><span class="sg-meta">exit · circle slash</span></div>
+    </div>
+  </section>
+
+  <!-- 8. Flags -->
+  <section class="sg-section" aria-labelledby="s-flags">
+    <h2 class="sg-h2" id="s-flags">8. Flags</h2>
+    <div class="sg-row">
+      <span class="ot-flag ot-flag--no-show">No-show</span>
+      <span class="ot-flag ot-flag--overdue">Overdue</span>
+      <span class="ot-flag ot-flag--no-appointment">No appointment</span>
+      <span class="ot-flag ot-flag--needs-review">Needs review</span>
+      <span class="ot-flag ot-flag--active-disease">Active disease</span>
+    </div>
+  </section>
+
+  <!-- 9. Today list -->
+  <section class="sg-section" aria-labelledby="s-today">
+    <h2 class="sg-h2" id="s-today">9. Sample: Today list (case rows)</h2>
+    <div class="ot-card sg-today" style="padding: 0">
+      <div class="sg-today__head">
+        <span class="sg-strong">Today</span>
+        <span class="ot-caps">4 Nov 2026 · 4 cases</span>
+      </div>
+      <div class="sg-today__list">
+        <div class="ot-list-row" tabindex="0">
+          <span class="ot-avatar" aria-hidden="true">MA</span>
+          <div class="ot-list-row__body">
+            <span class="ot-list-row__name">Mariam Adel</span>
+            <span class="ot-list-row__meta">Next visit · 4 Nov 2026</span>
+          </div>
+          <div class="ot-list-row__tags">
+            <span class="ot-stage ot-stage--active">Active treatment</span>
+          </div>
+          <div class="ot-list-row__actions">
+            <button class="ot-btn ot-btn--secondary ot-btn--sm" type="button">Open</button>
+          </div>
+        </div>
+        <div class="ot-list-row" tabindex="0">
+          <span class="ot-avatar" aria-hidden="true">YH</span>
+          <div class="ot-list-row__body">
+            <span class="ot-list-row__name">Youssef Hassan</span>
+            <span class="ot-list-row__meta">Next visit · 4 Nov 2026 · Bracket change</span>
+          </div>
+          <div class="ot-list-row__tags">
+            <span class="ot-flag ot-flag--overdue">Overdue</span>
+            <span class="ot-stage ot-stage--plan">Treatment plan</span>
+          </div>
+          <div class="ot-list-row__actions">
+            <button class="ot-btn ot-btn--secondary ot-btn--sm" type="button">Open</button>
+          </div>
+        </div>
+        <div class="ot-list-row" tabindex="0">
+          <span class="ot-avatar" aria-hidden="true">NI</span>
+          <div class="ot-list-row__body">
+            <span class="ot-list-row__name">Nour Ibrahim</span>
+            <span class="ot-list-row__meta">Growth check · next review 11 Nov 2026</span>
+          </div>
+          <div class="ot-list-row__tags">
+            <span class="ot-flag ot-flag--no-appointment">No appointment</span>
+            <span class="ot-stage ot-stage--growth-watch">Growth watch</span>
+          </div>
+          <div class="ot-list-row__actions">
+            <button class="ot-btn ot-btn--secondary ot-btn--sm" type="button">Open</button>
+          </div>
+        </div>
+        <div class="ot-list-row" tabindex="0">
+          <span class="ot-avatar" aria-hidden="true">KM</span>
+          <div class="ot-list-row__body">
+            <span class="ot-list-row__name">Karim Mostafa</span>
+            <span class="ot-list-row__meta">Missed visit · 3 Nov 2026</span>
+          </div>
+          <div class="ot-list-row__tags">
+            <span class="ot-flag ot-flag--no-show">No-show</span>
+            <span class="ot-stage ot-stage--exit"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10M11 3v10"/></svg>Paused</span>
+          </div>
+          <div class="ot-list-row__actions">
+            <button class="ot-btn ot-btn--secondary ot-btn--sm" type="button">Open</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Empty state -->
+  <section class="sg-section" aria-labelledby="s-empty">
+    <h2 class="sg-h2" id="s-empty">10. Empty state</h2>
+    <div class="ot-empty">
+      <span class="ot-empty__title">No cases match this filter</span>
+      <span class="ot-empty__text">Try another stage, or clear the filters to see all cases.</span>
+      <button class="ot-btn ot-btn--secondary" type="button">Clear filters</button>
+    </div>
+  </section>
+
+  <!-- 11. Toasts -->
+  <section class="sg-section" aria-labelledby="s-toast">
+    <h2 class="sg-h2" id="s-toast">11. Toast (one implementation, stack)</h2>
+    <div class="sg-frame">
+      <div class="ot-toast-stack" role="status" aria-live="polite">
+        <div class="ot-toast ot-toast--info">
+          <span class="ot-toast__mark"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 7v4M8 4.8v.2"/></svg></span>
+          <div class="ot-toast__body"><span class="ot-toast__title">Photos uploaded</span><span class="ot-toast__text">3 extra-oral photos for Mariam Adel.</span></div>
+        </div>
+        <div class="ot-toast ot-toast--success">
+          <span class="ot-toast__mark"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 5"/></svg></span>
+          <div class="ot-toast__body"><span class="ot-toast__title">Session saved</span><span class="ot-toast__text">Youssef Hassan · 4 Nov 2026</span></div>
+        </div>
+        <div class="ot-toast ot-toast--warn">
+          <span class="ot-toast__mark"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v6M8 12v.5"/></svg></span>
+          <div class="ot-toast__body"><span class="ot-toast__title">Plan not approved yet</span><span class="ot-toast__text">Approve the plan before starting treatment.</span></div>
+        </div>
+        <div class="ot-toast ot-toast--danger">
+          <span class="ot-toast__mark"><svg class="ot-icon ot-icon--sm" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>
+          <div class="ot-toast__body"><span class="ot-toast__title">Could not save</span><span class="ot-toast__text">Karim Mostafa's note was not saved. Try again.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. Drawer / session bottom sheet -->
+  <section class="sg-section" aria-labelledby="s-drawer">
+    <h2 class="sg-h2" id="s-drawer">12. Drawer: session bottom sheet (sample)</h2>
+    <p class="sg-note">Under 600px this is a full-width bottom sheet. Above 600px it is a side panel (--ot-drawer-w). Shown here in a frame with the scrim.</p>
+    <div class="sg-frame sg-frame--sheet">
+      <div class="ot-scrim" aria-hidden="true"></div>
+      <div class="ot-drawer" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+        <header class="ot-drawer__header">
+          <span class="ot-avatar" aria-hidden="true">MA</span>
+          <div class="sg-stack" style="flex: 1; min-inline-size: 0">
+            <span class="ot-drawer__title" id="sheet-title">Session · Mariam Adel</span>
+            <span class="sg-row"><span class="ot-stage ot-stage--active">Active treatment</span><span class="ot-flag ot-flag--overdue">Overdue</span></span>
+          </div>
+          <button class="ot-btn ot-btn--icon" type="button" aria-label="Close"><svg class="ot-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+        </header>
+        <div class="ot-drawer__body">
+          <div class="sg-stack">
+            <span class="ot-caps">Visit type</span>
+            <div class="sg-row" role="group" aria-label="Visit type">
+              <button class="ot-chip" type="button" aria-pressed="true">Adjustment</button>
+              <button class="ot-chip" type="button" aria-pressed="false">Check-up</button>
+            </div>
+          </div>
+          <label class="ot-field">
+            <span class="ot-field__label">Session note</span>
+            <textarea class="ot-textarea" rows="3">Wire adjusted. Patient comfortable.</textarea>
+          </label>
+          <div class="sg-stack">
+            <span class="ot-caps">Treatment progress</span>
+            <div class="ot-progress" role="progressbar" aria-label="Treatment progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60"><span class="ot-progress__bar" style="--ot-progress: 60%"></span></div>
+            <span class="sg-meta">Next visit 11 Nov 2026</span>
+          </div>
+        </div>
+        <footer class="ot-drawer__footer">
+          <button class="ot-btn ot-btn--ghost" type="button">Cancel</button>
+          <button class="ot-btn ot-btn--primary" type="button">Save session</button>
+        </footer>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- Colour helpers (computed from tokens at runtime, no hex duplicated here) ----
+  function rgbOf(value) {
+    var probe = document.createElement("span");
+    probe.style.color = value;
+    document.body.appendChild(probe);
+    var c = getComputedStyle(probe).color;
+    probe.remove();
+    var m = c.match(/[\d.]+/g).map(Number);
+    return { r: m[0], g: m[1], b: m[2], a: m.length > 3 ? m[3] : 1 };
+  }
+  function lum(c) {
+    function f(v) {
+      v = v / 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    }
+    return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+  }
+  function ratio(c, bg) {
+    var a = lum(c), b = lum(bg);
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  }
+  function hex(c) {
+    return "#" + [c.r, c.g, c.b].map(function (v) {
+      return Math.round(v).toString(16).padStart(2, "0");
+    }).join("");
+  }
+  var WHITE = { r: 255, g: 255, b: 255 };
+  var PAGE = { r: 246, g: 248, b: 251 };
+
+  // ---- Colour swatches ----
+  var FAMILIES = [
+    ["Neutrals", ["--ot-surface", "--ot-page", "--ot-subtle", "--ot-ink", "--ot-text-2", "--ot-text-muted", "--ot-icon", "--ot-border", "--ot-border-strong"]],
+    ["Brand", ["--ot-primary", "--ot-primary-hover", "--ot-primary-tint", "--ot-primary-border"]],
+    ["Success", ["--ot-success-text", "--ot-success-tint", "--ot-success-border", "--ot-success-dot"]],
+    ["Warn", ["--ot-warn-text", "--ot-warn-tint", "--ot-warn-border", "--ot-warn-dot"]],
+    ["Danger", ["--ot-danger-text", "--ot-danger-tint", "--ot-danger-border", "--ot-danger-dot"]],
+    ["Violet", ["--ot-violet-text", "--ot-violet-tint", "--ot-violet-border", "--ot-violet-dot"]],
+    ["Cyan", ["--ot-cyan-text", "--ot-cyan-tint", "--ot-cyan-border", "--ot-cyan-dot"]],
+    ["Slate", ["--ot-slate-text", "--ot-slate-tint", "--ot-slate-border", "--ot-slate-dot"]]
+  ];
+  var sw = document.getElementById("swatches");
+  FAMILIES.forEach(function (fam) {
+    var h = document.createElement("h3");
+    h.className = "sg-h3";
+    h.textContent = fam[0];
+    sw.appendChild(h);
+    var grid = document.createElement("div");
+    grid.className = "sg-swatches";
+    fam[1].forEach(function (tok) {
+      var c = rgbOf("var(" + tok + ")");
+      var cell = document.createElement("div");
+      cell.className = "sg-swatch";
+      var chip = document.createElement("div");
+      chip.className = "sg-chip";
+      chip.style.background = "var(" + tok + ")";
+      var name = document.createElement("span");
+      name.className = "sg-token";
+      name.textContent = tok;
+      var hx = document.createElement("span");
+      hx.className = "sg-hex";
+      hx.textContent = hex(c);
+      var rw = ratio(c, WHITE);
+      var rp = ratio(c, PAGE);
+      var r = document.createElement("span");
+      r.className = "sg-meta";
+      r.textContent = "vs white " + rw.toFixed(2) + ":1 (" + (rw >= 4.5 ? "AA text" : "not AA text") + ")";
+      var rp2 = document.createElement("span");
+      rp2.className = "sg-meta";
+      rp2.textContent = "vs page " + rp.toFixed(2) + ":1";
+      cell.appendChild(chip);
+      cell.appendChild(name);
+      cell.appendChild(hx);
+      cell.appendChild(r);
+      cell.appendChild(rp2);
+      grid.appendChild(cell);
+    });
+    sw.appendChild(grid);
+  });
+
+  // ---- Spacing scale ----
+  var sp = document.getElementById("spacing");
+  for (var i = 1; i <= 10; i++) {
+    var cell = document.createElement("div");
+    cell.className = "sg-cell";
+    var bar = document.createElement("div");
+    bar.className = "sg-bar";
+    bar.style.inlineSize = "var(--ot-space-" + i + ")";
+    bar.style.blockSize = "12px";
+    var lbl = document.createElement("span");
+    lbl.className = "sg-token";
+    lbl.textContent = "--ot-space-" + i;
+    cell.appendChild(bar);
+    cell.appendChild(lbl);
+    sp.appendChild(cell);
+  }
+
+  // ---- Direction toggle (proves logical properties) ----
+  var btn = document.getElementById("dirToggle");
+  btn.addEventListener("click", function () {
+    var rtl = document.documentElement.dir !== "rtl";
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
+    document.documentElement.lang = rtl ? "ar" : "en";
+    btn.setAttribute("aria-pressed", rtl ? "true" : "false");
+    btn.textContent = rtl ? "Switch to LTR" : "Switch to RTL";
+  });
+})();
+</script>
+</body>
+</html>

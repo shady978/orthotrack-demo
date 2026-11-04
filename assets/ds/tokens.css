@@ -1,0 +1,171 @@
+/*
+ * OrthoTrack Design System v1 - tokens
+ * Every value here already exists in the prototype (docs/DESIGN_SYSTEM.md sections 2-4),
+ * except the cyan border (#a5f3fc), which is flagged in section 10.
+ * Rule: screens use var(--ot-*) only. No new values without updating section 10.
+ */
+:root {
+  /* ---- Neutrals ---- */
+  --ot-surface: #ffffff;
+  --ot-page: #f6f8fb;
+  --ot-subtle: #f1f5f9;
+  --ot-ink: #0f172a;
+  --ot-text-2: #475569;
+  --ot-text-muted: #64748b;   /* lowest colour allowed for readable text */
+  --ot-icon: #94a3b8;         /* icons and placeholders only, NOT text */
+  --ot-border: #e8edf3;
+  --ot-border-strong: #cbd5e1;
+
+  /* ---- Brand ---- */
+  --ot-primary: #2563eb;
+  --ot-primary-hover: #1d4ed8; /* also link text */
+  --ot-primary-tint: #eff6ff;
+  --ot-primary-border: #bfdbfe;
+  --ot-focus-ring: rgba(37, 99, 235, 0.15);
+
+  /* ---- Tone families: text / tint / border / dot ---- */
+  --ot-slate-text: #334155;
+  --ot-slate-tint: #f1f5f9;
+  --ot-slate-border: #e2e8f0;
+  --ot-slate-dot: #94a3b8;
+
+  --ot-success-text: #047857;
+  --ot-success-tint: #ecfdf5;
+  --ot-success-border: #a7f3d0;
+  --ot-success-dot: #059669;
+
+  --ot-warn-text: #b45309;
+  --ot-warn-tint: #fffbeb;
+  --ot-warn-border: #fde68a;
+  --ot-warn-dot: #d97706;
+
+  --ot-danger-text: #b91c1c;
+  --ot-danger-tint: #fef2f2;
+  --ot-danger-border: #fecaca;
+  --ot-danger-dot: #dc2626;
+
+  --ot-violet-text: #6d28d9;
+  --ot-violet-tint: #f5f3ff;
+  --ot-violet-border: #ddd6fe;
+  --ot-violet-dot: #7c3aed;
+
+  --ot-cyan-text: #0e7490;
+  --ot-cyan-tint: #ecfeff;
+  --ot-cyan-border: #a5f3fc;  /* NEW value: no cyan border exists in the prototype. See section 10. */
+  --ot-cyan-dot: #0891b2;
+
+  /* ---- Stage tokens (one list, PROPOSAL: owner to approve) ---- */
+  --ot-stage-consultation-text: var(--ot-slate-text);
+  --ot-stage-consultation-bg: var(--ot-slate-tint);
+  --ot-stage-consultation-border: var(--ot-slate-border);
+  --ot-stage-consultation-dot: var(--ot-slate-dot);
+
+  --ot-stage-growth-watch-text: var(--ot-cyan-text);
+  --ot-stage-growth-watch-bg: var(--ot-cyan-tint);
+  --ot-stage-growth-watch-border: var(--ot-cyan-border);
+  --ot-stage-growth-watch-dot: var(--ot-cyan-dot);
+
+  --ot-stage-records-text: var(--ot-primary-hover);
+  --ot-stage-records-bg: var(--ot-primary-tint);
+  --ot-stage-records-border: var(--ot-primary-border);
+  --ot-stage-records-dot: var(--ot-primary);
+
+  --ot-stage-diagnosis-text: var(--ot-violet-text);
+  --ot-stage-diagnosis-bg: var(--ot-violet-tint);
+  --ot-stage-diagnosis-border: var(--ot-violet-border);
+  --ot-stage-diagnosis-dot: var(--ot-violet-dot);
+
+  --ot-stage-plan-text: var(--ot-warn-text);
+  --ot-stage-plan-bg: var(--ot-warn-tint);
+  --ot-stage-plan-border: var(--ot-warn-border);
+  --ot-stage-plan-dot: var(--ot-warn-dot);
+
+  --ot-stage-active-text: var(--ot-success-text);
+  --ot-stage-active-bg: var(--ot-success-tint);
+  --ot-stage-active-border: var(--ot-success-border);
+  --ot-stage-active-dot: var(--ot-success-dot);
+
+  --ot-stage-retention-text: var(--ot-cyan-text);
+  --ot-stage-retention-bg: var(--ot-cyan-tint);
+  --ot-stage-retention-border: var(--ot-cyan-border);
+  --ot-stage-retention-dot: var(--ot-cyan-dot);
+
+  --ot-stage-completed-text: var(--ot-surface);
+  --ot-stage-completed-bg: var(--ot-ink);
+  --ot-stage-completed-border: var(--ot-ink);
+  --ot-stage-completed-dot: var(--ot-surface);
+
+  /* Exits (paused, referred, no-treatment): neutral outlined, distinct icon */
+  --ot-stage-exit-text: var(--ot-text-2);
+  --ot-stage-exit-bg: var(--ot-surface);
+  --ot-stage-exit-border: var(--ot-border-strong);
+
+  /* ---- Typography ---- */
+  --ot-font-sans: Inter, 'Thmanyah Sans', sans-serif;
+  --ot-text-11: 11px;         /* caps labels only */
+  --ot-text-12: 12px;
+  --ot-text-13: 13px;
+  --ot-text-14: 14px;         /* default body */
+  --ot-text-16: 16px;
+  --ot-text-18: 18px;
+  --ot-text-22: 22px;
+  --ot-text-28: 28px;
+  --ot-weight-regular: 400;
+  --ot-weight-medium: 500;
+  --ot-weight-semibold: 600;
+  --ot-weight-bold: 700;
+  --ot-leading-body: 1.55;
+  --ot-leading-heading: 1.25;
+  --ot-tracking-caps: 0.06em;
+
+  /* ---- Spacing ---- */
+  --ot-space-1: 2px;
+  --ot-space-2: 4px;
+  --ot-space-3: 6px;
+  --ot-space-4: 8px;
+  --ot-space-5: 12px;
+  --ot-space-6: 16px;
+  --ot-space-7: 20px;
+  --ot-space-8: 24px;
+  --ot-space-9: 32px;
+  --ot-space-10: 44px;
+
+  /* ---- Radius ---- */
+  --ot-radius-sm: 8px;
+  --ot-radius-md: 12px;       /* buttons, inputs */
+  --ot-radius-lg: 16px;       /* cards */
+  --ot-radius-pill: 999px;
+
+  /* ---- Elevation ---- */
+  --ot-shadow-card: none;     /* cards use the border only */
+  --ot-shadow-overlay: 0 10px 30px rgba(15, 23, 42, 0.13);
+  --ot-scrim: rgba(15, 23, 42, 0.38);
+
+  /* ---- Sizes ---- */
+  --ot-touch-min: 44px;
+  --ot-input-h: 46px;
+  --ot-input-font-size: 14px;
+  --ot-border-w: 1px;
+  --ot-focus-w: 2px;
+  --ot-focus-halo: 4px;
+  --ot-drawer-w: 420px;
+  --ot-toast-w: 360px;
+  --ot-avatar: 36px;
+  --ot-size-mark: 32px;
+  --ot-size-dot: 6px;
+  --ot-size-progress: 6px;
+  --ot-icon-sm: 12px;
+  --ot-icon-md: 16px;
+
+  /* ---- Motion ---- */
+  --ot-dur-fast: 0.15s;
+  --ot-dur-base: 0.2s;
+  --ot-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* iOS zooms the page when a focused input is under 16px. Mobile inputs are 16px. */
+@media (max-width: 600px) {
+  :root {
+    --ot-input-font-size: 16px;
+  }
+}
