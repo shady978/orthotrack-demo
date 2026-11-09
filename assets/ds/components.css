@@ -375,7 +375,7 @@
   max-block-size: 85vh;
   border-start-start-radius: var(--ot-radius-lg);
   border-start-end-radius: var(--ot-radius-lg);
-  animation: ot-sheet var(--ot-dur-base) var(--ot-ease);
+  animation: ot-fade var(--ot-dur-base) var(--ot-ease);
 }
 .ot-drawer__header {
   display: flex;
@@ -592,19 +592,28 @@
   align-items: center;
   gap: var(--ot-space-4);
 }
-/* phone: the name on the first line, the stage and flags under it, the actions on their own line (the actions can be
-   two buttons: Open session and Didn't come / Book; S1.3, DECISIONS_LOG) */
+/* phone (S1.4): one flex line of avatar, name and actions. The actions stay on the name's line when they fit, and
+   wrap to a line of their own when they do not. The flags sit on the line under them (none: no gap). Targets stay 44px. */
 @media (max-width: 600px) {
   .ot-list-row {
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-template-areas:
-      "avatar body"
-      ".      tags"
-      ".      action";
-    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--ot-space-5);
+    row-gap: var(--ot-space-3);
+    padding-block: var(--ot-space-5);
   }
-  .ot-list-row__tags { justify-content: start; }
-  .ot-list-row__actions { flex-wrap: wrap; }
+  .ot-list-row > .ot-avatar { order: 0; }
+  .ot-list-row__body { order: 1; flex: 1 1 150px; }
+  .ot-list-row__actions {
+    order: 2;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    justify-content: end;
+    margin-inline-start: auto;
+  }
+  .ot-list-row__tags { order: 3; flex: 1 0 100%; justify-content: start; }
+  .ot-list-row__tags:empty { display: none; }
 }
 
 /* ---------- List row, compact (search dropdown). A button with the same grid, tags always on the end ---------- */
@@ -656,10 +665,6 @@
 @keyframes ot-fade {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-@keyframes ot-sheet {
-  from { opacity: 0; translate: 0 var(--ot-space-7); }
-  to { opacity: 1; translate: 0 0; }
 }
 @keyframes ot-toast {
   from { opacity: 0; translate: 0 var(--ot-space-5); }

@@ -54,6 +54,7 @@ button,input,select,textarea{font-family:inherit}
           <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:{{ stageBg }};color:{{ stageFg }};font-size:12px;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:{{ stageDot }}"></span>{{ stage }}</span>
         </sc-if>
         <sc-if value="{{ hasCase }}" hint-placeholder-val="{{ true }}">
+          <button type="button" class="ot-btn ot-btn--danger" onClick="{{ openEmergency }}">Emergency</button>
           <button type="button" onClick="{{ startSession }}" style="min-height:44px;padding:0 18px;border-radius:12px;border:none;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;cursor:pointer">Open session</button>
         </sc-if>
       </div>
@@ -509,6 +510,39 @@ button,input,select,textarea{font-family:inherit}
     </div>
   </sc-if>
 
+  <sc-if value="{{ emOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="ot-scrim" onClick="{{ emClose }}"></div>
+    <aside class="ot-drawer" role="dialog" aria-modal="true" aria-label="Emergency visit">
+      <header class="ot-drawer__header">
+        <div style="display:grid;gap:var(--ot-space-2);min-inline-size:0;flex:1">
+          <span class="ot-drawer__title">Emergency visit</span>
+          <span dir="auto" style="font-size:var(--ot-text-13);color:var(--ot-text-muted)">{{ emName }}</span>
+        </div>
+        <button type="button" class="ot-btn ot-btn--icon" aria-label="Close" onClick="{{ emClose }}"><svg class="ot-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+      </header>
+      <div class="ot-drawer__body">
+        <span class="ot-caps">Reason</span>
+        <div role="radiogroup" aria-label="Reason" style="display:flex;flex-wrap:wrap;gap:var(--ot-space-3)">
+          <sc-for list="{{ emReasons }}" as="r" hint-placeholder-count="5"><button type="button" role="radio" aria-checked="{{ r.on }}" class="ot-chip" style="background:{{ r.bg }};border-color:{{ r.bd }};color:{{ r.fg }};font-weight:{{ r.fw }}" onClick="{{ r.onClick }}">{{ r.label }}</button></sc-for>
+        </div>
+        <sc-if value="{{ emHasReason }}" hint-placeholder-val="{{ false }}">
+          <span class="ot-caps">Procedure</span>
+          <div role="radiogroup" aria-label="Procedure" style="display:flex;flex-wrap:wrap;gap:var(--ot-space-3)">
+            <sc-for list="{{ emProcs }}" as="p" hint-placeholder-count="4"><button type="button" role="radio" aria-checked="{{ p.on }}" class="ot-chip" style="background:{{ p.bg }};border-color:{{ p.bd }};color:{{ p.fg }};font-weight:{{ p.fw }}" onClick="{{ p.onClick }}">{{ p.label }}</button></sc-for>
+          </div>
+          <select class="ot-select" aria-label="New wire" value="{{ emWireVal }}" onChange="{{ emSetWire }}" dir="ltr" style="inline-size:auto">
+            <option value="">Keep the current wire</option>
+            <sc-for list="{{ emWires }}" as="w" hint-placeholder-count="10"><option value="{{ w.value }}">{{ w.label }}</option></sc-for>
+          </select>
+        </sc-if>
+      </div>
+      <footer class="ot-drawer__footer">
+        <sc-if value="{{ emHasReason }}" hint-placeholder-val="{{ false }}"><button type="button" class="ot-btn ot-btn--primary" onClick="{{ emFinish }}">Finish</button></sc-if>
+        <button type="button" class="ot-btn ot-btn--ghost" onClick="{{ emClose }}">Cancel</button>
+      </footer>
+    </aside>
+  </sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
@@ -518,7 +552,7 @@ button,input,select,textarea{font-family:inherit}
   &quot;onNavigate&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;(screen: string, caseInfo?: any) =&gt; void&quot;}
 }">
 class Component extends DCLogic {
-  state = { tab: null, openSession: null, measEdit: null, measDraft: '',
+  state = { tab: null, openSession: null, em: null, measEdit: null, measDraft: '',
             applEdit: null, applDraft: '', probs: {}, objs: {}, meas: {}, appl: {},
             proposeOpen: false, proposeText: '', amendments: [],
             viewer: null, viewerMode: 'side', slider: 50 };
@@ -603,6 +637,87 @@ class Component extends DCLogic {
     this.setState(st => ({ amendments: st.amendments.concat([{ text: text, when: this.fmt(d) }]) }));
   }
 
+  /* Emergency (T5-AC7..9): a short visit on its own, from the case file. The reason picks its procedure (editable).
+     Finish writes one visit line with kind 'emergency'; the next visit, its tasks and the stage are not touched. */
+  emReasonList = ['Broken bracket', 'Broken wire', 'Wire poking', 'Pain', 'Other'];
+  emPreset = { 'Broken bracket': 'Bracket repair', 'Broken wire': 'Arch wire change', 'Wire poking': 'Adjustment', 'Pain': 'Adjustment' };
+
+  emVals(open) {
+    const em = this.state.em;
+    const K = this.K();
+    const cat = open ? ((K.procedures || {})[open.stage] || (K.procedures || {}).active || []) : [];
+    const nickel = open ? (open.medical || []).some(m => m.label === 'Nickel allergy') : false;
+    const wires = (K.archwires || []).filter(w => !(nickel && /NiTi/.test(w)));
+    return {
+      openEmergency: () => this.setState({ em: { reason: null, proc: null, wire: '' } }),
+      emOpen: !!em && !!open,
+      emName: open ? open.patient.name : '',
+      emClose: () => this.setState({ em: null }),
+      emReasons: this.emReasonList.map(r => this.emChip(r, !!em && em.reason === r, ({
+        label: r, on: !!em && em.reason === r,
+        onClick: () => this.setState(st => ({ em: Object.assign({}, st.em, {
+          reason: r, proc: this.emPreset[r] && cat.indexOf(this.emPreset[r]) >= 0 ? this.emPreset[r] : null }) }))
+      }))),
+      emHasReason: !!em && !!em.reason,
+      emProcs: cat.map(p => this.emChip(p, !!em && em.proc === p, { label: p, on: !!em && em.proc === p,
+        onClick: () => this.setState(st => ({ em: Object.assign({}, st.em, { proc: p }) })) })),
+      emWireVal: em ? em.wire : '',
+      emWires: wires.map(w => ({ value: w, label: w })),
+      emSetWire: ev => { const v = ev.target.value; this.setState(st => ({ em: Object.assign({}, st.em, { wire: v }) })); },
+      emFinish: () => this.emFinish(open, em),
+    };
+  }
+
+  /* a choice chip: the selected one in the primary tint (the DS chip styles aria-pressed, these are radios) */
+  emChip(label, on, item) {
+    return Object.assign(item, {
+      bg: on ? 'var(--ot-primary-tint)' : 'var(--ot-surface)',
+      bd: on ? 'var(--ot-primary-border)' : 'var(--ot-border)',
+      fg: on ? 'var(--ot-primary-hover)' : 'var(--ot-text-2)',
+      fw: on ? 700 : 500,
+    });
+  }
+
+  emFinish(open, em) {
+    if (!open || !em || !em.reason) return;
+    const store = window.OT.store;
+    const cur = store.get(open.id);
+    if (!cur) return;
+    const visit = { date: window.OT.DEMO_TODAY, kind: 'emergency',
+                    note: [em.reason, em.proc].filter(Boolean).join(' · '), tasks: em.proc ? [em.proc] : [] };
+    const patch = { visits: [visit].concat(cur.visits || []) };
+    if (em.wire && em.wire !== cur.wire) { patch.wire = em.wire; visit.wire = em.wire; }
+    store.update(open.id, patch);
+    this.setState({ em: null });
+  }
+
+  /* one treatment-log card for a stored visit (case.visits): a visit, a no-show (not a visit) or an emergency */
+  visitCard(v, i) {
+    const OT = window.OT;
+    const key = 'v' + i;
+    const kind = v.kind || 'visit';
+    const isNo = kind === 'no-show', isEm = kind === 'emergency';
+    const type = isNo ? "Didn't come" : isEm ? 'Emergency' : kind === 'visit' ? 'Visit' : this.visitDef(kind).en;
+    const tint = isEm ? ['#fef2f2', '#b91c1c'] : isNo ? ['#fffbeb', '#b45309'] : ['#ecfdf5', '#047857'];
+    const open = this.state.openSession === key;
+    const summary = isNo ? 'Did not attend' : isEm ? 'Emergency · ' + (v.note || '') : (v.note || (v.tasks || []).join(' · ') || '—');
+    return {
+      date: OT.fmtDate(v.date), ago: OT.fmtRel(v.date),
+      dateFg: isEm ? '#b91c1c' : isNo ? '#b45309' : '#0f172a',
+      type: type, typeBg: tint[0], typeFg: tint[1], bd: isEm ? '#fecaca' : '#e8edf3',
+      wire: v.wire || '—', wireU: v.wire || '—', wireL: '—', aux: '—', by: '—',
+      summary: summary,
+      hasDelta: false, deltaLabel: '',
+      hasProcs: (v.tasks || []).length > 0, procs: (v.tasks || []).map(t => ({ text: t })),
+      hasDeltas: false, deltas: [],
+      hasNote: !!v.note, note: v.note || '',
+      noteBg: isEm ? '#fef2f2' : '#f6f8fb', noteFg: isEm ? '#b91c1c' : '#475569',
+      caret: open ? '▴' : '▾',
+      open: open,
+      onClick: () => this.setState(x => ({ openSession: x.openSession === key ? null : key })),
+    };
+  }
+
   visitDef(key) {
     const f = (this.K().visitTypes || []).filter(v => v[0] === key)[0];
     return f ? { en: f[1] } : { en: '—' };
@@ -630,7 +745,8 @@ class Component extends DCLogic {
     const open = this.cur();
     const c = open ? (C.byId || (() => null))(open.id) : null;
     const hero = open && open.records.media[0] ? open.records.media[0].src : '';
-    const lastVisit = open && open.visits[0] ? open.visits[0].date : null;
+    const lastEntry = open ? (open.visits || []).filter(v => v.kind !== 'no-show')[0] : null;
+    const lastVisit = lastEntry ? lastEntry.date : null;
     const nextIso = open && open.nextVisit ? open.nextVisit : null;
     const dayDiff = (from, to) => {
       const p = iso => { const q = iso.split('-'); return Date.UTC(+q[0], +q[1] - 1, +q[2]); };
@@ -650,7 +766,8 @@ class Component extends DCLogic {
       isLog: tab === 'log', isProgress: tab === 'progress', isAppliance: tab === 'appliance',
       onHistory: ev => { if (this.props.onNavigate) { ev.preventDefault(); this.props.onNavigate('summary'); } },
       hasCase: true, showTabs: true, isEmpty: false,
-      viewerOpen: false, flags: [], dx: [], alerts: [], phases: [], wireLine: [], nextPlan: [],
+      viewerOpen: false, emOpen: false, emReasons: [], emProcs: [], emWires: [], emHasReason: false,
+      flags: [], dx: [], alerts: [], phases: [], wireLine: [], nextPlan: [],
       problems: [], dxGroups: [], baseRows: [], planRows: [], objectives: [], log: [],
       measRows: [], views: [], appliance: [], applianceLog: [], viewerModes: []
     };
@@ -680,6 +797,10 @@ class Component extends DCLogic {
     const statuses = K.problemStatuses || [];
     const stColor = { pending: '#94a3b8', progress: '#2563eb', resolved: '#059669' };
     const history = (C.history || (() => []))(c);
+    /* the log: the stored visits (case.visits), then the derived history that is older than the first of them */
+    const storeCards = open ? (open.visits || []).map((v, i) => this.visitCard(v, i)) : [];
+    const earliest = open && (open.visits || []).length ? open.visits.map(v => v.date).sort()[0] : null;
+    const derived = history.filter(h => !earliest || this.iso(h.date) < earliest);
     const est = d.est || 0;
     const pct = c.stage === 'retention' ? 100 : (est ? Math.min(100, Math.round((c.mo / est) * 100)) : 0);
 
@@ -828,9 +949,10 @@ class Component extends DCLogic {
       stage: st.en, stageBg: st.bg, stageFg: st.fg, stageDot: st.dot,
       hasFlags: flags.length > 0, noFlags: flags.length === 0,
       flags: flags.map(f => ({ label: f.en, bg: toneBg(f.tone), fg: toneFg(f.tone), title: f.impact })),
-      updatedNote: this.state.amendments.length
+      updatedNote: [this.state.amendments.length
         ? this.state.amendments.length + ' amendment' + (this.state.amendments.length > 1 ? 's' : '') + ' today'
-        : (lastVisit ? 'Last updated ' + OT.fmtDate(lastVisit) : ''),
+        : (lastVisit ? 'Last visit ' + OT.fmtDate(lastVisit) : ''),
+        'Next visit ' + (nextIso ? OT.fmtDate(nextIso) : 'not booked')].filter(Boolean).join(' · '),
       startSession: () => {
         if (this.props.onNavigate) this.props.onNavigate('dashboard', { openId: c.id });
       },
@@ -913,9 +1035,9 @@ class Component extends DCLogic {
         };
       }),
 
-      hasLog: history.length > 0, noLog: history.length === 0,
-      logCount: history.length + ' sessions',
-      log: history.map(h => {
+      hasLog: storeCards.length + derived.length > 0, noLog: storeCards.length + derived.length === 0,
+      logCount: (storeCards.length + derived.length) + ' sessions',
+      log: storeCards.concat(derived.map(h => {
         const open = this.state.openSession === h.index;
         const tint = h.missed ? ['#fef2f2', '#b91c1c']
           : (h.type === 'Bonding' || h.type === 'Debond' || h.type === 'Aligner start') ? ['#f5f3ff', '#6d28d9']
@@ -951,7 +1073,7 @@ class Component extends DCLogic {
           open: open,
           onClick: () => this.setState(x => ({ openSession: x.openSession === h.index ? null : h.index }))
         };
-      }),
+      })),
 
       hasMeas: tracked.length > 0 && !!ch.meas && Object.keys(ch.meas).length > 0,
       noMeas: !(tracked.length > 0 && ch.meas && Object.keys(ch.meas).length > 0),
@@ -983,7 +1105,8 @@ class Component extends DCLogic {
       sliderPct: this.state.slider + '%',
       onSlider: ev => this.setState({ slider: Number(ev.target.value) }),
       stopClick: ev => ev.stopPropagation(),
-      closeViewer: () => this.setState({ viewer: null })
+      closeViewer: () => this.setState({ viewer: null }),
+      ...this.emVals(open)
     });
   }
 }

@@ -96,11 +96,11 @@ button,input,select,textarea{font-family:inherit}
           <sc-if value="{{ r.booking }}" hint-placeholder-val="{{ false }}">
             <div style="display:grid;gap:var(--ot-space-4);padding-block:var(--ot-space-5);border-block-end:var(--ot-border-w) solid var(--ot-border)">
               <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--ot-space-5)">
-                <label class="ot-field" style="flex:1 1 180px;min-inline-size:0">
+                <div class="ot-field" style="position:relative;flex:1 1 180px;min-inline-size:0">
                   <span class="ot-field__label">Date</span>
-                  <input class="ot-input" type="date" value="{{ r.bookDate }}" min="{{ r.todayISO }}" onChange="{{ r.onBookDate }}">
-                </label>
-                <span dir="ltr" style="unicode-bidi:isolate;min-block-size:var(--ot-touch-min);display:inline-flex;align-items:center;font-size:var(--ot-text-14);color:var(--ot-text-2)">{{ r.bookText }}</span>
+                  <span class="ot-input" dir="ltr" style="display:flex;align-items:center;color:var(--ot-ink)">{{ r.bookText }}</span>
+                  <input type="date" aria-label="Date" value="{{ r.bookDate }}" min="{{ r.todayISO }}" onChange="{{ r.onBookDate }}" style="position:absolute;inset:0;inline-size:100%;block-size:100%;opacity:0;cursor:pointer;margin:0;border:0">
+                </div>
                 <button type="button" class="ot-btn ot-btn--primary" onClick="{{ r.onBookSave }}">Save</button>
                 <button type="button" class="ot-btn ot-btn--ghost" onClick="{{ r.onBookCancel }}">Cancel</button>
               </div>
@@ -158,11 +158,11 @@ button,input,select,textarea{font-family:inherit}
           <sc-if value="{{ r.booking }}" hint-placeholder-val="{{ false }}">
             <div style="display:grid;gap:var(--ot-space-4);padding-block:var(--ot-space-5);border-block-end:var(--ot-border-w) solid var(--ot-border)">
               <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--ot-space-5)">
-                <label class="ot-field" style="flex:1 1 180px;min-inline-size:0">
+                <div class="ot-field" style="position:relative;flex:1 1 180px;min-inline-size:0">
                   <span class="ot-field__label">Date</span>
-                  <input class="ot-input" type="date" value="{{ r.bookDate }}" min="{{ r.todayISO }}" onChange="{{ r.onBookDate }}">
-                </label>
-                <span dir="ltr" style="unicode-bidi:isolate;min-block-size:var(--ot-touch-min);display:inline-flex;align-items:center;font-size:var(--ot-text-14);color:var(--ot-text-2)">{{ r.bookText }}</span>
+                  <span class="ot-input" dir="ltr" style="display:flex;align-items:center;color:var(--ot-ink)">{{ r.bookText }}</span>
+                  <input type="date" aria-label="Date" value="{{ r.bookDate }}" min="{{ r.todayISO }}" onChange="{{ r.onBookDate }}" style="position:absolute;inset:0;inline-size:100%;block-size:100%;opacity:0;cursor:pointer;margin:0;border:0">
+                </div>
                 <button type="button" class="ot-btn ot-btn--primary" onClick="{{ r.onBookSave }}">Save</button>
                 <button type="button" class="ot-btn ot-btn--ghost" onClick="{{ r.onBookCancel }}">Cancel</button>
               </div>
@@ -185,410 +185,127 @@ button,input,select,textarea{font-family:inherit}
 
   <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
     <div class="ot-toast-stack" role="status" aria-live="polite">
-      <div class="ot-toast ot-toast--warn">
+      <div class="ot-toast {{ toastCls }}" style="align-items:center">
         <div class="ot-toast__body"><span class="ot-toast__title">{{ toastText }}</span></div>
         <button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" onClick="{{ toastUndo }}">Undo</button>
+        <sc-if value="{{ toastHasNext }}" hint-placeholder-val="{{ false }}"><button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" onClick="{{ toastNext }}">Next patient →</button></sc-if>
       </div>
     </div>
   </sc-if>
 
   <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;z-index:40;background:rgba(15,23,42,.38);animation:otFade .15s ease-out"></div>
-    <aside role="dialog" aria-modal="true" aria-label="Case session" style="position:fixed;inset-block:0;inset-inline-end:0;z-index:41;width:min(640px,100%);background:#f6f8fb;border-inline-start:1px solid #e8edf3;display:flex;flex-direction:column;box-shadow:18px 0 48px rgba(15,23,42,.14);animation:otIn .22s cubic-bezier(.4,0,.2,1)">
+    <div class="ot-scrim" onClick="{{ closeDrawer }}"></div>
+    <aside class="ot-drawer" role="dialog" aria-modal="true" aria-label="Case session">
 
-      <div style="flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;padding:16px 20px 14px;display:grid;gap:12px">
-        <div style="display:flex;align-items:flex-start;gap:12px">
-          <img data-src="{{ dPhoto }}" data-fb="{{ dFallback }}" alt="{{ dName }}" style="width:50px;height:50px;flex:none;border-radius:50%;object-fit:cover;object-position:center 22%;background:#f1f5f9">
-          <div style="display:grid;gap:2px;min-width:0;flex:1">
-            <div style="display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap">
-              <span style="font-size:18px;font-weight:900;line-height:1.3">{{ dName }}</span>
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:500;color:#94a3b8">{{ dMeta }}</span>
-            </div>
-            <sc-if value="{{ dHasCC }}" hint-placeholder-val="{{ true }}">
-              <span style="font-size:13px;font-weight:300;color:#64748b;line-height:1.5">«{{ dCC }}»</span>
+      <header class="ot-drawer__header">
+        <div style="display:grid;gap:var(--ot-space-2);min-inline-size:0;flex:1">
+          <span class="ot-drawer__title" dir="auto">{{ dName }}</span>
+          <span style="display:flex;align-items:center;gap:var(--ot-space-4);flex-wrap:wrap;font-size:var(--ot-text-13);color:var(--ot-text-muted)">
+            <span dir="ltr" style="unicode-bidi:isolate">{{ dMeta }}</span>
+            <sc-if value="{{ dNoShow }}" hint-placeholder-val="{{ false }}"><span class="ot-flag ot-flag--no-show">Didn't come</span></sc-if>
+          </span>
+        </div>
+        <button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" onClick="{{ dNoShowAct }}">Didn't come</button>
+        <button type="button" class="ot-btn ot-btn--icon" aria-label="Close" onClick="{{ closeDrawer }}"><svg class="ot-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+      </header>
+
+      <div class="ot-drawer__body">
+
+        <sc-if value="{{ dHasWarn }}" hint-placeholder-val="{{ false }}">
+          <div role="note" style="display:flex;gap:var(--ot-space-4);align-items:flex-start;padding:var(--ot-space-4) var(--ot-space-5);border-radius:var(--ot-radius-md);border:var(--ot-border-w) solid var(--ot-warn-border);background:var(--ot-warn-tint);color:var(--ot-warn-text);font-size:var(--ot-text-13);line-height:var(--ot-leading-body)">
+            <span aria-hidden="true" style="font-weight:var(--ot-weight-bold)">!</span>
+            <span>{{ dWarn }}</span>
+          </div>
+        </sc-if>
+
+        <p style="margin:0;font-size:var(--ot-text-13);color:var(--ot-text-muted)">Last visit: {{ dLastText }}</p>
+
+        <div style="display:grid;gap:0">
+          <span class="ot-caps" style="margin-block-end:var(--ot-space-3)">Today’s tasks</span>
+          <sc-for list="{{ dTasks }}" as="t" hint-placeholder-count="3">
+            <button type="button" role="checkbox" aria-checked="{{ t.on }}" onClick="{{ t.onToggle }}" style="display:flex;align-items:center;gap:var(--ot-space-4);inline-size:100%;min-block-size:var(--ot-touch-min);padding:0;border:none;background:transparent;color:var(--ot-ink);font-family:var(--ot-font-sans);font-size:var(--ot-text-14);text-align:start;cursor:pointer">
+              <span aria-hidden="true" style="inline-size:22px;block-size:22px;flex:none;display:grid;place-items:center;border-radius:var(--ot-radius-sm);border:var(--ot-border-w) solid {{ t.bd }};background:{{ t.bg }};color:var(--ot-surface);font-size:var(--ot-text-12);font-weight:var(--ot-weight-bold)">{{ t.mark }}</span>
+              <span style="min-inline-size:0;overflow-wrap:anywhere;color:{{ t.fg }}">{{ t.text }}</span>
+            </button>
+          </sc-for>
+          <sc-if value="{{ dNoTasks }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:var(--ot-text-13);color:var(--ot-text-muted)">No tasks planned</span>
+          </sc-if>
+
+          <div style="display:flex;align-items:center;gap:var(--ot-space-4);flex-wrap:wrap;min-block-size:var(--ot-touch-min)">
+            <button type="button" role="checkbox" aria-checked="{{ dWireOn }}" onClick="{{ dWireToggle }}" style="display:flex;align-items:center;gap:var(--ot-space-4);min-block-size:var(--ot-touch-min);padding:0;border:none;background:transparent;color:var(--ot-ink);font-family:var(--ot-font-sans);font-size:var(--ot-text-14);cursor:pointer">
+              <span aria-hidden="true" style="inline-size:22px;block-size:22px;flex:none;display:grid;place-items:center;border-radius:var(--ot-radius-sm);border:var(--ot-border-w) solid {{ dWireBd }};background:{{ dWireBg }};color:var(--ot-surface);font-size:var(--ot-text-12);font-weight:var(--ot-weight-bold)">{{ dWireMark }}</span>
+              <span>Change wire</span>
+            </button>
+            <sc-if value="{{ dWireOn }}" hint-placeholder-val="{{ false }}">
+              <select class="ot-select" aria-label="New wire" value="{{ dWire }}" onChange="{{ dOnWire }}" dir="ltr" style="inline-size:auto;min-inline-size:200px;flex:1 1 200px">
+                <option value="">New wire…</option>
+                <sc-for list="{{ dWireOpts }}" as="w" hint-placeholder-count="10"><option value="{{ w.value }}">{{ w.label }}</option></sc-for>
+              </select>
             </sc-if>
           </div>
-          <button type="button" onClick="{{ closeDrawer }}" aria-label="Close" style="width:36px;height:36px;flex:none;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Outfit,sans-serif;font-size:15px;cursor:pointer" style-hover="background:#f6f8fb;color:#0f172a">✕</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;background:{{ dStageBg }};color:{{ dStageFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:{{ dStageDot }}"></span><span dir="ltr" style="unicode-bidi:isolate">{{ dStage }}</span></span>
-          <sc-if value="{{ dHasProgress }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;align-items:center;gap:9px;flex:1;min-width:160px">
-              <div style="flex:1;height:6px;border-radius:999px;background:#f1f5f9;overflow:hidden"><div style="height:100%;width:{{ dProgressPct }};border-radius:999px;background:{{ dProgressFill }}"></div></div>
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums;white-space:nowrap">{{ dProgressLabel }}</span>
+
+          <sc-if value="{{ dCanCat }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gap:var(--ot-space-4);justify-items:start">
+              <button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" style="padding-inline:0;color:var(--ot-primary-hover)" aria-expanded="{{ dCatOpen }}" onClick="{{ dToggleCat }}">+ Unplanned procedure</button>
+              <sc-if value="{{ dCatOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-wrap:wrap;gap:var(--ot-space-3)">
+                  <sc-for list="{{ dCat }}" as="p" hint-placeholder-count="6"><button type="button" class="ot-chip" onClick="{{ p.onClick }}">{{ p.label }}</button></sc-for>
+                </div>
+              </sc-if>
             </div>
           </sc-if>
         </div>
+
         <div style="display:grid;gap:var(--ot-space-4)">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:var(--ot-space-4)">
+          <div style="display:flex;align-items:center;gap:var(--ot-space-4);flex-wrap:wrap;min-block-size:var(--ot-touch-min)">
             <span class="ot-field__label">Next visit</span>
-            <span dir="ltr" style="unicode-bidi:isolate;font-size:var(--ot-text-14);color:var(--ot-ink);font-variant-numeric:tabular-nums">{{ dNvText }}</span>
-            <button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" onClick="{{ dNvChange }}">Change</button>
+            <span dir="ltr" style="unicode-bidi:isolate;font-size:var(--ot-text-14);color:var(--ot-ink);font-variant-numeric:tabular-nums">{{ dNvLine }}</span>
+            <button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" aria-expanded="{{ dNvOpen }}" onClick="{{ dNvOpenAct }}">Change</button>
           </div>
           <sc-if value="{{ dNvOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--ot-space-5)">
-              <label class="ot-field" style="flex:1 1 180px;min-inline-size:0">
-                <span class="ot-field__label">Date</span>
-                <input class="ot-input" type="date" value="{{ dNvDate }}" min="{{ dTodayISO }}" onChange="{{ onNvDate }}">
-              </label>
-              <span dir="ltr" style="unicode-bidi:isolate;min-block-size:var(--ot-touch-min);display:inline-flex;align-items:center;font-size:var(--ot-text-14);color:var(--ot-text-2)">{{ dNvPick }}</span>
-              <button type="button" class="ot-btn ot-btn--primary" onClick="{{ dNvSave }}">Save</button>
+            <div style="display:grid;gap:var(--ot-space-5);padding:var(--ot-space-5);border:var(--ot-border-w) solid var(--ot-border);border-radius:var(--ot-radius-md);background:var(--ot-page)">
+              <div style="display:flex;align-items:flex-end;gap:var(--ot-space-5);flex-wrap:wrap">
+                <div class="ot-field" style="position:relative;flex:1 1 160px;min-inline-size:0">
+                  <span class="ot-field__label">Date</span>
+                  <span class="ot-input" dir="ltr" style="display:flex;align-items:center;color:var(--ot-ink)">{{ dNvPick }}</span>
+                  <input type="date" aria-label="Date" value="{{ dNvDate }}" min="{{ dToday }}" onChange="{{ dNvDateSet }}" style="position:absolute;inset:0;inline-size:100%;block-size:100%;opacity:0;cursor:pointer;margin:0;border:0">
+                </div>
+                <button type="button" class="ot-btn ot-btn--primary" onClick="{{ dNvSave }}">Save</button>
+              </div>
+              <sc-if value="{{ dNvHasErr }}" hint-placeholder-val="{{ false }}"><p role="alert" class="ot-field__error" style="margin:0">{{ dNvErr }}</p></sc-if>
+              <div style="display:grid;gap:var(--ot-space-3)">
+                <span class="ot-caps">Planned tasks</span>
+                <div style="display:flex;flex-wrap:wrap;gap:var(--ot-space-3)">
+                  <sc-for list="{{ dNvTasks }}" as="t" hint-placeholder-count="3"><button type="button" class="ot-chip" aria-label="Remove {{ t.text }}" onClick="{{ t.onRemove }}">{{ t.text }} ✕</button></sc-for>
+                </div>
+                <select class="ot-select" aria-label="Add task" value="" onChange="{{ dNvAdd }}" style="inline-size:auto">
+                  <option value="">Add a task…</option>
+                  <sc-for list="{{ dNvOpts }}" as="o" hint-placeholder-count="6"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+                </select>
+              </div>
             </div>
           </sc-if>
-          <sc-if value="{{ dNvHasErr }}" hint-placeholder-val="{{ false }}"><p role="alert" class="ot-field__error" style="margin:0">{{ dNvErr }}</p></sc-if>
         </div>
-        <sc-if value="{{ dHasAlerts }}" hint-placeholder-val="{{ false }}">
-          <sc-for list="{{ dAlerts }}" as="a" hint-placeholder-count="1">
-            <div style="display:flex;align-items:flex-start;gap:9px;padding:9px 12px;border-radius:11px;background:{{ a.bg }}">
-              <span style="width:17px;height:17px;flex:none;border-radius:5px;background:{{ a.fg }};color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;margin-top:2px">!</span>
-              <span style="font-size:13px;font-weight:500;line-height:1.55;color:{{ a.fg }}">{{ a.text }}</span>
-            </div>
-          </sc-for>
-        </sc-if>
-        <sc-if value="{{ dHasAppliance }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <sc-for list="{{ dAppliance }}" as="a" hint-placeholder-count="2">
-              <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:9px;background:#f6f8fb;border:1px solid #e8edf3">
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.08em;color:#94a3b8">{{ a.arch }}</span>
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums">{{ a.value }}</span>
-              </span>
-            </sc-for>
-          </div>
-        </sc-if>
+
+        <label class="ot-field">
+          <span class="ot-field__label">Note</span>
+          <textarea class="ot-textarea" rows="2" placeholder="Optional" value="{{ dNote }}" onChange="{{ dNoteSet }}" style="min-block-size:56px"></textarea>
+        </label>
       </div>
 
-      <div style="flex:1;min-height:0;overflow-y:auto;padding:14px 20px;display:grid;gap:12px;align-content:start">
-
-        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:14px">
-          <button type="button" onClick="{{ toggleSum }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:12px 16px;border:none;border-radius:13px;background:transparent;cursor:pointer;text-align:start" style-hover="background:#fbfcfe">
-            <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1;flex-wrap:wrap">
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Case summary</span>
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:500;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dSumBrief }}</span>
-            </div>
-            <span style="font-family:Outfit,sans-serif;font-size:12px;color:#94a3b8;width:18px;text-align:center">{{ dSumCaret }}</span>
-          </button>
-          <sc-if value="{{ dSumOpen }}" hint-placeholder-val="{{ true }}">
-            <div style="padding:2px 16px 14px;display:grid;gap:13px;border-top:1px solid #f1f5f9">
-
-              <div style="display:grid;gap:6px;padding-top:10px">
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Medical</span>
-                <sc-if value="{{ dHasFlags }}" hint-placeholder-val="{{ false }}">
-                  <div style="display:flex;gap:6px;flex-wrap:wrap">
-                    <sc-for list="{{ dFlags }}" as="f" hint-placeholder-count="2">
-                      <span title="{{ f.title }}" dir="ltr" style="unicode-bidi:isolate;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:{{ f.bg }};color:{{ f.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:help"><span style="width:14px;height:14px;border-radius:4px;background:{{ f.fg }};color:#ffffff;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">!</span>{{ f.label }}</span>
-                    </sc-for>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ dNoFlags }}" hint-placeholder-val="{{ false }}">
-                  <span style="font-size:12.5px;font-weight:300;color:#94a3b8">No medical alerts</span>
-                </sc-if>
-              </div>
-
-              <sc-if value="{{ dHasRecGap }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;gap:8px;padding:12px 14px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a">
-                  <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
-                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#b45309">Records incomplete</span>
-                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:700;color:#b45309;font-variant-numeric:tabular-nums">{{ dRecCount }}</span>
-                    <span style="margin-inline-start:auto;font-size:11.5px;font-weight:300;color:#b45309">{{ dRecBlocks }}</span>
-                  </div>
-                  <div style="display:flex;gap:6px;flex-wrap:wrap">
-                    <sc-for list="{{ dRecMissing }}" as="m" hint-placeholder-count="3">
-                      <span dir="ltr" style="unicode-bidi:isolate;padding:4px 10px;border-radius:8px;background:#ffffff;border:1px solid #fde68a;color:#92400e;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600">{{ m.text }}</span>
-                    </sc-for>
-                  </div>
-                  <button type="button" onClick="{{ dOpenRecords }}" style="justify-self:start;min-height:40px;padding:0 15px;border-radius:11px;border:none;background:#d97706;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer" style-hover="background:#b45309">Continue records</button>
-                </div>
-              </sc-if>
-
-              <div style="display:grid;gap:6px">
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Diagnosis</span>
-                <sc-if value="{{ dHasDx }}" hint-placeholder-val="{{ true }}">
-                  <div style="display:flex;gap:6px;flex-wrap:wrap">
-                    <sc-for list="{{ dDx }}" as="d" hint-placeholder-count="4">
-                      <span dir="ltr" style="unicode-bidi:isolate;padding:4px 10px;border-radius:8px;background:{{ d.bg }};color:{{ d.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600">{{ d.label }}</span>
-                    </sc-for>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ dNoDx }}" hint-placeholder-val="{{ false }}">
-                  <span style="font-size:12.5px;font-weight:300;color:#94a3b8">Not set yet</span>
-                </sc-if>
-              </div>
-
-              <div style="display:grid;gap:8px">
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Plan</span>
-                <sc-if value="{{ dHasPlan }}" hint-placeholder-val="{{ true }}">
-                  <div style="display:flex;gap:6px 14px;flex-wrap:wrap">
-                    <sc-for list="{{ dPlan }}" as="p" hint-placeholder-count="4">
-                      <span dir="ltr" style="unicode-bidi:isolate;display:inline-flex;align-items:baseline;gap:6px;font-family:Outfit,sans-serif"><span style="font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#94a3b8">{{ p.k }}</span><span style="font-size:12.5px;font-weight:600;color:#0f172a">{{ p.v }}</span></span>
-                    </sc-for>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ dNoPlan }}" hint-placeholder-val="{{ false }}">
-                  <span style="font-size:12.5px;font-weight:300;color:#94a3b8">Not set yet</span>
-                </sc-if>
-                <sc-if value="{{ dHasPhase }}" hint-placeholder-val="{{ true }}">
-                  <div dir="ltr" style="display:flex;align-items:flex-start;padding-top:2px">
-                    <sc-for list="{{ dPhases }}" as="s" hint-placeholder-count="5">
-                      <div style="flex:1;display:grid;gap:5px;justify-items:center;position:relative;min-width:0">
-                        <div style="display:flex;align-items:center;width:100%">
-                          <span style="flex:1;height:2px;background:{{ s.lineL }}"></span>
-                          <span style="width:12px;height:12px;flex:none;border-radius:50%;border:2px solid {{ s.ring }};background:{{ s.dot }};box-sizing:border-box;display:flex;align-items:center;justify-content:center"><sc-if value="{{ s.now }}" hint-placeholder-val="{{ false }}"><span style="width:4px;height:4px;border-radius:50%;background:#7c3aed"></span></sc-if></span>
-                          <span style="flex:1;height:2px;background:{{ s.lineR }}"></span>
-                        </div>
-                        <span style="font-family:Outfit,sans-serif;font-size:10px;font-weight:{{ s.fw }};color:{{ s.fg }};white-space:nowrap">{{ s.label }}</span>
-                      </div>
-                    </sc-for>
-                  </div>
-                </sc-if>
-              </div>
-
-              <sc-if value="{{ dHasTimeline }}" hint-placeholder-val="{{ true }}">
-                <div style="display:grid;gap:7px">
-                  <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Timeline</span>
-                  <div dir="ltr" style="position:relative;height:14px;display:flex;align-items:center">
-                    <div style="width:100%;height:4px;border-radius:999px;background:#f1f5f9;overflow:hidden"><div style="height:100%;width:{{ dTimelinePct }};background:#ede9fe"></div></div>
-                    <sc-for list="{{ dTimelineDots }}" as="d" hint-placeholder-count="6">
-                      <span style="position:absolute;left:{{ d.x }};top:2px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:{{ d.bg }};border:2px solid {{ d.bd }};box-sizing:border-box"></span>
-                    </sc-for>
-                  </div>
-                  <div dir="ltr" style="display:flex;gap:4px 12px;flex-wrap:wrap;font-family:Outfit,sans-serif;font-size:12px;font-variant-numeric:tabular-nums">
-                    <span style="color:#475569"><span style="color:#94a3b8">Bonded</span> <span style="font-weight:600">{{ dBonded }}</span></span>
-                    <span style="color:#475569"><span style="font-weight:600">{{ dSessions }}</span> sessions</span>
-                    <span style="color:{{ dMissedFg }}"><span style="font-weight:600">{{ dMissed }}</span> missed</span>
-                    <span style="color:#475569;margin-left:auto"><span style="color:#94a3b8">Est. end</span> <span style="font-weight:600">{{ dEstEnd }}</span></span>
-                  </div>
-                </div>
-              </sc-if>
-
-              <sc-if value="{{ dHasProblems }}" hint-placeholder-val="{{ true }}">
-                <div style="display:grid;gap:4px">
-                  <div style="display:flex;align-items:center;gap:8px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Problem list</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;color:#047857;font-variant-numeric:tabular-nums">{{ dProblemsDone }}</span><span style="font-size:11px;font-weight:300;color:#94a3b8;margin-inline-start:auto">Tap to change status</span></div>
-                  <sc-for list="{{ dProblems }}" as="p" hint-placeholder-count="3">
-                    <button type="button" onClick="{{ p.onClick }}" style="display:flex;align-items:center;gap:10px;min-height:36px;padding:0 8px;margin:0 -8px;border:none;border-radius:9px;background:transparent;cursor:pointer;text-align:start" style-hover="background:#f6f8fb">
-                      <span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ p.dot }}"></span>
-                      <span dir="ltr" style="unicode-bidi:isolate;flex:1;font-family:Outfit,sans-serif;font-size:13px;font-weight:500;color:{{ p.fg }};text-decoration:{{ p.deco }};text-align:left">{{ p.text }}</span>
-                      <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;color:{{ p.dot }}">{{ p.status }}</span>
-                    </button>
-                  </sc-for>
-                </div>
-              </sc-if>
-
-              <sc-if value="{{ dHasMeas }}" hint-placeholder-val="{{ true }}">
-                <div style="display:grid;gap:4px">
-                  <div dir="ltr" style="display:grid;grid-template-columns:1.4fr 1fr 1fr .9fr;gap:8px;align-items:center;font-family:Outfit,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8;padding-bottom:2px">
-                    <span>Measurements</span><span style="text-align:center">Baseline</span><span style="text-align:center">Current</span><span style="text-align:right">Goal</span>
-                  </div>
-                  <sc-for list="{{ dMeas }}" as="m" hint-placeholder-count="3">
-                    <div dir="ltr" style="display:grid;grid-template-columns:1.4fr 1fr 1fr .9fr;gap:8px;align-items:center;min-height:34px;border-top:1px solid #f8fafc;font-family:Outfit,sans-serif;font-variant-numeric:tabular-nums">
-                      <span style="font-size:12.5px;font-weight:500;color:#334155">{{ m.label }}</span>
-                      <span style="font-size:12.5px;font-weight:500;color:#64748b;text-align:center">{{ m.base }}</span>
-                      <sc-if value="{{ m.editing }}" hint-placeholder-val="{{ false }}">
-                        <input type="text" value="{{ m.draft }}" onChange="{{ m.onDraft }}" onKeyDown="{{ m.onKey }}" onBlur="{{ m.onBlur }}" autoFocus="{{ true }}" style="width:100%;min-height:30px;padding:0 8px;border-radius:8px;border:1px solid #2563eb;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:700;color:#0f172a;text-align:center;outline:none">
-                      </sc-if>
-                      <sc-if value="{{ m.notEditing }}" hint-placeholder-val="{{ true }}">
-                        <button type="button" onClick="{{ m.onEdit }}" style="min-height:30px;padding:0 8px;border-radius:8px;border:1px solid {{ m.curBd }};background:{{ m.curBg }};color:{{ m.curFg }};font-family:Outfit,sans-serif;font-size:12.5px;font-weight:{{ m.curFw }};cursor:pointer;text-align:center" style-hover="border-color:#2563eb">{{ m.cur }}</button>
-                      </sc-if>
-                        <sc-if value="{{ m.readOnly }}" hint-placeholder-val="{{ false }}">
-                          <span style="min-height:30px;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:{{ m.curFw }};color:{{ m.curFg }}">{{ m.cur }}</span>
-                        </sc-if>
-                      <span style="font-size:11.5px;font-weight:500;color:#94a3b8;text-align:right">{{ m.goal }}</span>
-                    </div>
-                  </sc-for>
-                </div>
-              </sc-if>
-
-            </div>
-          </sc-if>
-        </div>
-
-        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:14px">
-          <button type="button" onClick="{{ toggleLast }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:12px 16px;border:none;border-radius:13px;background:transparent;cursor:pointer;text-align:start" style-hover="background:#fbfcfe">
-            <div style="display:grid;gap:1px;min-width:0;flex:1">
-              <div style="display:flex;align-items:center;gap:8px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Last session</span><span style="font-size:11.5px;font-weight:300;color:#94a3b8">{{ dLastWhen }}</span></div>
-              <div style="display:flex;align-items:center;gap:8px;min-width:0">
-                <span style="font-size:13.5px;font-weight:500;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dLastFirst }}</span>
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;color:#94a3b8">{{ dLastMore }}</span>
-              </div>
-            </div>
-            <sc-if value="{{ dHasComp }}" hint-placeholder-val="{{ false }}">
-              <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:9px;background:{{ dCompBg }}"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:600;color:#94a3b8">{{ dCompLabel }}</span><span style="font-size:12px;font-weight:700;color:{{ dCompFg }}">{{ dCompValue }}</span></span>
-            </sc-if>
-            <span style="font-family:Outfit,sans-serif;font-size:12px;color:#94a3b8;width:18px;text-align:center">{{ dLastCaret }}</span>
-          </button>
-          <sc-if value="{{ dLastOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="padding:4px 16px 14px;display:grid;gap:8px;border-top:1px solid #f1f5f9">
-              <sc-for list="{{ dLastItems }}" as="i" hint-placeholder-count="2">
-                <div style="display:flex;align-items:flex-start;gap:9px;padding-top:6px"><span style="width:14px;flex:none;color:#059669;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:700;margin-top:3px">✓</span><span style="font-size:13.5px;font-weight:500;line-height:1.6;color:#334155">{{ i.text }}</span></div>
-              </sc-for>
-              <div style="display:flex;gap:7px;flex-wrap:wrap;padding-top:6px">
-                <sc-for list="{{ dCompliance }}" as="c" hint-placeholder-count="1">
-                  <span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:9px;background:{{ c.bg }}"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:600;color:#94a3b8">{{ c.label }}</span><span style="font-size:12px;font-weight:700;color:{{ c.fg }}">{{ c.value }}</span></span>
-                </sc-for>
-              </div>
-            </div>
-          </sc-if>
-        </div>
-
-        <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:14px;padding:14px 16px;display:grid;gap:6px" data-comment-anchor="9d5bdb0714-div">
-          <div style="display:flex;align-items:center;gap:10px;padding-bottom:6px">
-            <div style="display:grid;gap:1px;min-width:0;flex:1">
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#1d4ed8">{{ dTodayHead }}</span>
-              <span style="font-size:11.5px;font-weight:300;color:#64748b">{{ dTodayWhen }}</span>
-            </div>
-            <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:#1d4ed8;font-variant-numeric:tabular-nums">{{ dPlanCount }}</span>
-          </div>
-          <sc-if value="{{ dReadOnly }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:2px;border-radius:9px;background:#f6f8fb"><span style="width:14px;height:14px;flex:none;border-radius:4px;background:#cbd5e1;color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:9.5px;font-weight:700">i</span><span style="font-size:12px;font-weight:500;color:#64748b">{{ dReadOnlyNote }}</span></div>
-          </sc-if>
-
-          <sc-for list="{{ dPlanItems }}" as="i" hint-placeholder-count="3">
-            <div style="display:grid;gap:0;border-radius:11px;background:#ffffff">
-              <div onClick="{{ i.onToggle }}" role="{{ i.role }}" tabindex="0" style="display:flex;align-items:flex-start;gap:10px;padding:8px 9px;margin:0 -9px;border-radius:10px;cursor:{{ i.cursor }}" style-hover="background:#f8fafc">
-                <sc-if value="{{ i.tickable }}" hint-placeholder-val="{{ true }}">
-                  <span style="width:18px;height:18px;flex:none;border-radius:6px;border:1.5px solid {{ i.boxBd }};background:{{ i.boxBg }};color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;margin-top:2px">{{ i.mark }}</span>
-                </sc-if>
-                <sc-if value="{{ i.notTickable }}" hint-placeholder-val="{{ false }}">
-                  <span style="width:18px;flex:none;display:flex;justify-content:center;margin-top:2px"><span style="width:6px;height:6px;border-radius:50%;background:#cbd5e1"></span></span>
-                </sc-if>
-                <span style="flex:1;min-width:0;font-size:13.5px;font-weight:500;line-height:1.6;color:{{ i.textFg }}">{{ i.text }}</span>
-                <sc-if value="{{ i.carried }}" hint-placeholder-val="{{ false }}"><span style="flex:none;padding:2px 8px;border-radius:999px;background:#fffbeb;color:#b45309;font-size:10.5px;font-weight:700;margin-top:3px">Carried over</span></sc-if>
-                <sc-if value="{{ i.extra }}" hint-placeholder-val="{{ false }}"><span style="flex:none;padding:2px 8px;border-radius:999px;background:#f1f5f9;color:#64748b;font-size:10.5px;font-weight:700;margin-top:3px">Unplanned</span></sc-if>
-                <sc-if value="{{ i.tickable }}" hint-placeholder-val="{{ true }}">
-                  <button type="button" onClick="{{ i.onRemove }}" title="Remove this item" aria-label="Remove this item" style="width:26px;height:26px;flex:none;border-radius:8px;border:none;background:transparent;color:#cbd5e1;font-family:Outfit,sans-serif;font-size:14px;cursor:pointer;margin-top:1px" style-hover="background:#fef2f2;color:#b91c1c">✕</button>
-                </sc-if>
-              </div>
-              <sc-if value="{{ i.isWire }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
-                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">UPPER</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.wiresU }}" as="w" hint-placeholder-count="3"><button type="button" onClick="{{ w.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ w.bd }};background:{{ w.bg }};color:{{ w.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ w.label }}</button></sc-for></div></div>
-                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">LOWER</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.wiresL }}" as="w2" hint-placeholder-count="3"><button type="button" onClick="{{ w2.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ w2.bd }};background:{{ w2.bg }};color:{{ w2.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ w2.label }}</button></sc-for></div></div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ i.isElastics }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;gap:5px;padding:6px 0 10px 28px;animation:otFade .15s ease-out"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">PRESCRIPTION</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.elastics }}" as="e" hint-placeholder-count="3"><button type="button" onClick="{{ e.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ e.bd }};background:{{ e.bg }};color:{{ e.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ e.label }}</button></sc-for></div></div>
-              </sc-if>
-              <sc-if value="{{ i.isCompliance }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
-                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">WEAR / DAY</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.hours }}" as="h" hint-placeholder-count="3"><button type="button" onClick="{{ h.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ h.bd }};background:{{ h.bg }};color:{{ h.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ h.label }}</button></sc-for></div></div>
-                  <div style="display:grid;gap:5px"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">ORAL HYGIENE</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.hygiene }}" as="g" hint-placeholder-count="3"><button type="button" onClick="{{ g.onClick }}" style="min-height:32px;padding:0 11px;border-radius:9px;border:1px solid {{ g.bd }};background:{{ g.bg }};color:{{ g.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums" dir="ltr">{{ g.label }}</button></sc-for></div></div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ i.isPhoto }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;gap:5px;padding:6px 0 10px 28px;animation:otFade .15s ease-out"><span style="font-size:11px;font-weight:600;color:#94a3b8;font-family:Outfit,sans-serif;letter-spacing:0.05em" dir="ltr">INTRAORAL VIEWS</span>
-                  <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ i.photoSlots }}" as="p" hint-placeholder-count="5"><button type="button" onClick="{{ p.onClick }}" style="display:inline-flex;align-items:center;gap:7px;min-height:44px;min-width:64px;padding:0 10px;border-radius:9px;border:1.5px dashed {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;cursor:pointer" dir="ltr"><sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}"><img data-src="{{ p.src }}" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:cover;background:#f1f5f9"></sc-if>{{ p.label }}</button></sc-for></div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ i.isMeasure }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;align-items:center;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
-                  <input type="text" inputmode="decimal" value="{{ i.measureVal }}" onChange="{{ i.onMeasure }}" placeholder="0.0" dir="ltr" style="width:84px;min-height:36px;padding:0 10px;border-radius:9px;border:1px solid #e2e8f0;background:#f6f8fb;font-family:Outfit,sans-serif;font-size:14px;font-weight:600;color:#0f172a;outline:none;text-align:center" style-focus="border-color:#2563eb;background:#ffffff">
-                  <span dir="ltr" style="font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:#94a3b8">mm</span>
-                </div>
-              </sc-if>
-              <sc-if value="{{ i.isIPR }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;align-items:center;gap:8px;padding:6px 0 10px 28px;animation:otFade .15s ease-out">
-                  <input type="text" value="{{ i.iprVal }}" onChange="{{ i.onIpr }}" placeholder="13–23 · 0.3mm" dir="ltr" style="flex:1;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid #e2e8f0;background:#f6f8fb;font-family:Outfit,sans-serif;font-size:13px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;background:#ffffff">
-                </div>
-              </sc-if>
-            </div>
-          </sc-for>
-
-          <sc-if value="{{ dCanAdd }}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{ openAdd }}" style="justify-self:start;min-height:34px;padding:0 10px;margin:2px -9px 0;border-radius:9px;border:none;background:transparent;color:#2563eb;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px" style-hover="background:#eff6ff"><span style="font-family:Outfit,sans-serif;font-size:15px">+</span>Unplanned procedure</button>
-          </sc-if>
-          <sc-if value="{{ dAddOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;gap:8px;padding-top:4px;padding-bottom:4px">
-              <input type="text" value="{{ addText }}" onChange="{{ onAddText }}" onKeyDown="{{ onAddKey }}" placeholder="e.g. Rebond bracket 36" style="flex:1;min-height:40px;padding:0 12px;border-radius:10px;border:1px solid #bfdbfe;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;outline:none" style-focus="box-shadow:0 0 0 3px rgba(37,99,235,.12)">
-              <button type="button" onClick="{{ commitAdd }}" style="min-height:40px;padding:0 14px;border-radius:10px;border:none;background:#2563eb;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer">Add</button>
-            </div>
-          </sc-if>
-          <sc-if value="{{ dShowReview }}" hint-placeholder-val="{{ false }}">
-            <div style="display:grid;gap:7px;padding-top:10px;margin-top:4px;border-top:1px solid #f1f5f9">
-              <div style="display:flex;align-items:center;gap:8px"><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Session photos</span><span style="font-size:11.5px;font-weight:300;color:#94a3b8">For documentation</span><span dir="ltr" style="unicode-bidi:isolate;margin-inline-start:auto;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#64748b;font-variant-numeric:tabular-nums">{{ dDocCount }}</span></div>
-              <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ dDocPhotos }}" as="p" hint-placeholder-count="5"><button type="button" onClick="{{ p.onClick }}" style="display:inline-flex;align-items:center;gap:7px;min-height:44px;min-width:64px;padding:0 10px;border-radius:9px;border:1.5px dashed {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;cursor:pointer" dir="ltr"><sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}"><img data-src="{{ p.src }}" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:cover;background:#f1f5f9"></sc-if>{{ p.label }}</button></sc-for></div>
-            </div>
-          </sc-if>
-        </div>
-
-        <sc-if value="{{ dHasGate }}" hint-placeholder-val="{{ false }}">
-          <div style="background:#ffffff;border:1px solid #fde68a;border-radius:14px;padding:13px 16px;display:grid;gap:8px">
-            <div style="display:flex;align-items:center;gap:9px"><span style="width:20px;height:20px;flex:none;border-radius:6px;background:#fffbeb;color:#b45309;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:12px;font-weight:700">!</span><span style="font-size:13px;font-weight:700">{{ dGateHead }}</span></div>
-            <sc-for list="{{ dGate }}" as="g" hint-placeholder-count="2">
-              <div style="display:flex;align-items:flex-start;gap:9px"><span style="width:5px;height:5px;flex:none;border-radius:50%;background:#d97706;margin-top:10px"></span><span style="font-size:13px;font-weight:500;line-height:1.6;color:#334155">{{ g.text }}</span></div>
-            </sc-for>
-          </div>
+      <footer class="ot-drawer__footer" style="justify-content:stretch;align-items:center">
+        <sc-if value="{{ dAsk }}" hint-placeholder-val="{{ false }}">
+          <span style="flex:1 1 100%;font-size:var(--ot-text-14);font-weight:var(--ot-weight-semibold)">Carry over {{ dUndoneN }} {{ dTaskWord }}?</span>
+          <button type="button" class="ot-btn ot-btn--primary" onClick="{{ dCarryYes }}">Yes</button>
+          <button type="button" class="ot-btn ot-btn--secondary" onClick="{{ dCarryNo }}">No</button>
+          <button type="button" class="ot-btn ot-btn--ghost" onClick="{{ dAskBack }}">Back</button>
         </sc-if>
-
-        <sc-if value="{{ dShowNext }}" hint-placeholder-val="{{ false }}">
-          <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:14px;padding:14px 16px;display:grid;gap:12px">
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">{{ dNextHead }}</span>
-              <div style="display:flex;gap:5px;margin-inline-start:auto"><sc-for list="{{ dIntervals }}" as="v" hint-placeholder-count="3"><button type="button" onClick="{{ v.onClick }}" style="min-height:32px;padding:0 12px;border-radius:9px;border:1px solid {{ v.bd }};background:{{ v.bg }};color:{{ v.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer" dir="ltr">{{ v.label }}</button></sc-for></div>
-              <label dir="ltr" style="display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 10px;border-radius:9px;border:1px solid {{ dCustomBd }};background:#ffffff;color:{{ dCustomFg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer"><span>Date</span><input type="date" value="{{ dNextISO }}" min="{{ dTodayISO }}" onChange="{{ onNextDate }}" style="border:none;background:transparent;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:inherit;outline:none;padding:0;cursor:pointer"></label>
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums">{{ dNextDate }} · {{ dNextDays }} · {{ dNextType }}</span>
-            </div>
-
-            <div style="display:grid;gap:7px">
-              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;font-weight:700">{{ dProcsHead }}</span><span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#1d4ed8;font-variant-numeric:tabular-nums">{{ dProcCount }}</span><span style="font-size:11.5px;font-weight:300;color:#94a3b8">Select one or more</span></div>
-              <div style="display:flex;gap:6px;flex-wrap:wrap">
-                <sc-for list="{{ dProcs }}" as="p" hint-placeholder-count="8">
-                  <button type="button" onClick="{{ p.onClick }}" style="min-height:34px;padding:0 12px;border-radius:9px;border:1px solid {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-family:Outfit,sans-serif;font-size:12px;font-weight:600;cursor:pointer;text-align:start;display:inline-flex;align-items:center;gap:6px"><sc-if value="{{ p.carried }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:#d97706"></span></sc-if><span dir="ltr" style="unicode-bidi:isolate">{{ p.label }}</span></button>
-                </sc-for>
-              </div>
-              <div style="display:flex;gap:8px">
-                <input type="text" value="{{ freeText }}" onChange="{{ onFreeText }}" onKeyDown="{{ onFreeKey }}" placeholder="Custom procedure — type and press Enter" style="flex:1;min-height:38px;padding:0 12px;border-radius:10px;border:1px dashed #cbd5e1;background:#fbfcfe;font-size:13px;font-weight:500;color:#0f172a;outline:none" style-focus="border-style:solid;border-color:#2563eb;background:#ffffff">
-                <button type="button" onClick="{{ commitFree }}" style="min-height:38px;padding:0 13px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;color:#1d4ed8;font-size:13px;font-weight:700;cursor:pointer" style-hover="background:#eff6ff">Add</button>
-              </div>
-            </div>
-
-
-            <div style="display:grid;gap:8px">
-              <div style="display:flex;gap:5px;flex-wrap:wrap">
-                <sc-for list="{{ dNoteTabs }}" as="t" hint-placeholder-count="3">
-                  <button type="button" onClick="{{ t.onClick }}" aria-selected="{{ t.on }}" style="min-height:32px;padding:0 12px;border-radius:9px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px">{{ t.label }}<sc-if value="{{ t.dot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:#2563eb"></span></sc-if></button>
-                </sc-for>
-              </div>
-              <textarea value="{{ dNoteValue }}" onChange="{{ onNote }}" placeholder="{{ dNotePlaceholder }}" rows="2" style="width:100%;min-height:56px;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#f6f8fb;font-size:13px;font-weight:500;color:#0f172a;resize:vertical;outline:none;line-height:1.6" style-focus="border-color:#2563eb;background:#ffffff"></textarea>
-            </div>
-          </div>
+        <sc-if value="{{ dNotAsk }}" hint-placeholder-val="{{ true }}">
+          <button type="button" class="ot-btn ot-btn--primary" style="flex:1 1 auto;min-block-size:var(--ot-touch-min)" onClick="{{ dFinish }}">Finish visit</button>
+          <button type="button" class="ot-btn ot-btn--ghost" onClick="{{ dOpenCase }}">Case file</button>
         </sc-if>
-
-      </div>
-
-      <div style="flex:none;padding:14px 20px;background:#ffffff;border-top:1px solid #e8edf3;display:flex;gap:10px;flex-wrap:wrap">
-        <button type="button" onClick="{{ dPrimaryAct }}" style="flex:1;min-height:48px;padding:0 18px;border-radius:12px;border:1px solid {{ dPrimaryBd }};background:{{ dPrimaryBg }};color:{{ dPrimaryFg }};font-size:14.5px;font-weight:700;cursor:pointer">{{ dPrimary }}</button>
-        <sc-if value="{{ dShowNext }}" hint-placeholder-val="{{ false }}">
-          <button type="button" onClick="{{ dOpenCase }}" style="flex:none;min-height:48px;padding:0 16px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;font-size:13.5px;font-weight:500;color:#0f172a;cursor:pointer" style-hover="background:#f6f8fb">Case file</button>
-        </sc-if>
-      </div>
-
-      <sc-if value="{{ dGalleryOpen }}" hint-placeholder-val="{{ false }}">
-        <div style="position:absolute;inset:0;z-index:5;background:rgba(15,23,42,.42);display:flex;align-items:flex-end;animation:otFade .15s ease-out">
-          <div role="dialog" aria-label="Photo gallery" style="width:100%;max-height:78%;background:#ffffff;border-radius:18px 18px 0 0;box-shadow:0 -12px 40px rgba(15,23,42,.18);display:flex;flex-direction:column;animation:otIn .2s cubic-bezier(.4,0,.2,1)">
-            <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid #f1f5f9">
-              <div style="display:grid;gap:1px;flex:1;min-width:0">
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#94a3b8">Session photo</span>
-                <span style="font-size:15px;font-weight:700">{{ dGallerySlot }} view</span>
-              </div>
-              <label style="display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:0 14px;border-radius:11px;background:#2563eb;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer">
-                <span style="font-family:Outfit,sans-serif;font-size:16px;line-height:1">+</span>Upload new
-                <input type="file" accept="image/*" onChange="{{ onUpload }}" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
-              </label>
-              <sc-if value="{{ dGalleryHas }}" hint-placeholder-val="{{ false }}">
-                <button type="button" onClick="{{ clearPhoto }}" style="min-height:38px;padding:0 12px;border-radius:11px;border:1px solid #fecaca;background:#ffffff;color:#b91c1c;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:#fef2f2">Remove</button>
-              </sc-if>
-              <button type="button" onClick="{{ closeGallery }}" aria-label="Close" style="width:36px;height:36px;flex:none;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Outfit,sans-serif;font-size:15px;cursor:pointer" style-hover="background:#f6f8fb;color:#0f172a">✕</button>
-            </div>
-            <div style="overflow-y:auto;padding:14px 18px 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-              <sc-for list="{{ dGallery }}" as="g" hint-placeholder-count="8">
-                <button type="button" onClick="{{ g.onClick }}" style="position:relative;aspect-ratio:1;padding:0;border-radius:12px;border:2px solid transparent;overflow:hidden;background:#f1f5f9;cursor:pointer" style-hover="border-color:#bfdbfe">
-                  <img data-src="{{ g.src }}" alt="{{ g.label }}" style="width:100%;height:100%;object-fit:cover;display:block">
-                  <span dir="ltr" style="position:absolute;left:6px;bottom:6px;padding:2px 7px;border-radius:6px;background:rgba(15,23,42,.72);color:#ffffff;font-family:Outfit,sans-serif;font-size:10px;font-weight:600">{{ g.label }}</span>
-                  <sc-if value="{{ g.on }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:#059669;color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:12px;font-weight:700">✓</span></sc-if>
-                </button>
-              </sc-for>
-            </div>
-          </div>
-        </div>
-      </sc-if>
+      </footer>
     </aside>
   </sc-if>
 </div>
@@ -601,79 +318,8 @@ button,input,select,textarea{font-family:inherit}
   &quot;openId&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;string&quot;}
 }">
 class Component extends DCLogic {
-  state = { tab: null, scope: 'today', query: '', view: 'all', sort: 'visit',
-            visitFilter: '', stageFilter: '', hideDone: false, openId: null,
-            sess: {}, lastOpen: false, addOpen: false, addText: '', freeText: '', noteTab: 'clinical',
-            collapsed: false, narrow: false, sumOpen: true, measEdit: null, measDraft: '', gallery: null,
-            stageSel: '', flagSel: '', bookId: null, bookDate: '', bookErr: '', toast: null,
-            nvOpen: false, nvDate: '', nvErr: '' };
-
-  /* gate flag codes → knowledge keys. Unknown codes are reported, not swallowed. */
-  flagMap = { R: 'recordsComplete', P: 'problemListApproved', A: 'planApproved', D: 'debondDone' };
-
-  /* One record per case. last = the session that happened, next = the session to come;
-     next.plan[0] IS the objective — it is never stored twice. */
-  get seed() { return (window.OrthoCases || {}).seed || []; }
-
-  /* presentation only — visit type → one of the six allowed status hues */
-  visitTone = {
-    consultation: 'slate', records: 'blue', progress: 'blue',
-    wire: 'emerald', adjustment: 'emerald', elastics: 'emerald',
-    ipr: 'amber', aligner: 'amber',
-    bonding: 'violet', debond: 'violet', retainer: 'violet',
-    emergency: 'red'
-  };
-
-  tones = {
-    slate:   ['#f1f5f9', '#475569', '#94a3b8'],
-    blue:    ['#eff6ff', '#1d4ed8', '#2563eb'],
-    emerald: ['#ecfdf5', '#047857', '#059669'],
-    amber:   ['#fffbeb', '#b45309', '#d97706'],
-    violet:  ['#f5f3ff', '#6d28d9', '#7c3aed'],
-    red:     ['#fef2f2', '#b91c1c', '#dc2626']
-  };
-
-  /* chairside detail per case:
-     cc  = chief complaint (why they came)
-     al  = [tone, text] medical / clinical alerts
-     ap  = appliance in the mouth right now [[label, value], …]
-     cmp = [label, value, ok?] compliance readings from the last session
-     carry = planned last time but not done — carries into today
-     est = estimated total months (for the progress bar) */
-  get detail() { return (window.OrthoCases || {}).detail || {}; }
-
-  /* chart summary per case — what the doctor needs in the first ten seconds:
-     dx       = [text, tone] findings from the diagnosis screen (2 severe · 1 moderate · 0 mild)
-     plan     = { ex, appl, mech, anch } approved plan; null until planning is done
-     phase    = current treatment phase key (OrthoKnowledge.treatmentPhases)
-     med      = condition names from the medical history (OrthoKnowledge.conditions)
-     problems = [text, status] problem list with treatment status
-     meas     = key → [baseline, current] for tracked measurements
-     bonded   = 'YYYY-MM' · sessions = visits so far · missedAt = indices of missed visits */
-  get chart() { return (window.OrthoCases || {}).chart || {}; }
-
-  get records() { return (window.OrthoCases || {}).records || {}; }
-
-  /* a plan item's recorder is inferred from its wording — the item IS the action IS the log */
-  recorderFor(text) {
-    const t = text.toLowerCase();
-    if (/compliance|tracking|wear/.test(t)) return 'compliance';
-    if (/arch ?wire|wire/.test(t)) return 'wire';
-    if (/elastic/.test(t)) return 'elastics';
-    if (/photo|records|progress/.test(t)) return 'photo';
-    if (/ipr/.test(t)) return 'ipr';
-    if (/overjet|overbite|measure|space/.test(t)) return 'measure';
-    return 'none';
-  }
-
-  /* the natural follow-up per visit type — seeds next session's objective */
-  nextSuggestion = {
-    wire: 'Review alignment on the new wire', elastics: 'Review overjet after the wear period',
-    adjustment: 'Follow up mechanics and assess progress', aligner: 'Deliver the next aligner set',
-    ipr: 'Assess space after IPR', progress: 'Review photos against plan objectives',
-    debond: 'Deliver retainers and instructions', retainer: 'Retention check', bonding: 'First activation after bonding',
-    records: 'Review records and start diagnosis', consultation: 'Records session'
-  };
+  state = { tab: null, stageSel: '', flagSel: '', openId: null, sess: {}, bookId: null, bookDate: '', bookErr: '',
+            toast: null, collapsed: false };
 
   K() { return window.OrthoKnowledge || {}; }
 
@@ -719,11 +365,14 @@ class Component extends DCLogic {
     return new Date(Date.UTC(+q[0], +q[1] - 1, +q[2]) + off * 86400000).toISOString().slice(0, 10);
   }
 
-  shortDate(off) { return window.OT.fmtDate(this.dayISO(off)); }
+  /* whole days from the demo day to an ISO date (negative: passed). UTC arithmetic, no clock */
+  daysFromToday(iso) {
+    return Math.round((Date.parse(iso + 'T00:00:00Z') - Date.parse(window.OT.DEMO_TODAY + 'T00:00:00Z')) / 86400000);
+  }
 
-  visitDef(key) {
-    const f = (this.K().visitTypes || []).filter(v => v[0] === key)[0];
-    return f ? { en: f[1], ar: f[2] } : { en: '—', ar: '' };
+  weeksText(iso) {
+    const w = Math.max(1, Math.round(this.daysFromToday(iso) / 7));
+    return w + (w === 1 ? ' week' : ' weeks');
   }
 
   stageInfo(key) {
@@ -731,70 +380,185 @@ class Component extends DCLogic {
     return f || { key: key, en: key, ar: '', dot: '#94a3b8', bg: '#f1f5f9', fg: '#475569' };
   }
 
-  expandFlags(codes) {
-    const out = {};
-    (codes || []).forEach(c => {
-      const k = this.flagMap[c];
-      if (!k) { if (window.console) window.console.warn('OrthoTrack: unknown gate flag "' + c + '"'); return; }
-      out[k] = true;
+  /* the stage's badge class: one per path/side stage, one shared class for the three exits */
+  stageCls(key) {
+    const def = (this.K().stageList || []).filter(x => x.key === key)[0];
+    if (!def) return '';
+    return def.kind === 'exit' ? 'ot-stage--exit' : 'ot-stage--' + def.key;
+  }
+
+  /* ---- next visit ----
+     shown and saved: the booked date while it is ahead. A booked date that is due or passed is replaced by the stage's
+     recall (the visit happens now). Nothing booked shows nothing: the platform does not suggest a date (T5-AC10). */
+  recallDays(stage) {
+    const r = (this.K().recallIntervals || {})[stage];
+    return r && r.days ? r.days : 21;
+  }
+  nextShown(c) {
+    if (c.nextVisit && c.nextVisit > window.OT.DEMO_TODAY) return c.nextVisit;
+    if (c.nextVisit) return this.dayISO(this.recallDays(c.stage));
+    return null;
+  }
+  /* what Finish visit writes: the shown date, or the recall when nothing is booked */
+  nextProposed(c) { return this.nextShown(c) || this.dayISO(this.recallDays(c.stage)); }
+
+  /* procedures of a stage (the catalogue from the knowledge base); the active list when the stage has none */
+  catalogueOf(stage) {
+    const p = this.K().procedures || {};
+    return p[stage] || p.active || [];
+  }
+
+  archwiresFor(c) {
+    const nickel = (c.medical || []).some(m => m.label === 'Nickel allergy');
+    return (this.K().archwires || []).filter(w => !(nickel && /NiTi/.test(w)));
+  }
+
+  /* ---- session model: what the doctor ticks today, kept per case while the screen is open ---- */
+  blankSess() {
+    return { ticks: {}, extra: [], wireOn: false, wireSet: false, wire: '', note: '', nvOpen: false, nvDate: '',
+             nvErr: '', nv: null, nvSaved: null, ask: false, cat: false };
+  }
+  sessOf(id) { return this.state.sess[id] || this.blankSess(); }
+  patchSess(id, patch) {
+    this.setState(st => {
+      const all = Object.assign({}, st.sess);
+      all[id] = Object.assign({}, st.sess[id] || this.blankSess(), patch);
+      return { sess: all };
     });
+  }
+
+  /* today's tasks: the carried and planned items (in order, unique), then the unplanned ones done today */
+  tasksOf(c, S) {
+    const out = [];
+    (c.carry || []).concat(c.nextTasks || [], S.extra).forEach(t => { if (out.indexOf(t) < 0) out.push(t); });
     return out;
   }
 
-  /* one place decides what "late" means:
-     a booked future visit is never late; a passed booking is late by the days since it;
-     an unbooked case is late once it exceeds its phase interval. */
-  lateness(o) {
-    if (o.next && o.next.off !== null && o.next.off !== undefined) {
-      return o.next.off >= 0 ? { days: 0, kind: 'scheduled' } : { days: -o.next.off, kind: 'missed' };
-    }
-    const ov = this.K().overdueBy || ((k, d) => d - 21);
-    const d = ov(o.stage, o.last ? o.last.d : 0);
-    return d > 0 ? { days: d, kind: 'unbooked' } : { days: 0, kind: 'open' };
+  tickTask(id, t) {
+    const S = this.sessOf(id);
+    this.patchSess(id, { ticks: Object.assign({}, S.ticks, { [t]: !S.ticks[t] }) });
   }
 
-  build() {
-    /* every row is a case of the store (OrthoCases.seed is a view of it); no ids are made up here */
-    const rows = this.seed.map(c => ({
-      seeded: true, id: 'ORT-' + c.id, name: c.n, meta: c.meta, stage: (this.K().stageKey || (k => k))(c.stage), mo: c.mo,
-      photo: this.heroOf('ORT-' + c.id, c.n), fallback: this.initialsAvatar(c.n),
-      flags: this.expandFlags(c.f), last: c.last, next: c.next
-    }));
-    rows.forEach(o => {
-      /* a booking made from the drawer overrides the seeded appointment */
-      const l = this.lateness(o);
-      o.late = l.days; o.lateKind = l.kind;
-      o.objective = (o.next && o.next.plan && o.next.plan[0]) || '—';
-      o.offset = o.next ? o.next.off : null;
-      o.visitType = o.next ? o.next.v : '';
-      const d = this.detail[o.id] || {};
-      o.cc = d.cc || '';
-      o.alerts = d.al || [];
-      o.appliance = d.ap || [];
-      o.compliance = d.cmp || [];
-      o.carry = d.carry || [];
-      o.est = d.est || 0;
-      /* records completeness is a property of the seeded dataset; a user-created
-         case carries its own intake progress and must never inherit a seeded id's */
-      if (o.seeded) {
-        const rc = this.records[o.id];
-        o.rec = rc && rc.done < rc.total ? rc : null;
-      } else if (o.record && o.record.progress) {
-        const up = Object.keys(o.record.progress.uploads || {}).length;
-        o.rec = up < 14 ? { done: up, total: 14, missing: ['Photo set incomplete — ' + (14 - up) + ' slots empty'] } : null;
-      } else {
-        o.rec = { done: 0, total: 14, missing: ['No records started'] };
-      }
+  addUnplanned(id, p) {
+    const S = this.sessOf(id);
+    this.patchSess(id, {
+      extra: S.extra.indexOf(p) < 0 ? S.extra.concat([p]) : S.extra,
+      ticks: Object.assign({}, S.ticks, { [p]: true }),
+      cat: false,
     });
-    return rows;
   }
 
-  go(o, screen) {
-    /* the case being opened is the store's current case: the other screens read it from there */
-    if (window.OT.store) window.OT.store.setCurrent(o.id);
-    const info = { name: o.name, id: o.id, meta: o.meta, photo: o.photo, stage: this.stageInfo(o.stage).en };
-    if (screen === 'session') info.tab = 'log';   // the session screen is not built yet (hidden, PHASE_0.md)
+  /* the new wire is written when it is picked (case.wire); the visit records it when it changed */
+  setWire(id, v) {
+    const c = window.OT.store.get(id);
+    if (!c || !v) return;
+    if (v !== c.wire) window.OT.store.update(id, { wire: v });
+    this.patchSess(id, { wire: v, wireSet: v !== c.wire });
+  }
+
+  /* Change: the date and the next visit's tasks. Auto-filled with the unticked tasks and the stage's first procedure */
+  openNext(id) {
+    const S = this.sessOf(id);
+    if (S.nvOpen) { this.patchSess(id, { nvOpen: false, nvErr: '' }); return; }
+    const c = window.OT.store.get(id);
+    const und = this.tasksOf(c, S).filter(t => !S.ticks[t]);
+    const first = this.catalogueOf(c.stage)[0];
+    const nv = und.slice();
+    if (first && nv.indexOf(first) < 0) nv.push(first);
+    this.patchSess(id, { nvOpen: true, nvErr: '', nvDate: this.nextShown(c) || '', nv: nv });
+  }
+
+  saveNext(id) {
+    const S = this.sessOf(id);
+    const err = this.bookDate(id, S.nvDate);
+    if (err) { this.patchSess(id, { nvErr: err }); return; }
+    /* the date is saved now; the next visit's tasks are written with the visit, at Finish, so that today's tasks do not
+       change while the doctor works on them */
+    this.patchSess(id, { nvOpen: false, nvErr: '', nvSaved: (S.nv || []).slice() });
+  }
+
+  nvRemove(id, t) {
+    const S = this.sessOf(id);
+    this.patchSess(id, { nv: (S.nv || []).filter(x => x !== t) });
+  }
+
+  nvAdd(id, t) {
+    const S = this.sessOf(id);
+    if (!t || (S.nv || []).indexOf(t) >= 0) return;
+    this.patchSess(id, { nv: (S.nv || []).concat([t]) });
+  }
+
+  /* Finish visit (T5-AC1, T5-AC3): one visit line; the wire; the next visit; the next visit's tasks. Unticked tasks
+     are carried over only when the doctor says so. */
+  finishVisit(id, carry) {
+    const c = window.OT.store.get(id);
+    if (!c) return;
+    const S = this.sessOf(id);
+    const today = window.OT.DEMO_TODAY;
+    const tasks = this.tasksOf(c, S);
+    const done = tasks.filter(t => S.ticks[t]);
+    const und = tasks.filter(t => !S.ticks[t]);
+    const next = (S.nvSaved || []).filter(t => carry || und.indexOf(t) < 0);
+    if (carry) und.forEach(t => { if (next.indexOf(t) < 0) next.push(t); });
+    const before = { visits: c.visits, nextVisit: c.nextVisit, nextTasks: c.nextTasks, carry: c.carry, flags: c.flags, wire: c.wire };
+    const visit = { date: today, kind: 'visit', note: S.note.trim() || null, tasks: done };
+    if (S.wireSet && S.wire) visit.wire = S.wire;
+    const todays = window.OT.store.list().filter(x => x.nextVisit === today);
+    const i = todays.map(x => x.id).indexOf(id);
+    const other = todays.slice(i + 1).concat(todays.slice(0, Math.max(i, 0))).filter(x => x.id !== id)[0];
+    window.OT.store.update(id, {
+      visits: [visit].concat(c.visits || []),
+      nextVisit: this.nextProposed(c),
+      nextTasks: next,
+      carry: [],
+      flags: (c.flags || []).filter(f => f !== 'no-show'),
+    });
+    this.patchSess(id, this.blankSess());
+    this.setState({ openId: null });
+    this.showToast('Recorded', () => window.OT.store.update(id, before), other ? other.id : null, 'success');
+  }
+
+  /* "Didn't come" (T5-AC4): the flag, a no-show entry in the log (not a visit), today's tasks move to the next visit,
+     the date is cleared. The toast's Undo puts back the whole snapshot. The row action and the panel use this. */
+  markNoShow(id) {
+    const c = window.OT.store.get(id);
+    if (!c) return;
+    const before = { flags: c.flags, nextVisit: c.nextVisit, nextTasks: c.nextTasks, carry: c.carry, visits: c.visits };
+    const tasks = [];
+    (c.carry || []).concat(c.nextTasks || []).forEach(t => { if (tasks.indexOf(t) < 0) tasks.push(t); });
+    window.OT.store.update(id, {
+      flags: (c.flags || []).filter(f => f !== 'no-show').concat(['no-show']),
+      nextVisit: null, nextTasks: tasks, carry: [],
+      visits: [{ date: window.OT.DEMO_TODAY, kind: 'no-show', note: null, tasks: [] }].concat(c.visits || []),
+    });
+    this.patchSess(id, this.blankSess());
+    this.showToast(c.patient.name + ': didn’t come', () => window.OT.store.update(id, before), null, 'warn');
+  }
+
+  showToast(text, undo, nextId, tone) {
+    clearTimeout(this._toastT);
+    this.setState({ toast: { text: text, undo: undo, next: nextId || null, tone: tone || 'warn' } });
+    this._toastT = setTimeout(() => this.setState({ toast: null }), 6000);
+  }
+
+  /* opens the case file (or another screen) for a case: the store's current case is the one the screens read */
+  openCase(c, screen) {
+    if (window.OT.store) window.OT.store.setCurrent(c.id);
+    const age = window.OT.age(c.patient.dob);
+    const meta = [age === null ? '' : age + 'y', c.patient.sex || '', c.complaint.chip || ''].filter(Boolean).join(' · ');
+    const info = { name: c.patient.name, id: c.id, meta: meta, photo: this.heroOf(c.id, c.patient.name), stage: this.stageInfo(c.stage).en };
     if (this.props.onNavigate) this.props.onNavigate(screen === 'overview' ? 'casefile' : screen, info);
+  }
+
+  /* a date in the store's form, checked for the booking: a real day, not in the past (T11-AC5). Returns the message or null */
+  bookDate(id, iso) {
+    if (!iso || !window.OT.fmtDate(iso)) return 'Pick a date.';
+    if (iso < window.OT.DEMO_TODAY) return 'A date in the past cannot be the next visit. Pick today or later.';
+    const c = window.OT.store.get(id);
+    if (!c) return 'No such case.';
+    /* a booking clears "Didn't come" on its own (T11-AC4); the derived flags clear with the date */
+    window.OT.store.update(id, { nextVisit: iso, flags: (c.flags || []).filter(f => f !== 'no-show') });
+    return null;
   }
 
   componentDidMount() {
@@ -805,12 +569,6 @@ class Component extends DCLogic {
         if (window.OrthoCases && window.OrthoKnowledge) { clearInterval(this._k); this.forceUpdate(); }
       }, 60);
     }
-    this._fit = () => {
-      const narrow = window.innerWidth < 1160;
-      if (narrow !== this.state.narrow) this.setState({ narrow: narrow });
-    };
-    this._fit();
-    window.addEventListener('resize', this._fit);
     this._esc = ev => { if (ev.key === 'Escape' && this.state.openId) this.setState({ openId: null }); };
     window.addEventListener('keydown', this._esc);
     /* offline fallback for the remote portraits — capture phase, no inline handler */
@@ -841,7 +599,7 @@ class Component extends DCLogic {
     this.setState({ tab: want ? 'all' : (this.props.startTab || 'today'), openId: want });
   }
   componentDidUpdate(prev) {
-    /* the host can ask for a specific drawer (e.g. Start session from the case file) */
+    /* the host can ask for a specific drawer (e.g. Open session from the case file) */
     if (this.props.openId && this.props.openId !== prev.openId) this.setState({ openId: this.props.openId });
     /* the sidebar asks for the All cases tab or for Today; the same mounted dashboard switches. The shell counts the
        requests (startReq): its startTab alone does not change when the tab was switched here (the tab buttons). */
@@ -851,467 +609,21 @@ class Component extends DCLogic {
   componentWillUnmount() {
     clearInterval(this._k);
     clearTimeout(this._toastT);
-    window.removeEventListener('resize', this._fit);
     window.removeEventListener('keydown', this._esc);
     document.removeEventListener('error', this._imgErr, true);
     if (this._obs) this._obs.disconnect();
   }
 
-  sessOf(id) { return this.state.sess[id] || { ticks: {}, rec: {}, extra: [], closed: false, interval: null, procs: null, free: [], review: false, notes: {} }; }
-  patchSess(id, patch) {
-    this.setState(st => {
-      const all = Object.assign({}, st.sess);
-      all[id] = Object.assign({}, this.sessOf(id), patch);
-      return { sess: all };
-    });
-  }
-
-  drawerVals(rows) {
-    const o = rows.filter(r => r.id === this.state.openId)[0];
-    const empty = { drawerOpen: false, dAlerts: [], dAppliance: [], dLastItems: [], dCompliance: [],
-                    dPlanItems: [], dGate: [], dIntervals: [], dFlags: [], dDx: [], dPlan: [], dPhases: [],
-                    dTimelineDots: [], dProblems: [], dMeas: [], dGallery: [], dRecMissing: [] };
-    if (!o) return empty;
-    const K = this.K();
-    const st = this.stageInfo(o.stage);
-    const vd = this.visitDef(o.visitType);
-    const S = this.sessOf(o.id);
-    const isToday = o.offset === 0;
-    const clinical = o.stage === 'active' || o.stage === 'retention';
-    const live = isToday && !S.closed;
-    /* booking mode: the visit was missed or never booked — D becomes the rebook block */
-    const booking = !isToday && (o.offset === null || o.offset < 0);
-    const editable = live || booking;
-    const wires = K.archwires || [];
-    const elasticsList = ['Class II 3/16" light', 'Class II 3/16" medium', 'Class II 1/4" medium',
-                          'Class III 1/4" medium', 'Anterior vertical 1/4"', 'Settling 3/16" light'];
-
-    /* appliance — live overrides from what was recorded this session */
-    const rec = S.rec;
-    const appliance = o.appliance.map(a => {
-      if (a[0] === 'UPPER' && rec.wireU) return [a[0], rec.wireU];
-      if (a[0] === 'LOWER' && rec.wireL) return [a[0], rec.wireL];
-      if (a[0] === 'ELASTICS' && rec.elastic) return [a[0], rec.elastic];
-      return a;
-    });
-    const applianceLine = appliance.map(a => a[0].charAt(0) + a[0].slice(1).toLowerCase() + ' ' + a[1]).join(' · ');
-
-    /* photo gallery: pick from the case library or upload */
-    const caseRec = window.OT.store.get(o.id);
-    const library = ((caseRec && caseRec.records.media) || []).map(m => ({ src: m.src, label: m.label }))
-      .concat((S.uploads || []).map(u => ({ src: u, label: 'Uploaded' })));
-    const gSlot = this.state.gallery;
-    const openGallery = v => { if (live) this.setState({ gallery: v }); };
-    const assignPhoto = src => {
-      const r = Object.assign({}, rec); const p = Object.assign({}, r.photos || {});
-      if (src) p[gSlot] = src; else delete p[gSlot];
-      r.photos = p; this.patchSess(o.id, { rec: r }); this.setState({ gallery: null });
-    };
-    const photoChip = v => {
-      const src = (rec.photos || {})[v];
-      return {
-        label: v, on: !!src, has: !!src, src: src || '',
-        bg: src ? '#ecfdf5' : '#fbfcfe', bd: src ? '#a7f3d0' : '#e2e8f0', fg: src ? '#047857' : '#94a3b8',
-        onClick: ev => { ev.stopPropagation(); openGallery(v); }
-      };
-    };
-    /* plan: carry-over first, dedup, each with its recorder */
-    const norm = t => t.replace(/\s+/g, ' ').trim();
-    const carryKeys = o.carry.map(norm);
-    const base = o.carry.map(t => ({ text: t, carried: true }))
-      .concat((o.next.plan || [])
-        .filter(t => !carryKeys.some(c => c.indexOf(norm(t)) >= 0 || norm(t).indexOf(c) >= 0))
-        .map(t => ({ text: t, carried: false })))
-      .concat(S.extra.map(t => ({ text: t, carried: false, extra: true })))
-      .filter(it => (S.dropped || []).indexOf(norm(it.text)) < 0);
-    const opt = (list, cur, key) => list.map(v => ({
-      label: v, on: cur === v,
-      bg: cur === v ? '#2563eb' : '#ffffff', fg: cur === v ? '#ffffff' : '#334155',
-      bd: cur === v ? '#2563eb' : '#e2e8f0',
-      onClick: ev => { ev.stopPropagation(); const r = Object.assign({}, rec); r[key] = cur === v ? '' : v; this.patchSess(o.id, { rec: r }); }
-    }));
-    const plan = base.map(it => {
-      const k = norm(it.text);
-      const done = !!S.ticks[k];
-      const type = this.recorderFor(it.text);
-      const open = done && live && type !== 'none';
-      return {
-        text: it.text, carried: it.carried, extra: !!it.extra,
-        tickable: live, notTickable: !live, role: live ? 'button' : 'listitem', cursor: live ? 'pointer' : 'default',
-        onRemove: ev => {
-          ev.stopPropagation(); if (!live) return;
-          const t = Object.assign({}, S.ticks); delete t[k];
-          this.patchSess(o.id, { extra: S.extra.filter(x => x !== it.text), dropped: (S.dropped || []).concat([k]), ticks: t });
-        },
-        mark: done ? '✓' : '',
-        boxBg: done ? '#2563eb' : '#ffffff', boxBd: done ? '#2563eb' : '#cbd5e1',
-        textFg: done ? '#64748b' : '#0f172a',
-        isWire: open && type === 'wire', isElastics: open && type === 'elastics',
-        isCompliance: open && type === 'compliance', isPhoto: open && type === 'photo',
-        isIPR: open && type === 'ipr', isMeasure: open && type === 'measure',
-        wiresU: opt(wires, rec.wireU, 'wireU'), wiresL: opt(wires, rec.wireL, 'wireL'),
-        elastics: opt(elasticsList, rec.elastic, 'elastic'),
-        hours: opt(['< 12h', '12–16h', '16–20h', '20h+'], rec.hours, 'hours'),
-        hygiene: opt(['Poor', 'Fair', 'Good'], rec.hygiene, 'hygiene'),
-        measureVal: rec.measure || '',
-        onMeasure: ev => { const r = Object.assign({}, rec); r.measure = ev.target.value; this.patchSess(o.id, { rec: r }); },
-        lastMeasure: o.compliance.length ? '' : '',
-        iprVal: rec.ipr || '',
-        onIpr: ev => { const r = Object.assign({}, rec); r.ipr = ev.target.value; this.patchSess(o.id, { rec: r }); },
-        photoSlots: ['Frontal', 'Right', 'Left', 'Upper', 'Lower'].map(photoChip),
-        onToggle: () => { if (!live) return; const t = Object.assign({}, S.ticks); t[k] = !t[k]; this.patchSess(o.id, { ticks: t }); }
-      };
-    });
-    const doneN = plan.filter(p => p.mark).length;
-    const undone = base.filter(it => !S.ticks[norm(it.text)]).map(it => it.text);
-
-    /* next session — interval chips from the phase recall; procedures composed from the catalogue */
-    const iv = ((K.recallIntervals || {})[o.stage] || {}).days || 42;
-    const weeks = Math.max(1, Math.round(iv / 7));
-    /* rebooking is always soon — the phase interval already ran out */
-    const ivOpts = booking ? [1, 2, 3, 4] : o.stage === 'retention' ? [3, 6, 12] : [weeks - 2, weeks, weeks + 2, weeks + 4].filter(w => w >= 1);
-    const unit = booking ? 'w' : o.stage === 'retention' ? 'mo' : 'w';
-    const chosen = S.interval === null ? (booking ? ivOpts[0] : ivOpts[1]) : S.interval;
-    const unitDays = unit === 'mo' ? 30 : 7;
-    /* a picked calendar date overrides the interval chips */
-    const custom = S.customOff !== null && S.customOff !== undefined;
-    const nextDays = custom ? S.customOff : chosen * unitDays;
-    const onNextDate = ev => {
-      if (!editable || !ev.target.value) return;
-      const t = new Date(window.OT.DEMO_TODAY + 'T00:00:00');
-      const d = new Date(ev.target.value + 'T00:00:00');
-      const diff = Math.round((d - t) / 86400000);
-      if (diff >= 0) this.patchSess(o.id, { customOff: diff, interval: null });
-    };
-    const catalogue = (K.procedures || {})[o.stage] || [];
-    /* default selection: today's undone items carry over; else the natural follow-up */
-    const defaultProcs = undone.length ? undone.slice() : (this.nextSuggestion[o.visitType] ? [this.nextSuggestion[o.visitType]] : []);
-    const procs = S.procs === null ? defaultProcs : S.procs;
-    const setProcs = list => this.patchSess(o.id, { procs: list });
-    const toggleProc = p => { if (!editable) return; setProcs(procs.indexOf(p) >= 0 ? procs.filter(x => x !== p) : procs.concat([p])); };
-    const nextType = booking ? vd.en : o.stage === 'retention' ? 'Retainer fit' : o.stage === 'active' ? 'Adjustment' : vd.en;
-    const notes = S.notes || {};
-    const addFree = () => {
-      const t = this.state.freeText.trim(); if (!t || !editable) return;
-      const free = (S.free || []).indexOf(t) >= 0 ? S.free : (S.free || []).concat([t]);
-      this.patchSess(o.id, { free: free, procs: procs.indexOf(t) >= 0 ? procs : procs.concat([t]) });
-      this.setState({ freeText: '' });
-    };
-    const noteTabs = [['clinical', 'Clinical note'], ['assistant', 'For assistant'], ['reception', 'For reception']];
-    /* gate — own milestone excluded */
-    const order = (K.caseStages || []).map(x => x[0]);
-    const nextStage = order[order.indexOf(o.stage) + 1];
-    const milestone = { active: 'debondDone', plan: 'planApproved', diagnosis: 'problemListApproved', records: 'recordsComplete' };
-    const gateRaw = nextStage ? (K.gateCheck || (() => []))(o.flags, nextStage) : [];
-    const ownDef = (K.stageGates || {})[nextStage] || [];
-    const ownLine = (ownDef.filter(g => g[0] === milestone[o.stage])[0] || [])[1];
-    const gate = gateRaw.filter(t => t !== ownLine).map(t => ({ text: t }));
-
-    const pct = o.stage === 'retention' ? 100 : (o.est ? Math.min(100, Math.round((o.mo / o.est) * 100)) : 0);
-    const lastFirst = (o.last.items || [])[0] || '';
-    const compChip = o.compliance[0];
-
-    /* ---- chart summary ---- */
-    const ch = this.chart[o.id] || {};
-    const toneBg = t => t === 2 ? '#fef2f2' : t === 1 ? '#fffbeb' : '#f1f5f9';
-    const toneFg = t => t === 2 ? '#b91c1c' : t === 1 ? '#b45309' : '#475569';
-    const flags = (K.medicalFlags || (() => []))(ch.med || []);
-    const phases = K.treatmentPhases || [];
-    const phaseIdx = phases.map(p => p[0]).indexOf(ch.phase);
-    const tracked = (K.trackedMeasures || (() => []))(o.meta, ch.tracked);
-    const pm = K.progressMeasures || {};
-    const measCur = S.meas || {};
-    const probs = S.probs || {};
-    const statuses = K.problemStatuses || [];
-    const stColor = { pending: '#94a3b8', progress: '#2563eb', resolved: '#059669' };
-    /* one line in today's session per summary edit — replaces its own earlier entry */
-    const logToday = (key, text) => {
-      if (!live) return {};
-      const keys = Object.assign({}, S.logKeys || {});
-      const prev = keys[key];
-      const extra = S.extra.filter(t => t !== prev).concat([text]);
-      keys[key] = text;
-      const ticks = Object.assign({}, S.ticks);
-      if (prev) delete ticks[norm(prev)];
-      ticks[norm(text)] = true;
-      return { extra: extra, logKeys: keys, ticks: ticks };
-    };
-    const mm = window.OT.fmtMonth(ch.bonded);
-    let estEnd = '';
-    if (ch.bonded && o.est) {
-      const d = new Date(ch.bonded + '-01'); d.setMonth(d.getMonth() + o.est);
-      estEnd = window.OT.fmtMonth(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'));
-    }
-    const nS = ch.sessions || 0;
-    const missedAt = ch.missedAt || [];
-    const planPairs = ch.plan ? [['Extraction', ch.plan.ex], ['Appliance', ch.plan.appl], ['Mechanics', ch.plan.mech], ['Anchorage', ch.plan.anch], ['Est.', o.est ? o.est + ' mo' : '']].filter(p => p[1]) : [];
-    const summary = {
-      dSumOpen: this.state.sumOpen,
-      dSumCaret: this.state.sumOpen ? '▴' : '▾',
-      toggleSum: () => this.setState(x => ({ sumOpen: !x.sumOpen })),
-      dSumBrief: [ch.dx && ch.dx.length ? ch.dx[0][0] : '', phaseIdx >= 0 ? phases[phaseIdx][1] : '', flags.length ? flags.length + ' medical' : ''].filter(Boolean).join(' · '),
-      dHasRecGap: !!o.rec,
-      dRecCount: o.rec ? o.rec.done + ' / ' + o.rec.total + ' uploaded' : '',
-      dRecBlocks: o.rec ? (o.stage === 'records' ? 'Blocks the move to Diagnosis' : 'Blocks the move to Planning') : '',
-      dRecMissing: (o.rec ? o.rec.missing : []).map(t => ({ text: t })),
-      dOpenRecords: () => { this.setState({ openId: null }); this.go(o, 'records'); },
-      dHasFlags: flags.length > 0, dNoFlags: flags.length === 0,
-      dNoDx: !(ch.dx && ch.dx.length), dNoPlan: planPairs.length === 0,
-      dFlags: flags.map(f => ({ label: f.en, bg: toneBg(f.tone), fg: toneFg(f.tone), title: f.impact })),
-      dHasDx: !!(ch.dx && ch.dx.length),
-      dDx: (ch.dx || []).map(d => ({ label: d[0], bg: toneBg(d[1]), fg: toneFg(d[1]) })),
-      dHasPlan: planPairs.length > 0,
-      dPlan: planPairs.map(p => ({ k: p[0], v: p[1] })),
-      dHasPhase: phaseIdx >= 0,
-      dPhases: phases.map((p, i) => ({
-        label: p[1], done: i < phaseIdx, now: i === phaseIdx,
-        dot: i < phaseIdx ? '#7c3aed' : '#ffffff',
-        ring: i <= phaseIdx ? '#7c3aed' : '#e2e8f0',
-        lineL: i === 0 ? 'transparent' : i <= phaseIdx ? '#7c3aed' : '#e2e8f0',
-        lineR: i === phases.length - 1 ? 'transparent' : i < phaseIdx ? '#7c3aed' : '#e2e8f0',
-        fg: i === phaseIdx ? '#0f172a' : i < phaseIdx ? '#6d28d9' : '#94a3b8',
-        fw: i === phaseIdx ? 700 : 500, last: i === phases.length - 1
-      })),
-      dPhaseNow: phaseIdx >= 0 ? phases[phaseIdx][1] : '',
-      dPhaseAr: phaseIdx >= 0 ? phases[phaseIdx][2] : '',
-      dHasTimeline: !!ch.bonded,
-      dBonded: mm, dSessions: String(nS), dMissed: String(missedAt.length), dEstEnd: estEnd,
-      dMissedFg: missedAt.length ? '#b91c1c' : '#475569',
-      dTimelinePct: pct + '%',
-      dTimelineDots: Array.from({ length: nS }, (_, i) => ({
-        x: (((i + 1) / (nS + 1)) * pct).toFixed(1) + '%',
-        bg: missedAt.indexOf(i) >= 0 ? '#dc2626' : '#ffffff',
-        bd: missedAt.indexOf(i) >= 0 ? '#dc2626' : '#7c3aed'
-      })),
-      dHasProblems: !!(ch.problems && ch.problems.length),
-      dProblems: (ch.problems || []).map((p, i) => {
-        const st = probs[i] || p[1];
-        const def = statuses.filter(s => s[0] === st)[0] || statuses[0] || [st, st, ''];
-        return {
-          text: p[0], status: def[1], statusAr: def[2], dot: stColor[st] || '#94a3b8',
-          fg: st === 'resolved' ? '#64748b' : '#0f172a', deco: st === 'resolved' ? 'line-through' : 'none',
-          onClick: () => {
-            const order = statuses.map(s => s[0]);
-            const next = order[(order.indexOf(st) + 1) % order.length];
-            const np = Object.assign({}, probs); np[i] = next;
-            const nd = statuses.filter(s => s[0] === next)[0];
-            this.patchSess(o.id, Object.assign({ probs: np }, logToday('prob' + i, p[0] + ' → ' + (nd ? nd[1] : next))));
-          }
-        };
-      }),
-      dProblemsDone: (ch.problems || []).filter((p, i) => (probs[i] || p[1]) === 'resolved').length + ' / ' + (ch.problems || []).length,
-      dHasMeas: tracked.length > 0 && !!ch.meas,
-      dMeasLive: live,
-      dMeas: tracked.map(k => {
-        const def = pm[k] || [k, '', 'num', ''];
-        const pair = (ch.meas || {})[k] || ['', ''];
-        const cur = measCur[k] !== undefined ? measCur[k] : pair[1];
-        const editing = this.state.measEdit === k;
-        const unit = def[1] ? ' ' + def[1] : '';
-        const commit = () => {
-          const v = this.state.measDraft.trim();
-          this.setState({ measEdit: null, measDraft: '' });
-          if (!live || v === cur) return;
-          const nm = Object.assign({}, measCur); nm[k] = v;
-          this.patchSess(o.id, Object.assign({ meas: nm }, logToday('meas' + k, def[0] + ': ' + (pair[0] || '—') + ' → ' + v + unit)));
-        };
-        return {
-          key: k, label: def[0], goal: def[3],
-          base: pair[0] ? pair[0] + unit : '—',
-          cur: cur ? cur + unit : (live ? 'Record' : '—'),
-          curFg: cur ? '#0f172a' : '#2563eb', curFw: cur ? 700 : 500,
-          curBg: live ? '#ffffff' : 'transparent', curBd: live ? '#e2e8f0' : 'transparent',
-          editing: editing, notEditing: !editing && live, readOnly: !live, draft: this.state.measDraft,
-          onEdit: () => { if (live) this.setState({ measEdit: k, measDraft: cur || '' }); },
-          onDraft: ev => this.setState({ measDraft: ev.target.value }),
-          onKey: ev => { if (ev.key === 'Enter') commit(); if (ev.key === 'Escape') this.setState({ measEdit: null, measDraft: '' }); },
-          onBlur: commit
-        };
-      })
-    };
-
-    return Object.assign(summary, this.nvVals(o), {
-      drawerOpen: true,
-      closeDrawer: () => this.setState({ openId: null, addOpen: false, lastOpen: false, nvOpen: false, nvErr: '' }),
-      dName: o.name, dId: o.id, dMeta: o.meta, dPhoto: o.photo, dFallback: o.fallback,
-      dHasCC: !!o.cc, dCC: o.cc,
-      dStage: st.en, dStageBg: st.bg, dStageFg: st.fg, dStageDot: st.dot,
-      dHasProgress: clinical && o.est > 0,
-      dProgressPct: pct + '%',
-      dProgressFill: o.stage === 'retention' ? '#0891b2' : '#7c3aed',
-      dProgressLabel: o.stage === 'retention' ? Math.max(0, o.mo - o.est) + ' mo since debond' : o.mo + ' / ' + o.est + ' mo',
-      dHasAlerts: o.alerts.length > 0,
-      dAlerts: o.alerts.map(a => ({ text: a[1], bg: a[0] === 'red' ? '#fef2f2' : '#fffbeb', fg: a[0] === 'red' ? '#b91c1c' : '#b45309' })),
-      dHasAppliance: appliance.length > 0,
-      dApplianceLine: applianceLine,
-      dAppliance: appliance.map(a => ({ arch: a[0], value: a[1] })),
-
-      dLastWhen: window.OT.fmtRel(this.dayISO(-o.last.d)) + ' · ' + this.shortDate(-o.last.d),
-      dLastFirst: lastFirst,
-      dLastMore: (o.last.items || []).length > 1 ? '+' + ((o.last.items || []).length - 1) : '',
-      dHasComp: !!compChip,
-      dCompLabel: compChip ? compChip[0] : '', dCompValue: compChip ? compChip[1] : '',
-      dCompFg: compChip && compChip[2] ? '#047857' : '#b45309',
-      dCompBg: compChip && compChip[2] ? '#ecfdf5' : '#fffbeb',
-      dLastOpen: this.state.lastOpen,
-      dLastCaret: this.state.lastOpen ? '▴' : '▾',
-      toggleLast: () => this.setState(x => ({ lastOpen: !x.lastOpen })),
-      dLastItems: (o.last.items || []).map(t => ({ text: t })),
-      dCompliance: o.compliance.map(c => ({ label: c[0], value: c[1], fg: c[2] ? '#047857' : '#b45309', bg: c[2] ? '#ecfdf5' : '#fffbeb' })),
-
-      dTodayHead: !isToday ? (o.offset === null ? 'Next session' : o.offset < 0 ? 'Missed session' : 'Next session')
-                 : S.closed ? 'Session closed' : 'Today\u2019s session',
-      dTodayWhen: !isToday ? (o.offset === null ? 'Not booked yet — the items below are what is needed' : o.offset < 0 ? 'Appointment missed — needs rebooking' : this.shortDate(o.offset) + ' · ' + vd.en)
-                 : vd.en,
-      dPlanCount: isToday ? doneN + ' / ' + plan.length : plan.length + ' items',
-      dReadOnly: !live,
-      dReadOnlyNote: !isToday
-        ? (o.offset === null ? 'Read-only — not booked yet' : o.offset < 0 ? 'Read-only — this session did not happen; rebook below' : 'Read-only — this session has not happened yet')
-        : 'Session closed — reopen it to edit',
-      dLive: live,
-      dPlanItems: plan,
-      dAddOpen: this.state.addOpen && live,
-      dCanAdd: live && !this.state.addOpen,
-      openAdd: () => this.setState({ addOpen: true, addText: '' }),
-      addText: this.state.addText,
-      onAddText: ev => this.setState({ addText: ev.target.value }),
-      onAddKey: ev => { if (ev.key === 'Enter' && this.state.addText.trim()) { this.patchSess(o.id, { extra: S.extra.concat([this.state.addText.trim()]) }); this.setState({ addOpen: false, addText: '' }); } if (ev.key === 'Escape') this.setState({ addOpen: false }); },
-      commitAdd: () => { if (this.state.addText.trim()) this.patchSess(o.id, { extra: S.extra.concat([this.state.addText.trim()]) }); this.setState({ addOpen: false, addText: '' }); },
-
-      dHasGate: gate.length > 0, dGate: gate,
-      dGateHead: clinical ? 'Missing before the next stage' : 'Required to complete this stage',
-
-      dShowNext: isToday || booking,
-      dBooking: booking,
-      dNextHead: booking ? (o.offset === null ? 'Book session' : 'Rebook') : 'Next session',
-      dProcsHead: booking ? 'Procedures for the booked session' : 'Next session procedures',
-      dIntervals: ivOpts.map(w => ({
-        label: w + unit, on: !custom && chosen === w,
-        bg: !custom && chosen === w ? '#0f172a' : '#ffffff', fg: !custom && chosen === w ? '#ffffff' : '#334155', bd: !custom && chosen === w ? '#0f172a' : '#e2e8f0',
-        onClick: () => { if (editable) this.patchSess(o.id, { interval: w, customOff: null }); }
-      })),
-      dNextType: nextType,
-      dNextDate: this.shortDate(nextDays),
-      dNextISO: this.dayISO(nextDays), dTodayISO: this.dayISO(0), onNextDate: onNextDate,
-      dNextDays: nextDays + ' days', dCustomBd: custom ? '#0f172a' : '#e2e8f0', dCustomFg: custom ? '#0f172a' : '#64748b',
-      dProcCount: String(procs.length),
-      /* carried items appear first, amber; catalogue chips follow; custom ones last */
-      /* three stable sources: carried (always shown), catalogue, custom. Toggling only changes selection. */
-      dProcs: undone.map(p => {
-        const on = procs.indexOf(p) >= 0;
-        return { label: p, carried: true, bg: on ? '#fffbeb' : '#ffffff', fg: on ? '#b45309' : '#94a3b8', bd: on ? '#fde68a' : '#e2e8f0', onClick: () => toggleProc(p) };
-      }).concat(catalogue.map(p => {
-        const on = procs.indexOf(p) >= 0;
-        return { label: p, carried: false, bg: on ? '#2563eb' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#2563eb' : '#e2e8f0', onClick: () => toggleProc(p) };
-      })).concat((S.free || []).map(p => {
-        const on = procs.indexOf(p) >= 0;
-        return { label: p, carried: false, bg: on ? '#2563eb' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#2563eb' : '#e2e8f0', onClick: () => toggleProc(p) };
-      })),
-      freeText: this.state.freeText,
-      onFreeText: ev => this.setState({ freeText: ev.target.value }),
-      onFreeKey: ev => { if (ev.key === 'Enter') addFree(); },
-      commitFree: addFree,
-      dShowReview: isToday,
-      dReview: !!S.review,
-      dReviewBg: S.review ? '#fef2f2' : '#ffffff', dReviewFg: S.review ? '#b91c1c' : '#334155', dReviewBd: S.review ? '#fecaca' : '#e2e8f0',
-      dReviewMark: S.review ? '✓' : '',
-      toggleReview: () => { if (live) this.patchSess(o.id, { review: !S.review }); },
-      dNoteTabs: noteTabs.map(t => {
-        const on = this.state.noteTab === t[0];
-        const filled = !!(notes[t[0]] || '').trim();
-        return { label: t[1], dot: filled, on: on, bg: on ? '#0f172a' : '#ffffff', fg: on ? '#ffffff' : '#334155', bd: on ? '#0f172a' : '#e2e8f0',
-                 onClick: () => this.setState({ noteTab: t[0] }) };
-      }),
-      dNoteValue: notes[this.state.noteTab] || '',
-      dNotePlaceholder: { clinical: 'Saved to the case record', assistant: 'Setup needed for the next session — e.g. prepare .019×.025 SS', reception: 'Shown to reception at checkout — e.g. confirm appointment by phone' }[this.state.noteTab],
-      onNote: ev => { if (!editable) return; const n = Object.assign({}, notes); n[this.state.noteTab] = ev.target.value; this.patchSess(o.id, { notes: n }); },
-      dDocPhotos: ['Frontal', 'Right', 'Left', 'Upper', 'Lower'].map(photoChip),
-      dGalleryOpen: !!gSlot, dGallerySlot: gSlot || '',
-      dGalleryHas: !!gSlot && !!(rec.photos || {})[gSlot],
-      closeGallery: () => this.setState({ gallery: null }),
-      clearPhoto: () => assignPhoto(null),
-      dGallery: library.map(g => ({ src: g.src, label: g.label, on: !!gSlot && (rec.photos || {})[gSlot] === g.src, onClick: () => assignPhoto(g.src) })),
-      onUpload: ev => {
-        const f = ev.target.files && ev.target.files[0]; if (!f) return;
-        const rd = new FileReader();
-        rd.onload = () => { const up = (S.uploads || []).concat([rd.result]); this.patchSess(o.id, { uploads: up }); assignPhoto(rd.result); };
-        rd.readAsDataURL(f);
-      },
-      dDocCount: String(Object.keys(rec.photos || {}).filter(k => rec.photos[k]).length) + ' / 5',
-
-      dPrimary: booking ? (o.offset === null ? 'Book session' : 'Rebook') + ' · ' + this.shortDate(nextDays)
-               : !isToday ? 'Case file' : S.closed ? 'Reopen session' : 'Close session',
-      dPrimaryBg: S.closed ? '#ffffff' : '#2563eb', dPrimaryFg: S.closed ? '#0f172a' : '#ffffff',
-      dPrimaryBd: S.closed ? '#e8edf3' : '#2563eb',
-      dPrimaryAct: () => {
-        if (booking) {
-          /* a booking is the next visit date in the case store; the seed view reads it back from there */
-          if (window.OT && window.OT.store) {
-            const patch = { nextVisit: this.dayISO(nextDays) };
-            if (procs && procs.length) patch.nextTasks = procs.slice();
-            window.OT.store.update(o.id, patch);
-          }
-          this.patchSess(o.id, { booked: nextDays, interval: null, customOff: null, procs: procs });
-          return;
-        }
-        if (!isToday) { this.setState({ openId: null }); this.go(o, 'overview'); return; }
-        this.patchSess(o.id, { closed: !S.closed, interval: chosen, procs: procs });
-      },
-      dShowFull: isToday && !S.closed,
-      dOpenFull: () => { this.setState({ openId: null }); this.go(o, 'session'); },
-      dOpenCase: () => { this.setState({ openId: null }); this.go(o, 'overview'); }
-    });
-  }
-
-  /* ---- Today and All cases (S1.3, T11, T9). Rows come from the store; flags from OT.flags. ---- */
-
-  /* the stage's badge class: one per path/side stage, one shared class for the three exits */
-  stageCls(key) {
-    const def = (this.K().stageList || []).filter(x => x.key === key)[0];
-    if (!def) return '';
-    return def.kind === 'exit' ? 'ot-stage--exit' : 'ot-stage--' + def.key;
-  }
-
-  /* a date in the store's form, checked for the booking: a real day, not in the past (T11-AC5). Returns the message or null */
-  bookDate(id, iso) {
-    if (!iso || !window.OT.fmtDate(iso)) return 'Pick a date.';
-    if (iso < window.OT.DEMO_TODAY) return 'A date in the past cannot be the next visit. Pick today or later.';
-    const c = window.OT.store.get(id);
-    if (!c) return 'No such case.';
-    /* a booking clears "Didn't come" on its own (T11-AC4); the derived flags clear with the date */
-    window.OT.store.update(id, { nextVisit: iso, flags: (c.flags || []).filter(f => f !== 'no-show') });
-    return null;
-  }
-
-  /* "Didn't come" (T5-AC4): the flag, a no-show entry in the log (not a visit), today's tasks pending for the next
-     booked visit, the date cleared. The toast's Undo puts back the whole snapshot. */
-  markNoShow(id) {
-    const c = window.OT.store.get(id);
-    if (!c) return;
-    const before = { flags: c.flags, nextVisit: c.nextVisit, nextTasks: c.nextTasks, carry: c.carry, visits: c.visits };
-    const carry = (c.carry || []).slice();
-    (c.nextTasks || []).forEach(t => { if (carry.indexOf(t) < 0) carry.push(t); });
-    const flags = (c.flags || []).filter(f => f !== 'no-show').concat(['no-show']);
-    window.OT.store.update(id, {
-      flags: flags, nextVisit: null, nextTasks: [], carry: carry,
-      visits: [{ date: window.OT.DEMO_TODAY, kind: 'no-show', note: null, tasks: [] }].concat(c.visits || []),
-    });
-    this.showToast(c.patient.name + ': didn’t come', () => window.OT.store.update(id, before));
-  }
-
-  showToast(text, undo) {
-    clearTimeout(this._toastT);
-    this.setState({ toast: { text: text, undo: undo } });
-    this._toastT = setTimeout(() => this.setState({ toast: null }), 6000);
-  }
-
   /* one row of Today or All cases. Every control is a child of the row: its handler stops the click, so the row does
-     not also open the session. Book and the date picker belong to All cases. */
+     not also open the session. Book and the date picker belong to All cases. Today's row shows the wire (active and
+     retention cases) or the first task, never the date: the date is the day (S1.4 planner decision). */
   caseRow(c, mode) {
     const f = window.OT.flags(c);
     const booking = mode === 'all' && this.state.bookId === c.id;
     const needsDate = (window.OT.isRunning(c.stage) && !c.nextVisit) || f.noShow || f.overdue;
     const open = () => this.setState({ openId: c.id });
+    const firstTask = (c.carry || []).concat(c.nextTasks || [])[0] || '';
+    const todayText = (c.stage === 'active' || c.stage === 'retention') && c.wire ? c.wire : firstTask;
     return {
       id: c.id,
       name: c.patient.name,
@@ -1319,14 +631,14 @@ class Component extends DCLogic {
       fallback: this.initialsAvatar(c.patient.name),
       stageLabel: this.stageInfo(c.stage).en,
       stageCls: this.stageCls(c.stage),
-      visitText: c.nextVisit ? window.OT.fmtDate(c.nextVisit) : 'Not booked',
+      visitText: mode === 'today' ? todayText : (c.nextVisit ? window.OT.fmtDate(c.nextVisit) : 'Not booked'),
       hasNoShow: f.noShow, hasOverdue: f.overdue, hasNoAppt: f.noAppointment,
       openCls: mode === 'today' ? 'ot-btn--primary' : 'ot-btn--secondary',
       showNoShow: mode === 'today',
       showBook: mode === 'all' && needsDate,
       booking: booking,
       bookDate: this.state.bookDate,
-      bookText: window.OT.fmtDate(this.state.bookDate),
+      bookText: window.OT.fmtDate(this.state.bookDate) || 'Pick a date',
       bookErr: this.state.bookErr,
       bookErrShown: booking && !!this.state.bookErr,
       todayISO: window.OT.DEMO_TODAY,
@@ -1346,32 +658,88 @@ class Component extends DCLogic {
     };
   }
 
-  /* the drawer's Next visit line: the date from the store, Change opens a date field, Save writes it (T11-AC1, AC5) */
-  nvVals(o) {
-    const rec = window.OT.store.get(o.id) || {};
+  /* the open session (role=dialog, ot-drawer): bottom sheet below 600px, side panel above (DESIGN_SYSTEM §10.3) */
+  drawerVals() {
+    const id = this.state.openId;
+    const c = id ? window.OT.store.get(id) : null;
+    if (!c) return { drawerOpen: false };
+    const OT = window.OT;
+    const S = this.sessOf(id);
+    const st = this.stageInfo(c.stage);
+    const age = OT.age(c.patient.dob);
+    const warn = (c.medical || []).map(m => (m.constraint ? m.label + ': ' + m.constraint : m.label));
+    const lastV = (c.visits || []).filter(v => v.kind !== 'no-show')[0];
+    const tasks = this.tasksOf(c, S);
+    const und = tasks.filter(t => !S.ticks[t]);
+    const cat = this.catalogueOf(c.stage);
+    const nvShown = this.nextShown(c);
+    const nv = S.nv || [];
+    const askNow = S.ask && und.length > 0;
+    const wireDone = S.wireOn;
     return {
-      dNvText: rec.nextVisit ? window.OT.fmtDate(rec.nextVisit) : 'Not booked',
-      dNvOpen: this.state.nvOpen,
-      dNvChange: () => this.setState({ nvOpen: true, nvDate: '', nvErr: '' }),
-      dNvDate: this.state.nvDate,
-      onNvDate: ev => this.setState({ nvDate: ev.target.value, nvErr: '' }),
-      dNvPick: window.OT.fmtDate(this.state.nvDate),
-      dNvHasErr: !!this.state.nvErr,
-      dNvErr: this.state.nvErr,
-      dNvSave: ev => {
-        if (ev && ev.stopPropagation) ev.stopPropagation();
-        const err = this.bookDate(o.id, this.state.nvDate);
-        if (err) this.setState({ nvErr: err });
-        else this.setState({ nvOpen: false, nvDate: '', nvErr: '' });
+      drawerOpen: true,
+      closeDrawer: () => this.setState({ openId: null }),
+      dName: c.patient.name,
+      dMeta: [age === null ? '' : age + 'y', st.en].filter(Boolean).join(' · '),
+      dNoShow: OT.flags(c).noShow,
+      dNoShowAct: () => { this.markNoShow(id); this.setState({ openId: null }); },
+      dHasWarn: warn.length > 0,
+      dWarn: warn.join(' · '),
+      dLastText: lastV ? OT.fmtRel(lastV.date) : OT.EMPTY,
+      dTasks: tasks.map(t => {
+        const on = !!S.ticks[t];
+        return { text: t, on: on, mark: on ? '✓' : '', bg: on ? 'var(--ot-primary)' : 'var(--ot-surface)',
+                 bd: on ? 'var(--ot-primary)' : 'var(--ot-border-strong)', fg: on ? 'var(--ot-text-muted)' : 'var(--ot-ink)',
+                 onToggle: () => this.tickTask(id, t) };
+      }),
+      dNoTasks: tasks.length === 0,
+      dWireOn: wireDone,
+      dWireMark: wireDone ? '✓' : '',
+      dWireBg: wireDone ? 'var(--ot-primary)' : 'var(--ot-surface)',
+      dWireBd: wireDone ? 'var(--ot-primary)' : 'var(--ot-border-strong)',
+      dWireToggle: () => this.patchSess(id, { wireOn: !this.sessOf(id).wireOn }),
+      dWire: S.wire,
+      dWireOpts: this.archwiresFor(c).map(w => ({ value: w, label: w })),
+      dOnWire: ev => this.setWire(id, ev.target.value),
+      dCanCat: cat.length > 0,
+      dCatOpen: S.cat,
+      dToggleCat: () => this.patchSess(id, { cat: !this.sessOf(id).cat }),
+      dCat: cat.filter(p => tasks.indexOf(p) < 0).map(p => ({ label: p, onClick: () => this.addUnplanned(id, p) })),
+      dNvLine: nvShown ? OT.fmtDate(nvShown) + ' (' + this.weeksText(nvShown) + ')' : 'Not booked',
+      dNvOpen: S.nvOpen,
+      dNvOpenAct: () => this.openNext(id),
+      dNvDate: S.nvDate,
+      dNvPick: OT.fmtDate(S.nvDate) || 'Pick a date',
+      dNvDateSet: ev => this.patchSess(id, { nvDate: ev.target.value, nvErr: '' }),
+      dToday: OT.DEMO_TODAY,
+      dNvHasErr: !!S.nvErr,
+      dNvErr: S.nvErr,
+      dNvSave: () => this.saveNext(id),
+      dNvTasks: nv.map(t => ({ text: t, onRemove: () => this.nvRemove(id, t) })),
+      dNvOpts: cat.filter(p => nv.indexOf(p) < 0).map(p => ({ value: p, label: p })),
+      dNvAdd: ev => this.nvAdd(id, ev.target.value),
+      dNote: S.note,
+      dNoteSet: ev => this.patchSess(id, { note: ev.target.value }),
+      dUndoneN: und.length,
+      dTaskWord: und.length === 1 ? 'task' : 'tasks',
+      dAsk: askNow,
+      dNotAsk: !askNow,
+      dFinish: () => {
+        const cur = this.sessOf(id);
+        const left = this.tasksOf(window.OT.store.get(id), cur).filter(t => !cur.ticks[t]);
+        if (left.length) this.patchSess(id, { ask: true });
+        else this.finishVisit(id, false);
       },
+      dCarryYes: () => this.finishVisit(id, true),
+      dCarryNo: () => this.finishVisit(id, false),
+      dAskBack: () => this.patchSess(id, { ask: false }),
+      dOpenCase: () => { this.setState({ openId: null }); this.openCase(c, 'overview'); },
     };
   }
 
   renderVals() {
-    /* the drawer's rows (the store's view, through build) */
-    const rows = this.build();
-    const tab = this.state.tab || 'today';
     const today = window.OT.DEMO_TODAY;
+    const tab = this.state.tab || 'today';
     const cases = window.OT.store.list();
     const todays = cases.filter(c => c.nextVisit === today);
     const overdueN = cases.filter(c => window.OT.flags(c).overdue).length;
@@ -1389,13 +757,14 @@ class Component extends DCLogic {
       ? (todays.length ? todays.length + (todays.length === 1 ? ' patient' : ' patients') + ' today' : 'No patients today') + passed
       : cases.length + ' cases' + passed;
     const K = this.K();
+    const t = this.state.toast;
     return Object.assign({
       showAside: !this.props.embedded,
       todayLong: window.OT.fmtDate(today),
       subline: subline,
       onNewCase: () => { if (this.props.onNavigate) this.props.onNavigate('newcase'); },
-      tabs: [['today', 'Today', todays.length], ['all', 'All cases', cases.length]].map(t => ({
-        text: t[1] + ' ' + t[2], on: tab === t[0], onClick: () => this.setState({ tab: t[0] })
+      tabs: [['today', 'Today', todays.length], ['all', 'All cases', cases.length]].map(x => ({
+        text: x[1] + ' ' + x[2], on: tab === x[0], onClick: () => this.setState({ tab: x[0] })
       })),
       todayTab: tab === 'today', allTab: tab === 'all',
       todayRows: todays.map(c => this.caseRow(c, 'today')),
@@ -1411,15 +780,22 @@ class Component extends DCLogic {
                     { value: 'overdue', label: 'Date passed' }, { value: 'noAppointment', label: 'No appointment' }],
       filterLine: 'Showing ' + allCases.length + ' of ' + cases.length + ' cases, nearest visit first',
       clearFilters: () => this.setState({ stageSel: '', flagSel: '' }),
-      toastOn: !!this.state.toast,
-      toastText: this.state.toast ? this.state.toast.text : '',
+      toastOn: !!t,
+      toastCls: t ? 'ot-toast--' + t.tone : '',
+      toastText: t ? t.text : '',
+      toastHasNext: !!(t && t.next),
+      toastNext: () => {
+        const n = t && t.next;
+        clearTimeout(this._toastT);
+        this.setState({ toast: null, openId: n || null });
+      },
       toastUndo: () => {
-        const t = this.state.toast;
+        const cur = this.state.toast;
         clearTimeout(this._toastT);
         this.setState({ toast: null });
-        if (t && t.undo) t.undo();
+        if (cur && cur.undo) cur.undo();
       },
-    }, this.drawerVals(rows), {
+    }, this.drawerVals(), {
       /* the standalone sidebar (showAside) is not shown when embedded in the shell; its keys stay bound */
       sideW: this.state.collapsed ? '76px' : '244px',
       labelOp: this.state.collapsed ? 0 : 1,
