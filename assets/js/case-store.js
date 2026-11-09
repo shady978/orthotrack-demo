@@ -403,7 +403,8 @@
 
   // one row of the old seed: { id, n, p, meta, stage, mo, f, last, next }
   function toSeedRow(c, today) {
-    var first = c.visits[0] || null;
+    // a no-show is a visits entry too, but it is not a visit: the last session skips it
+    var first = c.visits.filter(function (v) { return v.kind !== 'no-show'; })[0] || null;
     return {
       id: c.id.replace(/^ORT-/, ''),
       n: c.patient.name,
@@ -565,5 +566,26 @@
   };
   window.OT.empty = function (value) {
     return isPresent(value) ? value : EMPTY;
+  };
+
+  /* ---------- flags: the one place they are derived (S1.3, T11) ----------
+     noShow        stored: case.flags has 'no-show' (the patient did not come, and no date is booked)
+     overdue       'Date passed': a running case whose next visit is before DEMO_TODAY (nobody acted)
+     noAppointment 'No appointment': a running case with no next visit
+     Running = the path stages and Growth watch (kind 'path' or 'side'). Completed, referred, paused and
+     no-treatment are not running, so they never get overdue or noAppointment. */
+  function isRunning(stage) {
+    var s = K.stageList.filter(function (x) { return x.key === stage; })[0];
+    return !!s && (s.kind === 'path' || s.kind === 'side');
+  }
+  window.OT.isRunning = isRunning;
+  window.OT.flags = function (c) {
+    var running = isRunning(c.stage);
+    var flags = c.flags || [];
+    return {
+      noShow: flags.indexOf('no-show') >= 0,
+      overdue: running && !!c.nextVisit && c.nextVisit < DEMO_TODAY,
+      noAppointment: running && !c.nextVisit,
+    };
   };
 })();

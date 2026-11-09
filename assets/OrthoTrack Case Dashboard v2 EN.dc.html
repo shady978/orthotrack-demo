@@ -54,226 +54,143 @@ button,input,select,textarea{font-family:inherit}
 
   <div style="flex:1;min-width:0;display:flex;flex-direction:column">
 
-    <div style="min-height:70px;flex:none;background:#ffffff;border-bottom:1px solid #e8edf3;display:flex;align-items:center;gap:14px;padding:12px 26px;flex-wrap:wrap">
-      <div style="position:relative;flex:1;min-width:220px;max-width:420px">
-        <input type="search" aria-label="Search cases" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search by name, case ID or malocclusion" style="width:100%;min-height:46px;padding:0 44px 0 16px;border-radius:12px;border:1px solid #e8edf3;background:#f6f8fb;font-size:14.5px;font-weight:500;color:#0f172a;outline:none" style-focus="border-color:#2563eb;background:#ffffff;box-shadow:0 0 0 3px rgba(37,99,235,0.12)">
-        <span style="position:absolute;inset-inline-start:15px;top:50%;transform:translateY(-50%);display:flex;pointer-events:none">
-          <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="#94a3b8" stroke-width="1.9" stroke-linecap="round"><circle cx="7.8" cy="7.8" r="4.9"></circle><path d="M11.4 11.4l3.4 3.4"></path></svg>
-        </span>
-      </div>
-      <span title="Demo data — but every number on screen is computed from the same visible cases" style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;background:#fffbeb;border:1px solid #fde68a;cursor:default">
-        <span style="width:6px;height:6px;border-radius:50%;background:#d97706"></span>
-        <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#b45309">Demo data</span>
-      </span>
-      <div style="margin-inline-start:auto;display:flex;align-items:center;gap:10px">
-        <button type="button" onClick="{{ onNewCase }}" style="min-height:46px;padding:0 20px;border-radius:12px;background:#2563eb;color:#ffffff;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .15s" style-hover="background:#1d4ed8;transform:translateY(-1px)">
-          <span style="font-family:Outfit,sans-serif;font-size:17px;font-weight:500">+</span>New case
-        </button>
-      </div>
-    </div>
+<main style="flex:1;min-width:0;padding:var(--ot-space-7) var(--ot-space-6) var(--ot-space-10);display:grid;gap:var(--ot-space-6);align-content:start;background:var(--ot-page)">
 
-    <main style="flex:1;min-width:0;padding:24px 26px 40px;display:grid;gap:18px;align-content:start">
-
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
-        <div style="display:grid;gap:3px;min-width:0">
-          <h1 style="margin:0;font-size:27px;font-weight:900;line-height:1.35">{{ greeting }}</h1>
-          <p style="margin:0;font-size:14.5px;font-weight:300;color:#64748b">{{ subline }}</p>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--ot-space-5);flex-wrap:wrap">
+        <div style="display:grid;gap:var(--ot-space-2);min-inline-size:0">
+          <h1 style="margin:0;font-size:var(--ot-text-22);font-weight:var(--ot-weight-bold);line-height:var(--ot-leading-heading);color:var(--ot-ink)">Today · {{ todayLong }}</h1>
+          <p style="margin:0;font-size:var(--ot-text-14);color:var(--ot-text-muted)">{{ subline }}</p>
         </div>
-        <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">{{ todayLong }}</span>
+        <button type="button" class="ot-btn ot-btn--secondary" onClick="{{ onNewCase }}">New case</button>
       </div>
 
-      <div style="display:grid;gap:10px">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:12px">
-          <sc-for list="{{ metricsPrimary }}" as="m" hint-placeholder-count="2">
-            <button type="button" onClick="{{ m.onClick }}" title="{{ m.title }}" style="text-align:start;background:#ffffff;border:1px solid {{ m.bd }};box-shadow:{{ m.sh }};border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:transform .15s" style-hover="transform:translateY(-2px)">
-              <span style="width:52px;height:52px;flex:none;border-radius:15px;background:{{ m.tint }};display:flex;align-items:center;justify-content:center">
-                <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:24px;font-weight:600;line-height:1;color:{{ m.fg }};font-variant-numeric:tabular-nums">{{ m.n }}</span>
-              </span>
-              <div style="display:grid;gap:2px;min-width:0">
-                <span style="font-size:15px;font-weight:700;line-height:1.4">{{ m.label }}</span>
-                <span style="font-size:12.5px;font-weight:300;color:#64748b">{{ m.sub }}</span>
-              </div>
-            </button>
-          </sc-for>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <sc-for list="{{ metricsSecondary }}" as="m" hint-placeholder-count="3">
-            <button type="button" onClick="{{ m.onClick }}" style="min-height:38px;padding:0 14px;border-radius:11px;border:1px solid {{ m.bd }};background:{{ m.bg }};color:{{ m.fg }};font-size:12.5px;font-weight:{{ m.fw }};cursor:pointer;display:inline-flex;align-items:center;gap:8px">{{ m.label }}<span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">{{ m.n }}</span></button>
-          </sc-for>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:6px;padding:5px;border-radius:14px;background:#eef2f7;width:fit-content;max-width:100%;flex-wrap:wrap">
-        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-          <button type="button" onClick="{{ t.onClick }}" style="min-height:40px;padding:0 18px;border-radius:11px;border:none;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;font-weight:{{ t.fw }};cursor:pointer;box-shadow:{{ t.sh }};display:inline-flex;align-items:center;gap:8px">{{ t.label }}<span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:{{ t.nFg }};font-variant-numeric:tabular-nums">{{ t.n }}</span></button>
+      <div class="ot-tabs" role="tablist" aria-label="Views">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2">
+          <button type="button" role="tab" class="ot-tab" aria-selected="{{ t.on }}" onClick="{{ t.onClick }}">{{ t.text }}</button>
         </sc-for>
       </div>
 
       <sc-if value="{{ todayTab }}" hint-placeholder-val="{{ true }}">
-      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;animation:otFade .2s ease-out">
-        <div style="padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #f1f5f9">
-          <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#eff6ff;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#2563eb"></span></span>
-          <div style="display:grid;gap:0;min-width:0;flex:1">
-            <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">Chair schedule</span>
-            <span style="font-size:12.5px;font-weight:300;color:#64748b">{{ scopeSub }}</span>
-          </div>
-          <div style="display:inline-flex;padding:4px;gap:3px;background:#f6f8fb;border-radius:11px">
-            <sc-for list="{{ scopes }}" as="s" hint-placeholder-count="3">
-              <button type="button" onClick="{{ s.onClick }}" style="min-height:34px;padding:0 14px;border-radius:8px;border:none;background:{{ s.bg }};color:{{ s.fg }};font-size:12.5px;font-weight:{{ s.fw }};cursor:pointer;box-shadow:{{ s.sh }}">{{ s.label }}</button>
-            </sc-for>
-          </div>
-        </div>
-        <div style="padding:12px 20px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-bottom:1px solid #f1f5f9;background:#fbfcfe">
-          <span style="font-size:12px;font-weight:500;color:#94a3b8">Filter</span>
-          <select aria-label="Visit type" value="{{ visitFilter }}" onChange="{{ onVisitFilter }}" style="min-height:36px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
-            <sc-for list="{{ visitTypeOptions }}" as="o" hint-placeholder-count="4">
-              <option value="{{ o.value }}">{{ o.label }}</option>
-            </sc-for>
-          </select>
-          <select aria-label="Stage" value="{{ stageFilter }}" onChange="{{ onStageFilter }}" style="min-height:36px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
-            <sc-for list="{{ stageOptions }}" as="o" hint-placeholder-count="6">
-              <option value="{{ o.value }}">{{ o.label }}</option>
-            </sc-for>
-          </select>
-          <button type="button" onClick="{{ toggleHideDone }}" style="min-height:36px;padding:0 13px;border-radius:10px;border:1px solid {{ hideDoneBd }};background:{{ hideDoneBg }};color:{{ hideDoneFg }};font-size:12.5px;font-weight:{{ hideDoneFw }};cursor:pointer;display:inline-flex;align-items:center;gap:7px"><span style="font-family:Outfit,sans-serif;font-size:12px">{{ hideDoneMark }}</span>Hide completed</button>
-          <sc-if value="{{ visitFiltered }}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{ clearVisitFilters }}" style="min-height:36px;padding:0 13px;border-radius:10px;border:1px solid #e8edf3;background:#ffffff;font-size:12.5px;font-weight:600;color:#1d4ed8;cursor:pointer" style-hover="background:#eff6ff">Clear</button>
-          </sc-if>
-          <span style="margin-inline-start:auto;font-size:12px;font-weight:300;color:#64748b">Showing <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ visitShown }}</span> of <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ visitTotal }}</span></span>
-        </div>
-        <sc-for list="{{ visits }}" as="v" hint-placeholder-count="6">
-          <div onClick="{{ v.onRow }}" onKeyDown="{{ v.onKey }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid #f8fafc;background:{{ v.rowBg }};opacity:{{ v.op }};cursor:pointer" style-hover="background:#f6f8fb">
-            <span style="width:3px;flex:none;align-self:stretch;border-radius:999px;background:{{ v.bar }}"></span>
-            <img data-src="{{ v.photo }}" data-fb="{{ v.fallback }}" alt="{{ v.name }}" style="width:38px;height:38px;flex:none;border-radius:50%;object-fit:cover;object-position:center 22%;background:#f1f5f9">
-            <div style="flex:1;min-width:0;display:grid;gap:1px">
-              <span style="font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.name }}</span>
-              <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:500;color:#94a3b8">{{ v.id }}</span>
+        <div style="background:var(--ot-surface);border:var(--ot-border-w) solid var(--ot-border);border-radius:var(--ot-radius-lg);padding-inline:var(--ot-space-6)">
+          <sc-for list="{{ todayRows }}" as="r" hint-placeholder-count="4">
+          <div class="ot-list-row" role="button" tabindex="0" onClick="{{ r.onOpen }}" onKeyDown="{{ r.onKey }}" style="cursor:pointer">
+            <img class="ot-avatar" data-src="{{ r.photo }}" data-fb="{{ r.fallback }}" alt="" style="object-fit:cover">
+            <div class="ot-list-row__body">
+              <span class="ot-list-row__name" dir="auto">{{ r.name }}</span>
+              <span class="ot-list-row__meta" style="display:flex;flex-wrap:wrap;align-items:center;gap:var(--ot-space-3)">
+                <span class="ot-stage {{ r.stageCls }}">{{ r.stageLabel }}</span>
+                <span dir="ltr" style="unicode-bidi:isolate;font-variant-numeric:tabular-nums">{{ r.visitText }}</span>
+              </span>
             </div>
-            <span style="flex:none"><span style="display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:{{ v.typeBg }};color:{{ v.typeFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;white-space:nowrap"><span dir="ltr" style="unicode-bidi:isolate">{{ v.type }}</span></span></span>
-            <span style="flex:2;min-width:0;font-size:13.5px;font-weight:500;color:#334155;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ v.objective }}</span>
-            <sc-if value="{{ v.done }}" hint-placeholder-val="{{ false }}">
-              <span style="flex:none;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#047857"><span style="width:18px;height:18px;border-radius:50%;background:#ecfdf5;display:flex;align-items:center;justify-content:center;font-size:11px">✓</span>Done</span>
-            </sc-if>
-            <sc-if value="{{ v.pending }}" hint-placeholder-val="{{ true }}">
-              <button type="button" onClick="{{ v.onOpen }}" style="flex:none;min-height:38px;padding:0 16px;border-radius:11px;border:1px solid #bfdbfe;background:#eff6ff;font-size:13px;font-weight:700;color:#1d4ed8;cursor:pointer" style-hover="background:#dbeafe">Open session</button>
-            </sc-if>
+            <div class="ot-list-row__tags">
+              <sc-if value="{{ r.hasNoShow }}" hint-placeholder-val="{{ false }}"><span class="ot-flag ot-flag--no-show">Didn't come</span></sc-if>
+              <sc-if value="{{ r.hasOverdue }}" hint-placeholder-val="{{ false }}"><span class="ot-flag ot-flag--overdue">Date passed</span></sc-if>
+              <sc-if value="{{ r.hasNoAppt }}" hint-placeholder-val="{{ false }}"><span class="ot-flag ot-flag--no-appointment">No appointment</span></sc-if>
+            </div>
+            <div class="ot-list-row__actions">
+              <button type="button" class="ot-btn {{ r.openCls }}" onClick="{{ r.onOpenBtn }}">Open session</button>
+              <sc-if value="{{ r.showNoShow }}" hint-placeholder-val="{{ false }}"><button type="button" class="ot-btn ot-btn--secondary" onClick="{{ r.onNoShow }}">Didn't come</button></sc-if>
+              <sc-if value="{{ r.showBook }}" hint-placeholder-val="{{ false }}"><button type="button" class="ot-btn ot-btn--secondary" aria-expanded="{{ r.booking }}" onClick="{{ r.onBook }}">Book</button></sc-if>
+            </div>
           </div>
-        </sc-for>
-        <sc-if value="{{ noVisits }}" hint-placeholder-val="{{ false }}">
-          <div style="padding:40px 22px;display:grid;gap:8px;justify-items:center;text-align:center">
-            <span style="font-size:14px;font-weight:500">No visits in this range</span>
-            <span style="font-size:12.5px;font-weight:300;color:#64748b">Try the week view, or review overdue cases in All cases</span>
+          <sc-if value="{{ r.booking }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gap:var(--ot-space-4);padding-block:var(--ot-space-5);border-block-end:var(--ot-border-w) solid var(--ot-border)">
+              <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--ot-space-5)">
+                <label class="ot-field" style="flex:1 1 180px;min-inline-size:0">
+                  <span class="ot-field__label">Date</span>
+                  <input class="ot-input" type="date" value="{{ r.bookDate }}" min="{{ r.todayISO }}" onChange="{{ r.onBookDate }}">
+                </label>
+                <span dir="ltr" style="unicode-bidi:isolate;min-block-size:var(--ot-touch-min);display:inline-flex;align-items:center;font-size:var(--ot-text-14);color:var(--ot-text-2)">{{ r.bookText }}</span>
+                <button type="button" class="ot-btn ot-btn--primary" onClick="{{ r.onBookSave }}">Save</button>
+                <button type="button" class="ot-btn ot-btn--ghost" onClick="{{ r.onBookCancel }}">Cancel</button>
+              </div>
+              <sc-if value="{{ r.bookErrShown }}" hint-placeholder-val="{{ false }}"><p role="alert" class="ot-field__error" style="margin:0">{{ r.bookErr }}</p></sc-if>
+            </div>
+          </sc-if>
+          </sc-for>
+        </div>
+        <sc-if value="{{ noTodayRows }}" hint-placeholder-val="{{ false }}">
+          <div class="ot-empty">
+            <span class="ot-empty__title">No patients today</span>
+            <span class="ot-empty__text">A case shows here when its next visit is today. Book a date from All cases.</span>
           </div>
         </sc-if>
-      </div>
-      </sc-if>
-
-      <sc-if value="{{ hasSpotlight }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;display:flex;flex-wrap:wrap;animation:otFade .2s ease-out">
-          <div style="position:relative;width:264px;flex:none;align-self:stretch;min-height:232px;background:{{ spotPanelBg }};display:flex;align-items:center;justify-content:center">
-            <sc-if value="{{ spotHasPhoto }}" hint-placeholder-val="{{ true }}">
-              <img data-src="{{ spotPhoto }}" alt="{{ spotName }}" style="width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block">
-            </sc-if>
-            <sc-if value="{{ spotNoPhoto }}" hint-placeholder-val="{{ false }}">
-              <div style="display:grid;gap:10px;justify-items:center;padding:24px">
-                <span style="width:92px;height:92px;border-radius:50%;background:#ffffff;color:{{ spotInitialsFg }};display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:34px;font-weight:600">{{ spotInitials }}</span>
-                <span style="font-size:11.5px;font-weight:500;color:{{ spotInitialsFg }};text-align:center">No portrait on file</span>
-              </div>
-            </sc-if>
-            <span style="position:absolute;top:14px;inset-inline-start:14px;display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:#ffffff;box-shadow:0 1px 3px rgba(15,23,42,.14);font-family:Outfit,sans-serif;font-size:11.5px;font-weight:700;color:#b91c1c"><span style="width:6px;height:6px;border-radius:50%;background:#dc2626"></span>{{ spotBadge }}</span>
-          </div>
-          <div style="flex:1;min-width:300px;padding:22px 24px;display:grid;gap:14px;align-content:center">
-            <div style="display:flex;align-items:center;gap:11px;flex-wrap:wrap">
-              <span style="font-size:20px;font-weight:900;line-height:1.25">{{ spotName }}</span>
-              <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;background:{{ spotStageBg }};color:{{ spotStageFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600"><span style="width:6px;height:6px;border-radius:50%;background:{{ spotStageDot }}"></span>{{ spotStage }}</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">
-              <span>{{ spotId }}</span><span style="color:#e2e8f0">·</span><span>{{ spotMeta }}</span>
-            </div>
-            <div style="display:grid;gap:4px;padding:13px 15px;border-radius:12px;background:#fffbeb">
-              <div style="display:flex;align-items:flex-start;gap:10px">
-                <span style="width:18px;height:18px;flex:none;border-radius:5px;background:#d97706;color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;margin-top:1px">!</span>
-                <span style="font-size:14px;font-weight:700;color:#92400e;line-height:1.5">{{ spotBlocker }}</span>
-              </div>
-              <span style="padding-inline-start:28px;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:600;color:#b45309">{{ spotDetail }}</span>
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button type="button" onClick="{{ spotOpen }}" style="min-height:46px;padding:0 20px;border-radius:12px;border:none;background:#2563eb;color:#ffffff;font-size:14px;font-weight:700;cursor:pointer">{{ spotAction }}</button>
-              <button type="button" onClick="{{ spotSnooze }}" style="min-height:46px;padding:0 18px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#0f172a;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#f6f8fb">Snooze a week</button>
-            </div>
-          </div>
-        </div>
       </sc-if>
 
       <sc-if value="{{ allTab }}" hint-placeholder-val="{{ false }}">
-      <div style="background:#ffffff;border:1px solid #e8edf3;border-radius:16px;overflow:hidden;animation:otFade .2s ease-out">
-        <div style="padding:16px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid #f1f5f9">
-          <span style="width:34px;height:34px;flex:none;border-radius:11px;background:#ecfdf5;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;border-radius:3px;background:#059669"></span></span>
-          <div style="display:grid;gap:0;min-width:0;flex:1">
-            <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#0f172a">All cases</span>
-            <span style="font-size:12.5px;font-weight:300;color:#64748b">{{ viewCaption }}</span>
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--ot-space-5)">
+          <div class="ot-field" style="flex:1 1 180px;min-inline-size:0">
+            <span class="ot-field__label">Stage</span>
+            <select class="ot-select" aria-label="Stage" value="{{ stageSel }}" onChange="{{ onStageSel }}">
+              <sc-for list="{{ stageOptions }}" as="o" hint-placeholder-count="6"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+            </select>
           </div>
-          <sc-if value="{{ viewActive }}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{ clearFilters }}" style="min-height:38px;padding:0 13px;border-radius:10px;border:1px solid #bfdbfe;background:#eff6ff;font-size:12.5px;font-weight:600;color:#1d4ed8;cursor:pointer;display:inline-flex;align-items:center;gap:7px" style-hover="background:#dbeafe">{{ viewLabel }}<span style="font-family:Outfit,sans-serif;font-size:13px">×</span></button>
-          </sc-if>
-          <select aria-label="Stage" value="{{ stageFilter }}" onChange="{{ onStageFilter }}" style="min-height:38px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
-            <sc-for list="{{ stageOptions }}" as="o" hint-placeholder-count="6">
-              <option value="{{ o.value }}">{{ o.label }}</option>
-            </sc-for>
-          </select>
-          <select aria-label="Sort cases" value="{{ sort }}" onChange="{{ onSort }}" style="min-height:38px;padding:0 12px;border-radius:10px;border:1px solid #e2e8f0;background:#ffffff;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#0f172a;cursor:pointer;outline:none">
-            <sc-for list="{{ sortOptions }}" as="o" hint-placeholder-count="3">
-              <option value="{{ o.value }}">{{ o.label }}</option>
-            </sc-for>
-          </select>
+          <div class="ot-field" style="flex:1 1 180px;min-inline-size:0">
+            <span class="ot-field__label">Flag</span>
+            <select class="ot-select" aria-label="Flag" value="{{ flagSel }}" onChange="{{ onFlagSel }}">
+              <sc-for list="{{ flagOptions }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+            </select>
+          </div>
         </div>
-        <div style="overflow-x:auto">
-          <div style="min-width:900px">
-            <div style="display:flex;align-items:center;gap:14px;padding:11px 20px;background:#f6f8fb;border-bottom:1px solid #e8edf3;position:sticky;top:0;z-index:1">
-              <span style="flex:1.2;min-width:0;font-size:11.5px;font-weight:700;color:#94a3b8">Patient</span>
-              <span dir="ltr" style="unicode-bidi:isolate;width:150px;flex:none;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#94a3b8">Stage</span>
-              <span style="width:120px;flex:none;font-size:11.5px;font-weight:700;color:#94a3b8">Next visit</span>
-              <span style="flex:1.4;min-width:0;font-size:11.5px;font-weight:700;color:#94a3b8">Next required step</span>
-              <span style="width:92px;flex:none;font-size:11.5px;font-weight:700;color:#94a3b8">In treatment</span>
-              <span style="width:104px;flex:none;font-size:11.5px;font-weight:700;color:#94a3b8">Records</span>
-              <span style="width:34px;flex:none" aria-hidden="true"></span>
+        <p style="margin:0;font-size:var(--ot-text-13);color:var(--ot-text-muted)">{{ filterLine }}</p>
+        <div style="background:var(--ot-surface);border:var(--ot-border-w) solid var(--ot-border);border-radius:var(--ot-radius-lg);padding-inline:var(--ot-space-6)">
+          <sc-for list="{{ allRows }}" as="r" hint-placeholder-count="8">
+          <div class="ot-list-row" role="button" tabindex="0" onClick="{{ r.onOpen }}" onKeyDown="{{ r.onKey }}" style="cursor:pointer">
+            <img class="ot-avatar" data-src="{{ r.photo }}" data-fb="{{ r.fallback }}" alt="" style="object-fit:cover">
+            <div class="ot-list-row__body">
+              <span class="ot-list-row__name" dir="auto">{{ r.name }}</span>
+              <span class="ot-list-row__meta" style="display:flex;flex-wrap:wrap;align-items:center;gap:var(--ot-space-3)">
+                <span class="ot-stage {{ r.stageCls }}">{{ r.stageLabel }}</span>
+                <span dir="ltr" style="unicode-bidi:isolate;font-variant-numeric:tabular-nums">{{ r.visitText }}</span>
+              </span>
             </div>
-            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
-              <div onClick="{{ r.onClick }}" onKeyDown="{{ r.onKey }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid #f8fafc;cursor:pointer" style-hover="background:#f6f8fb">
-                <div style="flex:1.2;min-width:0;display:flex;align-items:center;gap:11px">
-                  <img data-src="{{ r.photo }}" data-fb="{{ r.fallback }}" alt="{{ r.name }}" style="width:38px;height:38px;flex:none;border-radius:50%;object-fit:cover;object-position:center 22%;background:#f1f5f9">
-                  <div style="display:grid;gap:0;min-width:0">
-                    <span style="font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
-                    <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:500;color:#94a3b8">{{ r.meta }}</span>
-                  </div>
-                </div>
-                <span style="width:150px;flex:none"><span style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:999px;background:{{ r.stageBg }};color:{{ r.stageFg }};font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;white-space:nowrap"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ r.stageDot }}"></span><span dir="ltr" style="unicode-bidi:isolate">{{ r.stage }}</span></span></span>
-                <span dir="ltr" style="unicode-bidi:isolate;width:120px;flex:none;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:{{ r.visitFw }};color:{{ r.visitFg }};font-variant-numeric:tabular-nums">{{ r.visit }}</span>
-                <span style="flex:1.4;min-width:0;font-size:13px;font-weight:500;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.next }}</span>
-                <span dir="ltr" style="unicode-bidi:isolate;width:92px;flex:none;font-family:Outfit,sans-serif;font-size:12.5px;font-weight:500;color:#94a3b8;font-variant-numeric:tabular-nums">{{ r.months }}</span>
-                <span style="width:104px;flex:none;display:flex;justify-content:flex-start">
-                  <sc-if value="{{ r.hasRecGap }}" hint-placeholder-val="{{ false }}">
-                    <button type="button" onClick="{{ r.onRecords }}" title="{{ r.recTitle }}" style="display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:0 10px;border-radius:9px;border:1px solid #fde68a;background:#fffbeb;color:#b45309;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#fef3c7"><span style="width:6px;height:6px;border-radius:50%;background:#d97706"></span>{{ r.recLabel }}</button>
-                  </sc-if>
-                </span>
-                <button type="button" onClick="{{ r.onFile }}" title="Open full case file" aria-label="Open full case file" style="width:34px;height:34px;flex:none;border-radius:10px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;font-family:Outfit,sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">›</button>
-              </div>
-            </sc-for>
-            <sc-if value="{{ noRows }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:44px 22px;display:grid;gap:12px;justify-items:center;text-align:center">
-                <span style="font-size:14px;font-weight:500">No matching results</span>
-                <button type="button" onClick="{{ clearFilters }}" style="min-height:40px;padding:0 18px;border-radius:11px;border:1px solid #e8edf3;background:#ffffff;font-size:13px;font-weight:600;color:#1d4ed8;cursor:pointer" style-hover="background:#eff6ff">Clear filters</button>
-              </div>
-            </sc-if>
+            <div class="ot-list-row__tags">
+              <sc-if value="{{ r.hasNoShow }}" hint-placeholder-val="{{ false }}"><span class="ot-flag ot-flag--no-show">Didn't come</span></sc-if>
+              <sc-if value="{{ r.hasOverdue }}" hint-placeholder-val="{{ false }}"><span class="ot-flag ot-flag--overdue">Date passed</span></sc-if>
+              <sc-if value="{{ r.hasNoAppt }}" hint-placeholder-val="{{ false }}"><span class="ot-flag ot-flag--no-appointment">No appointment</span></sc-if>
+            </div>
+            <div class="ot-list-row__actions">
+              <button type="button" class="ot-btn {{ r.openCls }}" onClick="{{ r.onOpenBtn }}">Open session</button>
+              <sc-if value="{{ r.showNoShow }}" hint-placeholder-val="{{ false }}"><button type="button" class="ot-btn ot-btn--secondary" onClick="{{ r.onNoShow }}">Didn't come</button></sc-if>
+              <sc-if value="{{ r.showBook }}" hint-placeholder-val="{{ false }}"><button type="button" class="ot-btn ot-btn--secondary" aria-expanded="{{ r.booking }}" onClick="{{ r.onBook }}">Book</button></sc-if>
+            </div>
           </div>
+          <sc-if value="{{ r.booking }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gap:var(--ot-space-4);padding-block:var(--ot-space-5);border-block-end:var(--ot-border-w) solid var(--ot-border)">
+              <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--ot-space-5)">
+                <label class="ot-field" style="flex:1 1 180px;min-inline-size:0">
+                  <span class="ot-field__label">Date</span>
+                  <input class="ot-input" type="date" value="{{ r.bookDate }}" min="{{ r.todayISO }}" onChange="{{ r.onBookDate }}">
+                </label>
+                <span dir="ltr" style="unicode-bidi:isolate;min-block-size:var(--ot-touch-min);display:inline-flex;align-items:center;font-size:var(--ot-text-14);color:var(--ot-text-2)">{{ r.bookText }}</span>
+                <button type="button" class="ot-btn ot-btn--primary" onClick="{{ r.onBookSave }}">Save</button>
+                <button type="button" class="ot-btn ot-btn--ghost" onClick="{{ r.onBookCancel }}">Cancel</button>
+              </div>
+              <sc-if value="{{ r.bookErrShown }}" hint-placeholder-val="{{ false }}"><p role="alert" class="ot-field__error" style="margin:0">{{ r.bookErr }}</p></sc-if>
+            </div>
+          </sc-if>
+          </sc-for>
         </div>
-        <div style="padding:13px 20px;border-top:1px solid #f1f5f9;font-size:12.5px;font-weight:300;color:#64748b">Showing <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ shownCount }}</span> of <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-weight:600;color:#0f172a">{{ totalCount }}</span> cases</div>
-      </div>
+        <sc-if value="{{ noAllRows }}" hint-placeholder-val="{{ false }}">
+          <div class="ot-empty">
+            <span class="ot-empty__title">No cases match these filters</span>
+            <button type="button" class="ot-btn ot-btn--secondary" onClick="{{ clearFilters }}">Clear filters</button>
+          </div>
+        </sc-if>
       </sc-if>
 
     </main>
   </div>
 
+
+  <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+    <div class="ot-toast-stack" role="status" aria-live="polite">
+      <div class="ot-toast ot-toast--warn">
+        <div class="ot-toast__body"><span class="ot-toast__title">{{ toastText }}</span></div>
+        <button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" onClick="{{ toastUndo }}">Undo</button>
+      </div>
+    </div>
+  </sc-if>
 
   <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;z-index:40;background:rgba(15,23,42,.38);animation:otFade .15s ease-out"></div>
@@ -301,6 +218,24 @@ button,input,select,textarea{font-family:inherit}
               <span dir="ltr" style="unicode-bidi:isolate;font-family:Outfit,sans-serif;font-size:11.5px;font-weight:600;color:#475569;font-variant-numeric:tabular-nums;white-space:nowrap">{{ dProgressLabel }}</span>
             </div>
           </sc-if>
+        </div>
+        <div style="display:grid;gap:var(--ot-space-4)">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:var(--ot-space-4)">
+            <span class="ot-field__label">Next visit</span>
+            <span dir="ltr" style="unicode-bidi:isolate;font-size:var(--ot-text-14);color:var(--ot-ink);font-variant-numeric:tabular-nums">{{ dNvText }}</span>
+            <button type="button" class="ot-btn ot-btn--ghost ot-btn--sm" onClick="{{ dNvChange }}">Change</button>
+          </div>
+          <sc-if value="{{ dNvOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--ot-space-5)">
+              <label class="ot-field" style="flex:1 1 180px;min-inline-size:0">
+                <span class="ot-field__label">Date</span>
+                <input class="ot-input" type="date" value="{{ dNvDate }}" min="{{ dTodayISO }}" onChange="{{ onNvDate }}">
+              </label>
+              <span dir="ltr" style="unicode-bidi:isolate;min-block-size:var(--ot-touch-min);display:inline-flex;align-items:center;font-size:var(--ot-text-14);color:var(--ot-text-2)">{{ dNvPick }}</span>
+              <button type="button" class="ot-btn ot-btn--primary" onClick="{{ dNvSave }}">Save</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ dNvHasErr }}" hint-placeholder-val="{{ false }}"><p role="alert" class="ot-field__error" style="margin:0">{{ dNvErr }}</p></sc-if>
         </div>
         <sc-if value="{{ dHasAlerts }}" hint-placeholder-val="{{ false }}">
           <sc-for list="{{ dAlerts }}" as="a" hint-placeholder-count="1">
@@ -670,7 +605,8 @@ class Component extends DCLogic {
             visitFilter: '', stageFilter: '', hideDone: false, openId: null,
             sess: {}, lastOpen: false, addOpen: false, addText: '', freeText: '', noteTab: 'clinical',
             collapsed: false, narrow: false, sumOpen: true, measEdit: null, measDraft: '', gallery: null,
-            snoozed: [] };
+            stageSel: '', flagSel: '', bookId: null, bookDate: '', bookErr: '', toast: null,
+            nvOpen: false, nvDate: '', nvErr: '' };
 
   /* gate flag codes → knowledge keys. Unknown codes are reported, not swallowed. */
   flagMap = { R: 'recordsComplete', P: 'problemListApproved', A: 'planApproved', D: 'debondDone' };
@@ -826,12 +762,6 @@ class Component extends DCLogic {
     }));
     rows.forEach(o => {
       /* a booking made from the drawer overrides the seeded appointment */
-      const bk = (this.state.sess[o.id] || {}).booked;
-      if (bk !== null && bk !== undefined) {
-        const bp = (this.state.sess[o.id] || {}).procs;
-        o.next = Object.assign({}, o.next || {}, { off: bk, v: o.next && o.next.v ? o.next.v : 'progress' });
-        if (bp && bp.length) o.next.plan = bp;
-      }
       const l = this.lateness(o);
       o.late = l.days; o.lateKind = l.kind;
       o.objective = (o.next && o.next.plan && o.next.plan[0]) || '—';
@@ -920,6 +850,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     clearInterval(this._k);
+    clearTimeout(this._toastT);
     window.removeEventListener('resize', this._fit);
     window.removeEventListener('keydown', this._esc);
     document.removeEventListener('error', this._imgErr, true);
@@ -1199,9 +1130,9 @@ class Component extends DCLogic {
       })
     };
 
-    return Object.assign(summary, {
+    return Object.assign(summary, this.nvVals(o), {
       drawerOpen: true,
-      closeDrawer: () => this.setState({ openId: null, addOpen: false, lastOpen: false }),
+      closeDrawer: () => this.setState({ openId: null, addOpen: false, lastOpen: false, nvOpen: false, nvErr: '' }),
       dName: o.name, dId: o.id, dMeta: o.meta, dPhoto: o.photo, dFallback: o.fallback,
       dHasCC: !!o.cc, dCC: o.cc,
       dStage: st.en, dStageBg: st.bg, dStageFg: st.fg, dStageDot: st.dot,
@@ -1332,242 +1263,169 @@ class Component extends DCLogic {
     });
   }
 
+  /* ---- Today and All cases (S1.3, T11, T9). Rows come from the store; flags from OT.flags. ---- */
+
+  /* the stage's badge class: one per path/side stage, one shared class for the three exits */
+  stageCls(key) {
+    const def = (this.K().stageList || []).filter(x => x.key === key)[0];
+    if (!def) return '';
+    return def.kind === 'exit' ? 'ot-stage--exit' : 'ot-stage--' + def.key;
+  }
+
+  /* a date in the store's form, checked for the booking: a real day, not in the past (T11-AC5). Returns the message or null */
+  bookDate(id, iso) {
+    if (!iso || !window.OT.fmtDate(iso)) return 'Pick a date.';
+    if (iso < window.OT.DEMO_TODAY) return 'A date in the past cannot be the next visit. Pick today or later.';
+    const c = window.OT.store.get(id);
+    if (!c) return 'No such case.';
+    /* a booking clears "Didn't come" on its own (T11-AC4); the derived flags clear with the date */
+    window.OT.store.update(id, { nextVisit: iso, flags: (c.flags || []).filter(f => f !== 'no-show') });
+    return null;
+  }
+
+  /* "Didn't come" (T5-AC4): the flag, a no-show entry in the log (not a visit), today's tasks pending for the next
+     booked visit, the date cleared. The toast's Undo puts back the whole snapshot. */
+  markNoShow(id) {
+    const c = window.OT.store.get(id);
+    if (!c) return;
+    const before = { flags: c.flags, nextVisit: c.nextVisit, nextTasks: c.nextTasks, carry: c.carry, visits: c.visits };
+    const carry = (c.carry || []).slice();
+    (c.nextTasks || []).forEach(t => { if (carry.indexOf(t) < 0) carry.push(t); });
+    const flags = (c.flags || []).filter(f => f !== 'no-show').concat(['no-show']);
+    window.OT.store.update(id, {
+      flags: flags, nextVisit: null, nextTasks: [], carry: carry,
+      visits: [{ date: window.OT.DEMO_TODAY, kind: 'no-show', note: null, tasks: [] }].concat(c.visits || []),
+    });
+    this.showToast(c.patient.name + ': didn’t come', () => window.OT.store.update(id, before));
+  }
+
+  showToast(text, undo) {
+    clearTimeout(this._toastT);
+    this.setState({ toast: { text: text, undo: undo } });
+    this._toastT = setTimeout(() => this.setState({ toast: null }), 6000);
+  }
+
+  /* one row of Today or All cases. Every control is a child of the row: its handler stops the click, so the row does
+     not also open the session. Book and the date picker belong to All cases. */
+  caseRow(c, mode) {
+    const f = window.OT.flags(c);
+    const booking = mode === 'all' && this.state.bookId === c.id;
+    const needsDate = (window.OT.isRunning(c.stage) && !c.nextVisit) || f.noShow || f.overdue;
+    const open = () => this.setState({ openId: c.id });
+    return {
+      id: c.id,
+      name: c.patient.name,
+      photo: this.heroOf(c.id, c.patient.name),
+      fallback: this.initialsAvatar(c.patient.name),
+      stageLabel: this.stageInfo(c.stage).en,
+      stageCls: this.stageCls(c.stage),
+      visitText: c.nextVisit ? window.OT.fmtDate(c.nextVisit) : 'Not booked',
+      hasNoShow: f.noShow, hasOverdue: f.overdue, hasNoAppt: f.noAppointment,
+      openCls: mode === 'today' ? 'ot-btn--primary' : 'ot-btn--secondary',
+      showNoShow: mode === 'today',
+      showBook: mode === 'all' && needsDate,
+      booking: booking,
+      bookDate: this.state.bookDate,
+      bookText: window.OT.fmtDate(this.state.bookDate),
+      bookErr: this.state.bookErr,
+      bookErrShown: booking && !!this.state.bookErr,
+      todayISO: window.OT.DEMO_TODAY,
+      onBookDate: ev => this.setState({ bookDate: ev.target.value, bookErr: '' }),
+      onBookSave: ev => {
+        if (ev) ev.stopPropagation();
+        const err = this.bookDate(c.id, this.state.bookDate);
+        if (err) this.setState({ bookErr: err });
+        else this.setState({ bookId: null, bookDate: '', bookErr: '' });
+      },
+      onBookCancel: ev => { if (ev) ev.stopPropagation(); this.setState({ bookId: null, bookDate: '', bookErr: '' }); },
+      onOpen: () => open(),
+      onKey: ev => { if (ev.target === ev.currentTarget && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); open(); } },
+      onOpenBtn: ev => { ev.stopPropagation(); open(); },
+      onNoShow: ev => { ev.stopPropagation(); this.markNoShow(c.id); },
+      onBook: ev => { ev.stopPropagation(); this.setState({ bookId: c.id, bookDate: '', bookErr: '' }); },
+    };
+  }
+
+  /* the drawer's Next visit line: the date from the store, Change opens a date field, Save writes it (T11-AC1, AC5) */
+  nvVals(o) {
+    const rec = window.OT.store.get(o.id) || {};
+    return {
+      dNvText: rec.nextVisit ? window.OT.fmtDate(rec.nextVisit) : 'Not booked',
+      dNvOpen: this.state.nvOpen,
+      dNvChange: () => this.setState({ nvOpen: true, nvDate: '', nvErr: '' }),
+      dNvDate: this.state.nvDate,
+      onNvDate: ev => this.setState({ nvDate: ev.target.value, nvErr: '' }),
+      dNvPick: window.OT.fmtDate(this.state.nvDate),
+      dNvHasErr: !!this.state.nvErr,
+      dNvErr: this.state.nvErr,
+      dNvSave: ev => {
+        if (ev && ev.stopPropagation) ev.stopPropagation();
+        const err = this.bookDate(o.id, this.state.nvDate);
+        if (err) this.setState({ nvErr: err });
+        else this.setState({ nvOpen: false, nvDate: '', nvErr: '' });
+      },
+    };
+  }
+
   renderVals() {
+    /* the drawer's rows (the store's view, through build) */
     const rows = this.build();
     const tab = this.state.tab || 'today';
-    const q = this.state.query.trim().toLowerCase();
-    const match = o => !q || [o.name, o.id, o.meta].join(' ').toLowerCase().indexOf(q) >= 0;
-
-    const isDone = o => o.offset === 0 && !!(this.state.sess[o.id] || {}).closed;
-
-    const todays = rows.filter(o => o.offset === 0);
-    const remaining = todays.filter(o => !isDone(o)).length;
-    const overdue = rows.filter(o => o.late > 0);
-    const awaiting = rows.filter(o => o.stage === 'plan' && !o.flags.planApproved);
-    const blocking = rows.filter(o => !!o.rec);
-    /* the dataset has no creation date, so this cannot honestly mean "new this
-       month" — it is every case that has not started active treatment yet */
-    const fresh = rows.filter(o => o.mo === 0);
-
-    /* spotlight: the case that has sat still longest with something concrete blocking it.
-       One card, one blocker, one action — snoozing it promotes the next one. */
-    /* a case's own milestone is not a blocker — an active case has simply not
-       reached its debond yet. Same exclusion the drawer's gate list uses. */
-    const milestoneOf = { active: 'debondDone', plan: 'planApproved',
-                          diagnosis: 'problemListApproved', records: 'recordsComplete' };
-    const gateOf = o => {
-      const KB = this.K();
-      const order = (KB.caseStages || []).map(x => x[0]);
-      const nextStage = order[order.indexOf(o.stage) + 1];
-      if (!nextStage) return [];
-      const own = ((KB.stageGates || {})[nextStage] || []).filter(g => g[0] === milestoneOf[o.stage])[0];
-      return (KB.gateCheck || (() => []))(o.flags, nextStage).filter(t => !own || t !== own[1]);
+    const today = window.OT.DEMO_TODAY;
+    const cases = window.OT.store.list();
+    const todays = cases.filter(c => c.nextVisit === today);
+    const overdueN = cases.filter(c => window.OT.flags(c).overdue).length;
+    const sel = this.state.stageSel, fsel = this.state.flagSel;
+    const flagPass = c => {
+      const f = window.OT.flags(c);
+      return !fsel || (fsel === 'noShow' ? f.noShow : fsel === 'overdue' ? f.overdue : f.noAppointment);
     };
-    const blocked = rows
-      .filter(o => !this.state.snoozed.includes(o.id))
-      .filter(o => !!o.rec || gateOf(o).length > 0)
-      .sort((a, b) => b.last.d - a.last.d);
-    const spot = blocked[0] || null;
-    let spotBadge = '', spotBlocker = '', spotDetail = '', spotAction = '';
-    if (spot) {
-      const gate = gateOf(spot);
-      spotBadge = 'Longest with no movement';
-      if (spot.rec) {
-        const n = spot.rec.total - spot.rec.done;
-        spotBlocker = n + (n === 1 ? ' missing record blocks' : ' missing records block') + ' the next stage';
-        spotDetail = spot.rec.missing.slice(0, 3).join(' · ') + ' — ' + spot.last.d + ' days idle';
-        spotAction = 'Open Records collection';
-      } else {
-        spotBlocker = gate[0];
-        spotDetail = (gate.length > 1 ? '+' + (gate.length - 1) + ' more · ' : '') + spot.last.d + ' days idle';
-        spotAction = 'Open the case file';
-      }
-    }
-
-    const view = this.state.view;
-    const setView = v => this.setState({ tab: 'all', view: view === v ? 'all' : v });
-
-    const primaryDefs = [
-      ['today', 'Visits left today', String(remaining), 'of ' + todays.length + ' today', '#0f172a', '#eff6ff',
-        'Show today\'s schedule', () => this.setState({ tab: 'today', scope: 'today' }), tab === 'today'],
-      ['overdue', 'Overdue', String(overdue.length), 'cases', '#b91c1c', '#fef2f2',
-        'Missed appointment or past the stage interval', () => setView('overdue'), tab === 'all' && view === 'overdue']
-    ];
-    const secondaryDefs = [
-      ['plans', 'Plans awaiting approval', String(awaiting.length), () => setView('plans'), tab === 'all' && view === 'plans'],
-      ['records', 'Records still incomplete', String(blocking.length), () => setView('records'), tab === 'all' && view === 'records'],
-      ['new', 'Not yet in treatment', String(fresh.length), () => setView('new'), tab === 'all' && view === 'new']
-    ];
-
-    const scopeRange = { today: [0, 0], tomorrow: [1, 1], week: [0, 6] }[this.state.scope];
-    const inScope = rows
-      .filter(o => o.offset !== null && o.offset >= scopeRange[0] && o.offset <= scopeRange[1])
-      .filter(match)
-      .sort((a, b) => a.offset - b.offset);
-    const vf = this.state.visitFilter, sf = this.state.stageFilter;
-    const visitRows = inScope.filter(o => {
-      if (vf && o.visitType !== vf) return false;
-      if (sf && o.stage !== sf) return false;
-      if (this.state.hideDone && isDone(o)) return false;
-      return true;
-    });
-    const vtSeen = [];
-    inScope.forEach(o => { if (o.visitType && vtSeen.indexOf(o.visitType) < 0) vtSeen.push(o.visitType); });
-
-    const viewPred = {
-      all: null, overdue: o => o.late > 0,
-      plans: o => o.stage === 'plan' && !o.flags.planApproved,
-      records: o => !o.flags.recordsComplete && (o.stage === 'records' || o.stage === 'diagnosis'),
-      new: o => o.mo === 0 && o.last.d <= 30
-    }[view];
-    const shown = rows.filter(o => {
-      if (!match(o)) return false;
-      if (sf && o.stage !== sf) return false;
-      if (viewPred && !viewPred(o)) return false;
-      return true;
-    }).sort((a, b) => {
-      if (this.state.sort === 'late') return b.late - a.late;
-      if (this.state.sort === 'name') return a.name.localeCompare(b.name, 'ar');
-      const av = a.offset === null ? 999 : a.offset, bv = b.offset === null ? 999 : b.offset;
-      return av - bv;
-    });
-
-    const stageOpts = [{ value: '', label: 'All stages' }].concat(
-      (this.K().caseStages || []).map(x => ({ value: x[0], label: x[1] })));
-    const monthsLabel = o => (o.mo ? o.mo + ' mo' : 'Not started');
-    const visitCell = o => o.offset === null ? 'Not booked' : this.shortDate(o.offset);
-    const visitFg = o => o.offset === null ? '#b45309' : o.offset < 0 ? '#b91c1c' : '#0f172a';
-
-    return {
+    /* one sort: the nearest visit first; no date last */
+    const dateKey = c => c.nextVisit || '9999-12-31';
+    const allCases = cases.filter(c => (!sel || c.stage === sel) && flagPass(c))
+      .sort((a, b) => (dateKey(a) < dateKey(b) ? -1 : dateKey(a) > dateKey(b) ? 1 : 0));
+    const passed = overdueN ? ' · ' + overdueN + (overdueN === 1 ? ' date passed' : ' dates passed') : '';
+    const subline = tab === 'today'
+      ? (todays.length ? todays.length + (todays.length === 1 ? ' patient' : ' patients') + ' today' : 'No patients today') + passed
+      : cases.length + ' cases' + passed;
+    const K = this.K();
+    return Object.assign({
       showAside: !this.props.embedded,
+      todayLong: window.OT.fmtDate(today),
+      subline: subline,
+      onNewCase: () => { if (this.props.onNavigate) this.props.onNavigate('newcase'); },
+      tabs: [['today', 'Today', todays.length], ['all', 'All cases', cases.length]].map(t => ({
+        text: t[1] + ' ' + t[2], on: tab === t[0], onClick: () => this.setState({ tab: t[0] })
+      })),
+      todayTab: tab === 'today', allTab: tab === 'all',
+      todayRows: todays.map(c => this.caseRow(c, 'today')),
+      noTodayRows: todays.length === 0,
+      allRows: allCases.map(c => this.caseRow(c, 'all')),
+      noAllRows: allCases.length === 0,
+      stageSel: sel,
+      onStageSel: ev => this.setState({ stageSel: ev.target.value }),
+      stageOptions: [{ value: '', label: 'All stages' }].concat((K.stageList || []).map(s => ({ value: s.key, label: s.label }))),
+      flagSel: fsel,
+      onFlagSel: ev => this.setState({ flagSel: ev.target.value }),
+      flagOptions: [{ value: '', label: 'All flags' }, { value: 'noShow', label: 'Didn\'t come' },
+                    { value: 'overdue', label: 'Date passed' }, { value: 'noAppointment', label: 'No appointment' }],
+      filterLine: 'Showing ' + allCases.length + ' of ' + cases.length + ' cases, nearest visit first',
+      clearFilters: () => this.setState({ stageSel: '', flagSel: '' }),
+      toastOn: !!this.state.toast,
+      toastText: this.state.toast ? this.state.toast.text : '',
+      toastUndo: () => {
+        const t = this.state.toast;
+        clearTimeout(this._toastT);
+        this.setState({ toast: null });
+        if (t && t.undo) t.undo();
+      },
+    }, this.drawerVals(rows), {
+      /* the standalone sidebar (showAside) is not shown when embedded in the shell; its keys stay bound */
       sideW: this.state.collapsed ? '76px' : '244px',
       labelOp: this.state.collapsed ? 0 : 1,
       sideIcon: this.state.collapsed ? '›' : '‹',
       toggleSide: () => this.setState(st => ({ collapsed: !st.collapsed })),
-      onNewCase: () => { if (this.props.onNavigate) this.props.onNavigate('newcase'); },
-      query: this.state.query,
-      onQuery: ev => this.setState({ query: ev.target.value }),
-
-      greeting: 'Welcome, Dr Mohamed Shady',
-      subline: remaining
-        ? remaining + ' visits left today, and ' + overdue.length + ' cases are overdue.'
-        : 'Today\'s schedule is done — ' + overdue.length + ' overdue cases are waiting on you.',
-      todayLong: window.OT.fmtDate(this.dayISO(0)),
-
-      metricsPrimary: primaryDefs.map(m => ({
-        label: m[1], n: m[2], sub: m[3], fg: m[4], tint: m[5], title: m[6], onClick: m[7],
-        bd: m[8] ? '#2563eb' : '#e8edf3', sh: m[8] ? '0 0 0 3px rgba(37,99,235,.12)' : 'none'
-      })),
-      metricsSecondary: secondaryDefs.map(m => ({
-        label: m[1], n: m[2], onClick: m[3],
-        bg: m[4] ? '#eff6ff' : '#ffffff', bd: m[4] ? '#bfdbfe' : '#e8edf3',
-        fg: m[4] ? '#1d4ed8' : '#64748b', fw: m[4] ? 700 : 500
-      })),
-
-      tabs: [['today', 'Today', String(todays.length)], ['all', 'All cases', String(rows.length)]].map(t => {
-        const on = tab === t[0];
-        return { label: t[1], n: t[2], bg: on ? '#ffffff' : 'transparent',
-                 fg: on ? '#0f172a' : '#64748b', nFg: on ? '#2563eb' : '#94a3b8',
-                 fw: on ? 700 : 500, sh: on ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
-                 onClick: () => this.setState({ tab: t[0] }) };
-      }),
-      todayTab: tab === 'today', allTab: tab === 'all',
-
-      scopes: [['today', 'Today'], ['tomorrow', 'Tomorrow'], ['week', 'Week']].map(x => {
-        const on = this.state.scope === x[0];
-        return { label: x[1], bg: on ? '#ffffff' : 'transparent', fg: on ? '#0f172a' : '#64748b',
-                 fw: on ? 700 : 500, sh: on ? '0 1px 2px rgba(15,23,42,0.09)' : 'none',
-                 onClick: () => this.setState({ scope: x[0] }) };
-      }),
-      scopeSub: { today: 'Today\'s visits in time order — sessions close from the Session panel',
-                  tomorrow: 'Tomorrow\'s visits — for preparation',
-                  week: 'Seven days from today' }[this.state.scope],
-
-      visits: visitRows.map(o => {
-        const vd = this.visitDef(o.visitType);
-        const tn = this.tones[this.visitTone[o.visitType] || 'slate'];
-        const done = isDone(o);
-        return {
-          name: o.name, id: o.id,
-          photo: o.photo, fallback: o.fallback,
-          type: vd.en, typeBg: tn[0], typeFg: tn[1], bar: tn[2],
-          objective: o.objective, done: done, pending: !done,
-          rowBg: done ? '#fbfcfe' : '#ffffff', op: done ? 0.62 : 1,
-          onRow: () => this.setState({ openId: o.id }),
-          onKey: ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); this.setState({ openId: o.id }); } },
-          onOpen: ev => { ev.stopPropagation(); this.setState({ openId: o.id }); }
-        };
-      }),
-      noVisits: visitRows.length === 0,
-      ...this.drawerVals(rows),
-
-      visitFilter: vf,
-      visitTypeOptions: [{ value: '', label: 'All visit types' }].concat(
-        vtSeen.map(k => ({ value: k, label: this.visitDef(k).en }))),
-      onVisitFilter: ev => this.setState({ visitFilter: ev.target.value }),
-      stageFilter: sf,
-      stageOptions: stageOpts,
-      onStageFilter: ev => this.setState({ stageFilter: ev.target.value }),
-      toggleHideDone: () => this.setState(st => ({ hideDone: !st.hideDone })),
-      hideDoneMark: this.state.hideDone ? '✓' : '○',
-      hideDoneBg: this.state.hideDone ? '#eff6ff' : '#ffffff',
-      hideDoneFg: this.state.hideDone ? '#1d4ed8' : '#64748b',
-      hideDoneBd: this.state.hideDone ? '#bfdbfe' : '#e2e8f0',
-      hideDoneFw: this.state.hideDone ? 700 : 500,
-      visitFiltered: !!(vf || sf || this.state.hideDone || q),
-      clearVisitFilters: () => this.setState({ visitFilter: '', stageFilter: '', hideDone: false, query: '' }),
-      visitShown: String(visitRows.length),
-      visitTotal: String(inScope.length),
-
-      hasSpotlight: !!spot,
-      spotName: spot ? spot.name : '',
-      spotId: spot ? spot.id : '',
-      spotMeta: spot ? spot.meta : '',
-      spotPhoto: spot ? spot.photo : '',
-      spotHasPhoto: !!(spot && spot.photo && spot.photo.indexOf('data:') !== 0),
-      spotNoPhoto: !!(spot && (!spot.photo || spot.photo.indexOf('data:') === 0)),
-      spotInitials: spot ? this.initials(spot.name) : '',
-      spotInitialsFg: '#475569', spotPanelBg: '#f1f5f9',
-      spotBadge: spot ? spotBadge : '',
-      spotStage: spot ? this.stageInfo(spot.stage).en : '',
-      spotStageBg: spot ? this.stageInfo(spot.stage).bg : '',
-      spotStageFg: spot ? this.stageInfo(spot.stage).fg : '',
-      spotStageDot: spot ? this.stageInfo(spot.stage).dot : '',
-      spotBlocker: spot ? spotBlocker : '',
-      spotDetail: spot ? spotDetail : '',
-      spotAction: spot ? spotAction : '',
-      spotOpen: () => { if (spot) this.go(spot, spot.rec ? 'records' : 'overview'); },
-      spotSnooze: () => { if (spot) this.setState(st => ({ snoozed: st.snoozed.concat([spot.id]) })); },
-
-      viewActive: view !== 'all',
-      viewLabel: ({ overdue: 'Overdue', plans: 'Plans awaiting approval',
-                    records: 'Records still incomplete', new: 'Not yet in treatment' })[view] || '',
-      viewCaption: view === 'all' ? 'All registered cases — the numbers above filter this list'
-                                  : 'Filtered from the bar above',
-      sort: this.state.sort,
-      sortOptions: [{ value: 'visit', label: 'Nearest visit' }, { value: 'late', label: 'Most overdue' }, { value: 'name', label: 'Name' }],
-      onSort: ev => this.setState({ sort: ev.target.value }),
-      clearFilters: () => this.setState({ view: 'all', stageFilter: '', query: '' }),
-      rows: shown.map(o => {
-        const st = this.stageInfo(o.stage);
-        return {
-          name: o.name, meta: o.meta, photo: o.photo, fallback: o.fallback, stage: st.en,
-          stageBg: st.bg, stageFg: st.fg, stageDot: st.dot,
-          visit: visitCell(o), visitFw: o.offset !== null && o.offset < 0 ? 700 : 500, visitFg: visitFg(o),
-          next: o.objective, months: monthsLabel(o),
-          onClick: () => this.setState({ openId: o.id }),
-          onFile: ev => { ev.stopPropagation(); this.go(o, 'overview'); },
-          hasRecGap: !!o.rec,
-          recLabel: o.rec ? o.rec.done + ' / ' + o.rec.total : '',
-          recTitle: o.rec ? 'Still missing: ' + o.rec.missing.join(' · ') : '',
-          onRecords: ev => { ev.stopPropagation(); this.go(o, 'records'); },
-          onKey: ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); this.setState({ openId: o.id }); } }
-        };
-      }),
-      noRows: shown.length === 0,
-      shownCount: String(shown.length),
-      totalCount: String(rows.length)
-    };
+    });
   }
 }
 </script>

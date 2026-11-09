@@ -592,15 +592,51 @@
   align-items: center;
   gap: var(--ot-space-4);
 }
+/* phone: the name on the first line, the stage and flags under it, the actions on their own line (the actions can be
+   two buttons: Open session and Didn't come / Book; S1.3, DECISIONS_LOG) */
 @media (max-width: 600px) {
   .ot-list-row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:
-      "avatar body action"
-      ".      tags tags";
+      "avatar body"
+      ".      tags"
+      ".      action";
     align-items: start;
   }
   .ot-list-row__tags { justify-content: start; }
+  .ot-list-row__actions { flex-wrap: wrap; }
+}
+
+/* ---------- List row, compact (search dropdown). A button with the same grid, tags always on the end ---------- */
+.ot-list-row--compact {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "avatar body tags";
+  gap: var(--ot-space-4) var(--ot-space-5);
+  inline-size: 100%;
+  min-block-size: var(--ot-touch-min);
+  padding-block: var(--ot-space-4);
+  padding-inline: var(--ot-space-4);
+  border: 0;
+  border-block-end: var(--ot-border-w) solid var(--ot-border);
+  border-radius: var(--ot-radius-sm);
+  background: var(--ot-surface);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.ot-list-row--compact:last-child {
+  border-block-end: 0;
+}
+.ot-list-row--compact:hover {
+  background: var(--ot-page);
+}
+.ot-list-row--compact > .ot-avatar {
+  inline-size: 32px;
+  block-size: 32px;
+}
+.ot-list-row--compact .ot-list-row__tags {
+  justify-content: end;
 }
 
 /* ---------- Focus ring: every interactive ot- element ---------- */

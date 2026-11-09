@@ -2,6 +2,8 @@
 <html><head><script>window.__resources = {"./OrthoTrack%20Case%20Dashboard%20v2%20EN.dc.html": "assets/OrthoTrack%20Case%20Dashboard%20v2%20EN.dc.html", "https://cdn.jsdelivr.net/npm/@dawod/thmanyah-font-web@1.2.0/sans.css": "assets/vendor/css/thmanyah-sans.css", "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap": "assets/vendor/css/google-outfit-400-700.css", "./OrthoTrack%20Case%20Overview%20EN.dc.html": "assets/OrthoTrack%20Case%20Overview%20EN.dc.html", "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap": "assets/vendor/css/google-inter-300-700-400-600.css", "./OrthoTrack%20Case%20Create%20v2%20EN.dc.html": "assets/OrthoTrack%20Case%20Create%20v2%20EN.dc.html", "./OrthoTrack%20Records%20Collection%20v3%20EN.dc.html": "assets/OrthoTrack%20Records%20Collection%20v3%20EN.dc.html", "./OrthoTrack%20Diagnosis%20EN.dc.html": "assets/OrthoTrack%20Diagnosis%20EN.dc.html", "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap": "assets/vendor/css/google-inter-300-700.css", "./OrthoTrack%20Case%20File%20EN.dc.html": "assets/OrthoTrack%20Case%20File%20EN.dc.html", "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap": "assets/vendor/css/google-outfit-300-900.css", "./OrthoTrack%20Case%20Summary%20EN.dc.html": "assets/OrthoTrack%20Case%20Summary%20EN.dc.html", "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "assets/vendor/react.production.min.js", "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "assets/vendor/react-dom.production.min.js"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/ds/tokens.css">
+<link rel="stylesheet" href="assets/ds/components.css">
 <script src="assets/js/dc-runtime.js"></script>
 <script src="assets/js/case-photo-resolver.js"></script>
 <!-- OT-DATA-START — generated from ortho-knowledge-en.js + ortho-cases.js; regenerate, do not hand-edit -->
@@ -2368,6 +2370,91 @@ button,input,select,textarea{font-family:inherit}
 @keyframes otScreen{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 @keyframes otFade{from{opacity:0}to{opacity:1}}
 </style>
+<style>
+/* ---- App shell (S1.2). Colours, type and components come from assets/ds; these rules only lay the shell out. ---- */
+.ot-shell { font-family: var(--ot-font-sans); }
+.ot-shell .ot-shell__main { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; overflow: hidden; }
+.ot-shell .ot-shell__close,
+.ot-shell .ot-shell__menu,
+.ot-shell .ot-shell__top-mark { display: none; }
+.ot-shell .ot-shell__mark { inline-size: 34px; block-size: 34px; flex: none; border-radius: var(--ot-radius-md); background: var(--ot-primary); }
+.ot-shell .ot-shell__brand { display: flex; align-items: center; gap: var(--ot-space-5); min-block-size: var(--ot-touch-min); padding: var(--ot-space-2) var(--ot-space-2) var(--ot-space-6); }
+.ot-shell .ot-shell__wordmark { font-size: var(--ot-text-16); font-weight: var(--ot-weight-bold); letter-spacing: 0.02em; color: var(--ot-ink); white-space: nowrap; }
+.ot-shell .ot-shell__spacer { flex: 1; }
+.ot-shell .ot-shell__group { display: grid; gap: var(--ot-space-2); min-inline-size: 0; }
+.ot-shell .ot-shell__item {
+  display: flex; align-items: center; gap: var(--ot-space-5); inline-size: 100%; min-block-size: var(--ot-touch-min);
+  padding-inline: var(--ot-space-4); padding-block: 0; border: 0; border-radius: var(--ot-radius-md);
+  background: transparent; color: var(--ot-text-2); font: inherit; font-size: var(--ot-text-14); font-weight: var(--ot-weight-medium);
+  text-align: start; cursor: pointer; min-inline-size: 0;
+}
+.ot-shell .ot-shell__item:hover { background: var(--ot-page); color: var(--ot-ink); }
+.ot-shell .ot-shell__item.is-current,
+.ot-shell .ot-shell__item.is-current:hover { background: var(--ot-primary-tint); color: var(--ot-primary-hover); font-weight: var(--ot-weight-bold); }
+.ot-shell .ot-shell__item:focus-visible { outline: var(--ot-focus-w) solid var(--ot-primary); outline-offset: 2px; }
+.ot-shell .ot-shell__icon { inline-size: 26px; flex: none; display: grid; place-items: center; }
+.ot-shell .ot-shell__dot { inline-size: 9px; block-size: 9px; border-radius: var(--ot-radius-pill); }
+.ot-shell .ot-shell__label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: opacity var(--ot-dur-base) var(--ot-ease); }
+.ot-shell .ot-shell__stage { display: grid; gap: 0; min-inline-size: 0; }
+.ot-shell .ot-shell__stage-latin { font-size: var(--ot-text-11); font-weight: var(--ot-weight-semibold); letter-spacing: 0.04em; text-transform: uppercase; }
+.ot-shell .ot-shell__stage-ar { display: block; font-size: var(--ot-text-13); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ot-shell .ot-shell__case { display: flex; align-items: center; gap: var(--ot-space-5); min-inline-size: 0; margin-block-end: var(--ot-space-2); padding: var(--ot-space-4) var(--ot-space-2) var(--ot-space-5); border-block-end: var(--ot-border-w) solid var(--ot-border); }
+.ot-shell .ot-shell__case-text { display: grid; min-inline-size: 0; }
+.ot-shell .ot-shell__case-name { font-size: var(--ot-text-13); font-weight: var(--ot-weight-bold); color: var(--ot-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ot-shell .ot-shell__case-id { font-size: var(--ot-text-11); color: var(--ot-text-muted); }
+.ot-shell .ot-shell__doctor { display: flex; align-items: center; gap: var(--ot-space-5); min-inline-size: 0; margin-block-start: var(--ot-space-5); padding: var(--ot-space-5) var(--ot-space-2) 0; border-block-start: var(--ot-border-w) solid var(--ot-border); }
+.ot-shell .ot-shell__doctor-text { display: grid; flex: 1; min-inline-size: 0; }
+.ot-shell .ot-shell__doctor-name { font-size: var(--ot-text-13); font-weight: var(--ot-weight-semibold); color: var(--ot-ink); white-space: normal; overflow-wrap: anywhere; }
+.ot-shell .ot-shell__doctor-role { font-size: var(--ot-text-12); color: var(--ot-text-muted); }
+.ot-shell .ot-shell__reset { inline-size: 100%; justify-content: flex-start; margin-block-start: var(--ot-space-4); font-size: var(--ot-text-13); font-weight: var(--ot-weight-medium); }
+.ot-shell .ot-shell__collapse { color: var(--ot-text-muted); }
+
+/* phone and tablet: the nav is a drawer (ot-drawer + ot-scrim), hidden until the menu button opens it */
+.ot-shell .ot-shell__side { display: none; }
+.ot-shell .ot-shell__side.ot-drawer { display: flex; gap: var(--ot-space-2); overflow-y: auto; padding: var(--ot-space-6) var(--ot-space-6) var(--ot-space-7); }
+.ot-shell .ot-shell__side.ot-drawer .ot-shell__desk { display: none; }
+.ot-shell .ot-shell__side.ot-drawer .ot-shell__spacer { min-block-size: var(--ot-space-6); }
+@media (max-width: 899px) {
+  .ot-shell .ot-shell__close,
+  .ot-shell .ot-shell__menu { display: inline-flex; }
+  .ot-shell .ot-shell__top-mark { display: block; inline-size: 32px; block-size: 32px; flex: none; border-radius: var(--ot-radius-md); background: var(--ot-primary); }
+  .ot-shell .ot-shell__close { margin-inline-start: auto; }
+}
+
+/* search: one input in the top bar. Results drop below it; on a phone they span the bar */
+.ot-shell .ot-shell__top { position: relative; z-index: 30; display: flex; align-items: center; gap: var(--ot-space-5); min-inline-size: 0; padding: var(--ot-space-5) var(--ot-space-6); background: var(--ot-surface); border-block-end: var(--ot-border-w) solid var(--ot-border); }
+.ot-shell .ot-shell__search { flex: 1; min-inline-size: 0; }
+.ot-shell .ot-shell__search-form { position: relative; }
+.ot-shell .ot-shell__search-input { padding-inline-start: 40px; }
+.ot-shell .ot-shell__search-icon { position: absolute; inset-inline-start: var(--ot-space-6); inset-block-start: 50%; translate: 0 -50%; color: var(--ot-icon); pointer-events: none; }
+.ot-shell .ot-shell__results {
+  position: absolute; z-index: 31; inset-inline: var(--ot-space-6); inset-block-start: calc(100% + var(--ot-space-3));
+  max-block-size: 60vh; overflow-y: auto; padding: var(--ot-space-3) var(--ot-space-6) var(--ot-space-5);
+  background: var(--ot-surface); border: var(--ot-border-w) solid var(--ot-border); border-radius: var(--ot-radius-lg); box-shadow: var(--ot-shadow-overlay);
+}
+.ot-shell .ot-shell__results-list { display: grid; }
+.ot-shell .ot-shell__noresults,
+.ot-shell .ot-shell__more { margin: 0; padding-block: var(--ot-space-5); font-size: var(--ot-text-13); color: var(--ot-text-muted); }
+
+/* desktop: the nav is the sidebar, and the top bar holds only the search */
+@media (min-width: 900px) {
+  .ot-shell .ot-shell__side {
+    display: flex; flex-direction: column; gap: var(--ot-space-2); flex: none;
+    position: sticky; inset-block-start: 0; align-self: flex-start; block-size: 100vh; inline-size: 244px;
+    padding: var(--ot-space-7) var(--ot-space-5); background: var(--ot-surface);
+    border-inline-end: var(--ot-border-w) solid var(--ot-border); overflow: hidden;
+    transition: inline-size 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ot-shell .ot-shell__side--collapsed { inline-size: 76px; }
+  .ot-shell .ot-shell__side--collapsed .ot-shell__label { opacity: 0; }
+  .ot-shell .ot-shell__desk { display: flex; }
+  .ot-shell .ot-shell__signout { inline-size: 36px; }
+  .ot-shell .ot-shell__scrim { display: none; }
+  .ot-shell .ot-shell__top { padding: var(--ot-space-6) var(--ot-space-8); }
+  .ot-shell .ot-shell__search { position: relative; flex: 0 1 420px; }
+  .ot-shell .ot-shell__results { inset-inline: 0; }
+}
+</style>
 </helmet>
 
 <div aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">
@@ -2517,67 +2604,110 @@ button,input,select,textarea{font-family:inherit}
 </sc-if>
 
 <sc-if value="{{ isLoggedIn }}" hint-placeholder-val="{{ false }}">
-<div style="min-height:100vh;display:flex;background:#f6f8fb;animation:otFade .3s ease-out">
+<div class="ot-shell" style="min-height:100vh;display:flex;background:var(--ot-page);animation:otFade .3s ease-out">
 
-  <aside style="width:{{ sideW }};flex:none;position:sticky;top:0;height:100vh;align-self:flex-start;background:#ffffff;border-inline-end:1px solid #e8edf3;display:flex;flex-direction:column;padding:18px 12px;gap:5px;transition:width .28s cubic-bezier(.4,0,.2,1);overflow:hidden">
-    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 18px;min-height:44px">
-      <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#2563eb"></div>
-     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.04em;color:#0f172a;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">OrthoTrack</span>
+  <nav id="ot-side" class="{{ sideCls }}" aria-label="Main">
+    <div class="ot-shell__brand">
+      <div class="ot-shell__mark" aria-hidden="true"></div>
+      <span class="ot-shell__wordmark ot-shell__label" dir="ltr">OrthoTrack</span>
+      <button type="button" class="ot-btn ot-btn--icon ot-shell__close" sc-camel-on-click="{{ closeMenu }}" aria-label="Close menu" title="Close menu">
+        <svg class="ot-icon" sc-camel-view-box="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"></path></svg>
+      </button>
     </div>
     <sc-if value="{{ isCaseNav }}" hint-placeholder-val="{{ false }}">
-    <div style="display:grid;gap:5px">
-      <button type="button" sc-camel-on-click="{{ goAllCases }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 10px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;cursor:pointer;text-align:start;transition:transform .15s" style-hover="background:#f6f8fb;color:#0f172a;transform:translateX(-2px)">
-       <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:16px;font-weight:500">›</span>
-       <span style="font-size:13.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">All cases</span>
+    <div class="ot-shell__group">
+      <button type="button" class="ot-shell__item" sc-camel-on-click="{{ goAllCases }}">
+        <span class="ot-shell__icon" aria-hidden="true">›</span>
+        <span class="ot-shell__label">All cases</span>
       </button>
-      <div style="display:flex;align-items:center;gap:11px;padding:10px 8px 12px;margin-bottom:2px;border-bottom:1px solid #e8edf3">
+      <div class="ot-shell__case">
         <sc-if value="{{ hasCasePhoto }}" hint-placeholder-val="{{ false }}">{{ caseAvatar }}</sc-if>
-        <div style="display:grid;gap:1px;min-width:0;opacity:{{ labelOp }};transition:opacity .2s">
-         <span dir="rtl" style="unicode-bidi:isolate;font-family:'Thmanyah Sans',Inter,sans-serif;line-height:1.7;font-size:13.5px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ caseName }}</span>
-         <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:500;color:#94a3b8;white-space:nowrap">{{ caseId }}</span>
+        <div class="ot-shell__case-text ot-shell__label">
+          <span class="ot-shell__case-name" dir="auto">{{ caseName }}</span>
+          <span class="ot-shell__case-id" dir="ltr">{{ caseId }}</span>
         </div>
       </div>
       <sc-for list="{{ stages }}" as="sg" hint-placeholder-count="7">
-        <button type="button" sc-camel-on-click="{{ sg.go }}" title="{{ sg.title }}" style="display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:0 10px;border-radius:12px;border:none;cursor:{{ sg.cursor }};text-align:start;transition:transform .15s;background:{{ sg.bg }};color:{{ sg.fg }}" style-hover="transform:translateX(-2px)">
-         <span style="width:26px;flex:none;display:flex;justify-content:center"><span style="width:9px;height:9px;border-radius:50%;background:{{ sg.dot }};box-shadow:{{ sg.ring }}"></span></span>
-         <span style="display:grid;gap:0;min-width:0;opacity:{{ labelOp }};transition:opacity .2s">
-           <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:{{ sg.latinFg }};white-space:nowrap">{{ sg.latin }}</span>
-           <span style="font-size:13.5px;font-weight:{{ sg.fw }};white-space:nowrap">{{ sg.ar }}</span>
+        <button type="button" class="ot-shell__item {{ sg.cls }}" sc-camel-on-click="{{ sg.go }}" title="{{ sg.title }}" aria-current="{{ sg.current }}" style="cursor:{{ sg.cursor }};color:{{ sg.fg }}">
+          <span class="ot-shell__icon" aria-hidden="true"><span class="ot-shell__dot" style="background:{{ sg.dot }};box-shadow:{{ sg.ring }}"></span></span>
+          <span class="ot-shell__label ot-shell__stage">
+            <span class="ot-shell__stage-latin" dir="ltr" style="color:{{ sg.latinFg }}">{{ sg.latin }}</span>
+            <span class="ot-shell__stage-ar" style="font-weight:{{ sg.fw }}">{{ sg.ar }}</span>
           </span>
         </button>
       </sc-for>
     </div>
     </sc-if>
     <sc-if value="{{ isGlobalNav }}" hint-placeholder-val="{{ true }}">
-    <div style="display:grid;gap:5px">
-    <button type="button" sc-camel-on-click="{{ goDashboard }}" style="display:flex;align-items:center;gap:12px;width:100%;min-height:46px;padding:0 10px;border-radius:12px;border:none;cursor:pointer;text-align:start;transition:transform .15s;background:{{ navDashBg }};color:{{ navDashFg }}" style-hover="transform:translateX(-2px)">
-     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="19" height="19" sc-camel-view-box="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
-     <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:13.5px;font-weight:{{ navDashFw }};letter-spacing:0.02em;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Dashboard</span>
-    </button>
-    </div>
-    </sc-if>
-    <div style="flex:1"></div>
-    <button type="button" sc-camel-on-click="{{ toggleSide }}" style="display:flex;align-items:center;gap:12px;min-height:46px;padding:0 10px;border-radius:12px;border:none;background:transparent;color:#94a3b8;cursor:pointer;text-align:start" style-hover="background:#f6f8fb;color:#0f172a">
-     <span style="width:26px;flex:none;display:flex;justify-content:center;font-family:Inter,sans-serif;font-size:17px;font-weight:500">{{ sideIcon }}</span>
-     <span style="font-size:14px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Collapse menu</span>
-    </button>
-    <div style="display:flex;align-items:center;gap:11px;padding:12px 8px 2px;border-top:1px solid #e8edf3;margin-top:5px">
-      <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">MS</div>
-      <div style="display:grid;gap:0;min-width:0;flex:1;opacity:{{ labelOp }};transition:opacity .2s">
-       <span style="font-size:13.5px;font-weight:500;white-space:nowrap">Dr Mohamed Shady</span>
-       <span dir="ltr" style="unicode-bidi:isolate;font-family:Inter,sans-serif;font-size:11px;font-weight:500;color:#94a3b8;white-space:nowrap">Orthodontist</span>
-      </div>
-      <button type="button" sc-camel-on-click="{{ signOut }}" title="Sign out" aria-label="Sign out" style="width:32px;height:32px;flex:none;border-radius:10px;border:1px solid #e8edf3;background:#ffffff;color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:{{ labelOp }};transition:opacity .2s" style-hover="background:#fef2f2;border-color:#fecaca;color:#b91c1c">
-        <svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 6V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2"></path><path d="M9 10h8m0 0-2.5-2.5M17 10l-2.5 2.5"></path></svg>
+    <div class="ot-shell__group">
+      <button type="button" class="ot-shell__item {{ navDashCls }}" sc-camel-on-click="{{ goDashboard }}" aria-current="{{ navDashCur }}">
+        <span class="ot-shell__icon" aria-hidden="true"><svg width="19" height="19" sc-camel-view-box="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="6" height="6" rx="2"></rect><rect x="10" y="2" width="6" height="6" rx="2"></rect><rect x="2" y="10" width="6" height="6" rx="2"></rect><rect x="10" y="10" width="6" height="6" rx="2"></rect></svg></span>
+        <span class="ot-shell__label" dir="ltr">Dashboard</span>
       </button>
     </div>
-    <button type="button" sc-camel-on-click="{{ resetDemoData }}" title="Reset demo data" aria-label="Reset demo data" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px;margin-top:4px;border-radius:12px;border:1px solid #e8edf3;background:#ffffff;color:#64748b;cursor:pointer;text-align:start" style-hover="background:#f6f8fb;color:#0f172a">
-     <span style="width:26px;flex:none;display:flex;justify-content:center"><svg width="16" height="16" sc-camel-view-box="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 10a5.5 5.5 0 1 0 1.6-3.9"></path><path d="M4.5 3.5v3h3"></path></svg></span>
-     <span dir="ltr" style="unicode-bidi:isolate;font-size:12.5px;font-weight:500;opacity:{{ labelOp }};white-space:nowrap;transition:opacity .2s">Reset demo data</span>
+    </sc-if>
+    <div class="ot-shell__spacer"></div>
+    <button type="button" class="ot-shell__item ot-shell__desk ot-shell__collapse" sc-camel-on-click="{{ toggleSide }}">
+      <span class="ot-shell__icon" aria-hidden="true">{{ sideIcon }}</span>
+      <span class="ot-shell__label">Collapse menu</span>
     </button>
-  </aside>
+    <div class="ot-shell__doctor">
+      <span class="ot-avatar" aria-hidden="true">MS</span>
+      <div class="ot-shell__doctor-text ot-shell__label">
+        <span class="ot-shell__doctor-name">Dr Mohamed Shady</span>
+        <span class="ot-shell__doctor-role" dir="ltr">Orthodontist</span>
+      </div>
+      <button type="button" class="ot-btn ot-btn--icon ot-shell__signout" sc-camel-on-click="{{ signOut }}" title="Sign out" aria-label="Sign out">
+        <svg class="ot-icon" sc-camel-view-box="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 6V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2"></path><path d="M9 10h8m0 0-2.5-2.5M17 10l-2.5 2.5"></path></svg>
+      </button>
+    </div>
+    <button type="button" class="ot-btn ot-btn--secondary ot-shell__reset" sc-camel-on-click="{{ resetDemoData }}" title="Reset demo data" aria-label="Reset demo data">
+      <svg class="ot-icon ot-icon--sm" sc-camel-view-box="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 10a5.5 5.5 0 1 0 1.6-3.9"></path><path d="M4.5 3.5v3h3"></path></svg>
+      <span class="ot-shell__label">Reset demo data</span>
+    </button>
+  </nav>
 
-  <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="ot-scrim ot-shell__scrim" aria-hidden="true" sc-camel-on-click="{{ closeMenu }}"></div>
+  </sc-if>
+
+  <div class="ot-shell__main">
+    <header class="ot-shell__top">
+      <button type="button" id="ot-menu-btn" class="ot-btn ot-btn--icon ot-shell__menu" sc-camel-on-click="{{ openMenu }}" aria-label="Open menu" aria-controls="ot-side" aria-expanded="{{ menuExpanded }}" title="Menu">
+        <svg class="ot-icon" sc-camel-view-box="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+      </button>
+      <div class="ot-shell__top-mark" aria-hidden="true"></div>
+      <div class="ot-shell__search" data-ot-search>
+        <div class="ot-shell__search-form" role="search">
+          <svg class="ot-icon ot-shell__search-icon" sc-camel-view-box="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="5.5"></circle><path d="M13.5 13.5L17 17"></path></svg>
+          <input id="ot-search" type="search" class="ot-input ot-shell__search-input" aria-label="Search" placeholder="Name, phone or case number" autocomplete="off" dir="auto" value="{{ q }}" sc-camel-on-change="{{ setQ }}" sc-camel-on-focus="{{ openSearch }}" aria-controls="ot-search-results" aria-expanded="{{ searchExpanded }}">
+        </div>
+        <sc-if value="{{ qShown }}" hint-placeholder-val="{{ false }}">
+          <div id="ot-search-results" class="ot-shell__results" role="region" aria-label="Search results">
+            <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+              <div class="ot-shell__results-list">
+                <sc-for list="{{ results }}" as="r" hint-placeholder-count="2">
+                  <button type="button" class="ot-list-row ot-list-row--compact" sc-camel-on-click="{{ r.open }}">
+                    <span class="ot-avatar" aria-hidden="true">{{ r.initial }}</span>
+                    <span class="ot-list-row__body">
+                      <span class="ot-list-row__name" dir="auto">{{ r.name }}</span>
+                      <span class="ot-list-row__meta" dir="ltr">{{ r.id }}</span>
+                    </span>
+                    <span class="ot-list-row__tags"><span class="ot-stage {{ r.stageCls }}">{{ r.stageLabel }}</span></span>
+                  </button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+                <p class="ot-shell__more">{{ moreText }}</p>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+              <p class="ot-shell__noresults" role="status">No case matches this search.</p>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </header>
     <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
       <div style="flex:1;min-width:0;animation:otScreen .34s ease-out">
         <dc-import name="OrthoTrack Case Dashboard v2 EN" embedded="{{ true }}" on-navigate="{{ nav }}" open-id="{{ openDrawerId }}" start-tab="{{ dashTab }}" start-req="{{ dashReq }}" style="width:100%;height:100%;display:block" hint-size="100%,100%"></dc-import>
@@ -2648,26 +2778,39 @@ class Component extends DCLogic {
     loggedIn: false, authScreen: 'login',
     id: '', pw: '', showPw: false, remember: true, err: null, touched: false,
     screen: 'dashboard', dashTab: 'today', dashReq: 0, collapsed: false, cases: [], activeCase: null,
-    caseTab: 'overview', stageKey: 'overview', openDrawerId: ''
+    caseTab: 'overview', stageKey: 'overview', openDrawerId: '',
+    menuOpen: false, q: '', qOpen: false
   };
 
   /* legacy Arabic values (from the AR build or an older save) normalise to English */
   stageEN = {
-    '\u0627\u0633\u062a\u0634\u0627\u0631\u0629': 'Consultation',
-    '\u062c\u0645\u0639 \u0627\u0644\u0633\u062c\u0644\u0627\u062a': 'Records',
-    '\u0627\u0644\u062a\u0634\u062e\u064a\u0635': 'Diagnosis',
-    '\u0627\u0644\u062a\u062e\u0637\u064a\u0637 \u0627\u0644\u0639\u0644\u0627\u062c\u064a': 'Treatment plan',
-    '\u0639\u0644\u0627\u062c \u0646\u0634\u0637': 'Active treatment',
-    '\u0627\u0644\u062a\u062b\u0628\u064a\u062a': 'Retention',
-    '\u0645\u0643\u062a\u0645\u0644': 'Completed'
+    'استشارة': 'Consultation',
+    'جمع السجلات': 'Records',
+    'التشخيص': 'Diagnosis',
+    'التخطيط العلاجي': 'Treatment plan',
+    'علاج نشط': 'Active treatment',
+    'التثبيت': 'Retention',
+    'مكتمل': 'Completed'
   };
 
   nextEN = {
-    '\u0627\u0633\u062a\u0643\u0645\u0627\u0644 \u0627\u0644\u0633\u062c\u0644\u0627\u062a': 'Complete the records',
-    '\u0627\u0633\u062a\u0643\u0645\u0627\u0644 \u0627\u0644\u0640records': 'Complete the records',
-    '\u0631\u0641\u0639 \u0627\u0644\u0635\u0648\u0631 \u0648\u0627\u0644\u0623\u0634\u0639\u0629': 'Upload photos and radiographs',
-    '\u0625\u0642\u0631\u0627\u0631 \u0627\u0644\u0640problem list': 'Approve the problem list',
-    '\u0627\u0639\u062a\u0645\u0627\u062f \u0627\u0644\u0640treatment plan': 'Approve the treatment plan'
+    'استكمال السجلات': 'Complete the records',
+    'استكمال الـrecords': 'Complete the records',
+    'رفع الصور والأشعة': 'Upload photos and radiographs',
+    'إقرار الـproblem list': 'Approve the problem list',
+    'اعتماد الـtreatment plan': 'Approve the treatment plan'
+  };
+
+  /* search result labels and badge classes (the stage list of the knowledge block, in English) */
+  stageLabel = {
+    consultation: 'Consultation', records: 'Records', diagnosis: 'Diagnosis', plan: 'Treatment plan',
+    active: 'Active treatment', retention: 'Retention', completed: 'Completed', 'growth-watch': 'Growth watch',
+    paused: 'Paused', referred: 'Referred out', 'no-treatment': 'No treatment needed'
+  };
+  stageCls = {
+    consultation: 'ot-stage--consultation', records: 'ot-stage--records', diagnosis: 'ot-stage--diagnosis',
+    plan: 'ot-stage--plan', active: 'ot-stage--active', retention: 'ot-stage--retention',
+    completed: 'ot-stage--completed', 'growth-watch': 'ot-stage--growth-watch'
   };
 
   SKEY = 'orthotrack.session.v1';
@@ -2677,6 +2820,16 @@ class Component extends DCLogic {
       if (window.localStorage.getItem(this.SKEY) === '1') this.setState({ loggedIn: true });
     } catch (e) { /* storage unavailable */ }
     /* cases come from window.OT.store (case-store.js); nothing to load here */
+    /* the shell's keys and clicks: Escape and Tab inside the open menu, Enter and arrows in the search, clicks outside it */
+    document.addEventListener('keydown', this.handleKey);
+    document.addEventListener('mousedown', this.handleDown);
+    /* at 900px and up the menu is the sidebar, so a drawer left open is closed */
+    try {
+      this.mq = window.matchMedia('(min-width: 900px)');
+      const onWide = ev => { if (ev.matches && this.state.menuOpen) this.setState({ menuOpen: false }); };
+      if (this.mq.addEventListener) this.mq.addEventListener('change', onWide);
+      else if (this.mq.addListener) this.mq.addListener(onWide);
+    } catch (e) { /* matchMedia unavailable */ }
   }
 
   /* Records and Diagnosis save a snapshot of their screen; it lives on the case until task 0.5 maps it */
@@ -2704,7 +2857,7 @@ class Component extends DCLogic {
   signOut = () => {
     try { window.localStorage.removeItem(this.SKEY); } catch (e) { /* ignore */ }
     this.setState({ loggedIn: false, authScreen: 'login', pw: '', err: null, touched: false,
-                    screen: 'dashboard', activeCase: null });
+                    screen: 'dashboard', activeCase: null, menuOpen: false, q: '', qOpen: false });
   };
 
   /* sidebar "Reset demo data": confirm, back to the seed cases, then reload (opens on the dashboard) */
@@ -2715,6 +2868,114 @@ class Component extends DCLogic {
       window.localStorage.removeItem('orthotrack.en.current.v1');
     } catch (e) { /* storage unavailable */ }
     window.location.reload();
+  };
+
+  /* ---------- the menu drawer (phone and tablet) ---------- */
+  openMenu = () => {
+    this.setState({ menuOpen: true });
+    /* focus moves into the drawer: its first control is the close button */
+    setTimeout(() => {
+      const n = document.getElementById('ot-side');
+      const b = n && n.querySelector('button');
+      if (b) b.focus();
+    }, 0);
+  };
+
+  /* closing returns focus to the menu button; a nav choice closes the drawer the same way */
+  closeMenu = () => {
+    if (!this.state.menuOpen) return;
+    this.setState({ menuOpen: false });
+    setTimeout(() => {
+      const b = document.getElementById('ot-menu-btn');
+      if (b) b.focus();
+    }, 0);
+  };
+
+  /* Tab stays inside the open drawer */
+  trapTab = e => {
+    const n = document.getElementById('ot-side');
+    if (!n) return;
+    const items = [].slice.call(n.querySelectorAll('button')).filter(b => b.offsetParent !== null);
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    const a = document.activeElement;
+    if (e.shiftKey && (a === first || !n.contains(a))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (a === last || !n.contains(a))) { e.preventDefault(); first.focus(); }
+  };
+
+  inSearch = el => !!(el && el.closest && el.closest('[data-ot-search]'));
+
+  handleKey = e => {
+    if (this.state.menuOpen) {
+      if (e.key === 'Escape') { e.preventDefault(); this.closeMenu(); }
+      else if (e.key === 'Tab') this.trapTab(e);
+      return;
+    }
+    if (!this.inSearch(e.target)) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      this.setState({ q: '', qOpen: false });
+      const i = document.getElementById('ot-search');
+      if (i && e.target !== i) i.focus();
+    } else if (e.key === 'Enter' && e.target.id === 'ot-search') {
+      e.preventDefault();
+      const hit = this.findCases(this.state.q)[0];
+      if (hit) this.openSearchCase(hit.id);
+    } else if (e.key === 'ArrowDown' && e.target.id === 'ot-search') {
+      const b = document.querySelector('#ot-search-results button');
+      if (b) { e.preventDefault(); b.focus(); }
+    }
+  };
+
+  handleDown = e => {
+    if (this.state.qOpen && !this.inSearch(e.target)) this.setState({ qOpen: false });
+  };
+
+  /* ---------- the search (T9): every case in the store ---------- */
+  setQ = ev => this.setState({ q: ev.target.value, qOpen: true });
+
+  openSearch = () => {
+    if (String(this.state.q || '').trim()) this.setState({ qOpen: true });
+  };
+
+  /* name part (any case), last 4+ digits of the phone, or the case number with or without ORT- */
+  findCases(q) {
+    const term = String(q || '').trim().toLowerCase();
+    if (!term || !window.OT || !window.OT.store) return [];
+    const digits = term.replace(/\D/g, '');
+    const num = term.replace(/^ort-?/, '');
+    return window.OT.store.list().filter(c => {
+      const p = c.patient || {};
+      if (String(p.name || '').toLowerCase().indexOf(term) > -1) return true;
+      const phone = String(p.phone || '').replace(/\D/g, '');
+      if (digits.length >= 4 && phone.slice(-digits.length) === digits) return true;
+      const id = String(c.id || '').toLowerCase();
+      const idNum = id.replace(/^ort-/, '');
+      if (id === term) return true;
+      if (!num) return false;
+      return idNum === num || (num.length >= 4 && idNum.slice(-num.length - 1) === '-' + num);
+    });
+  }
+
+  /* a case from the search: the tab that fits its stage (active and retention: treatment; records: records; else overview) */
+  openSearchCase = id => {
+    const c = window.OT.store.get(id);
+    if (!c) return;
+    const screen = c.stage === 'active' || c.stage === 'retention' ? 'treatment' : c.stage === 'records' ? 'records' : 'overview';
+    this.setState({ q: '', qOpen: false });
+    this.navTo(screen, { id: id });
+  };
+
+  stageEntry = c => c.stage || '';
+
+  /* a stage or tab of the open case: the store's current case is that case */
+  go = screen => {
+    this.closeMenu();
+    if (this.state.activeCase) window.OT.store.setCurrent(this.state.activeCase.id);
+    const tab = this.caseFileTabs[screen];
+    if (tab) { this.setState({ screen: 'casefile', caseTab: tab, stageKey: screen }); return; }
+    this.setState({ screen: screen, stageKey: screen });
   };
 
   stageDefs = [
@@ -2730,13 +2991,25 @@ class Component extends DCLogic {
   /* stage keys that are rendered as a tab of the case file rather than their own screen */
   caseFileTabs = { casefile: 'overview', plan: 'plan', treatment: 'log', retention: 'appliance', progress: 'progress' };
 
-  go = screen => {
-    /* a stage or tab of the open case: the store's current case is that case */
-    if (this.state.activeCase) window.OT.store.setCurrent(this.state.activeCase.id);
-    const tab = this.caseFileTabs[screen];
-    if (tab) { this.setState({ screen: 'casefile', caseTab: tab, stageKey: screen }); return; }
-    this.setState({ screen: screen, stageKey: screen });
-  };
+  /* the one navigation path: a screen, and optionally a case (set as the store's current case) or a drawer */
+  navTo = (screen, caseInfo) => this.setState(s => {
+    /* New case → the 6-step intake (patient history · photos · imaging · measurements · occlusion · function) */
+    if (screen === 'newcase') return { screen: 'newcase', stageKey: 'records', activeCase: null };
+    if (screen === 'create') return { screen: 'create', stageKey: 'create', activeCase: null };
+    /* the case file asks for a tab; the dashboard asks for a drawer */
+    const tab = (caseInfo && caseInfo.tab) || this.caseFileTabs[screen] || null;
+    const target = tab ? 'casefile' : screen;
+    const patch = { screen: target, stageKey: tab ? (screen === 'casefile' ? 'casefile' : screen) : screen };
+    if (tab) patch.caseTab = tab;
+    /* no case in the call: the open case stays open, and the store's current case is set to it again */
+    if (!caseInfo) { if (s.activeCase) window.OT.store.setCurrent(s.activeCase.id); return patch; }
+    /* {openId} is a request to open a drawer, not a case — keep the active case intact */
+    if (caseInfo.openId && !caseInfo.name) { patch.openDrawerId = caseInfo.openId; return patch; }
+    /* a screen that opens a case: the store's current case is set first, so every screen reads that case */
+    patch.activeCase = caseInfo.id && window.OT.store.setCurrent(caseInfo.id) ? { id: caseInfo.id } : null;
+    patch.openDrawerId = '';
+    return patch;
+  });
 
   renderVals() {
     const bad = this.state.touched && this.state.err;
@@ -2757,13 +3030,19 @@ class Component extends DCLogic {
     const photo = ac ? ac.photo : '';
     // Overview counts as done once the case exists; Records once the Records screen has a saved draft.
     const doneIdx = ac && ac.hasRecords ? 1 : 0;
+
+    /* search results: the first eight matches, with the stage badge */
+    const term = String(this.state.q || '').trim();
+    const qShown = !!term && this.state.qOpen;
+    const hits = qShown ? this.findCases(term) : [];
+    const shown = hits.slice(0, 8);
     return {
       hasCasePhoto: true,
       caseAvatar: photo ? React.createElement('img', {
         src: photo, alt: '',
-        style: { width: 38, height: 38, flex: 'none', borderRadius: 12, objectFit: 'cover', objectPosition: 'center 22%', background: '#eff6ff' }
+        style: { width: 38, height: 38, flex: 'none', borderRadius: 12, objectFit: 'cover', objectPosition: 'center 22%', background: 'var(--ot-primary-tint)' }
       }) : React.createElement('span', {
-        style: { width: 38, height: 38, flex: 'none', borderRadius: 12, background: '#eff6ff', color: '#1d4ed8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }
+        style: { width: 38, height: 38, flex: 'none', borderRadius: 12, background: 'var(--ot-primary-tint)', color: 'var(--ot-primary-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }
       }, ((ac && ac.name) || '+').slice(0, 1)),
       isGlobalNav: !inCase,
       isCaseNav: inCase,
@@ -2805,12 +3084,13 @@ class Component extends DCLogic {
           title: locked ? "Opens after the case is saved" : '',
           cursor: locked ? 'not-allowed' : 'pointer',
           go: () => { if (!locked) this.go(d[0]); },
-          bg: cur ? '#eff6ff' : 'transparent',
-          fg: locked ? '#cbd5e1' : cur ? '#1d4ed8' : built ? '#0f172a' : '#94a3b8',
-          latinFg: locked ? '#e2e8f0' : cur ? '#2563eb' : '#94a3b8',
+          cls: cur ? 'is-current' : '',
+          current: cur ? 'true' : 'false',
+          fg: locked ? 'var(--ot-border-strong)' : cur ? 'var(--ot-primary-hover)' : built ? 'var(--ot-ink)' : 'var(--ot-text-muted)',
+          latinFg: locked ? 'var(--ot-border)' : cur ? 'var(--ot-primary)' : 'var(--ot-text-muted)',
           fw: cur ? 700 : 500,
-          dot: locked ? '#f1f5f9' : cur ? '#2563eb' : i <= doneIdx ? '#059669' : '#cbd5e1',
-          ring: cur ? '0 0 0 4px rgba(37,99,235,0.16)' : 'none'
+          dot: locked ? 'var(--ot-subtle)' : cur ? 'var(--ot-primary)' : i <= doneIdx ? 'var(--ot-success-dot)' : 'var(--ot-border-strong)',
+          ring: cur ? '0 0 0 4px var(--ot-focus-ring)' : 'none'
         };
       }),
       signOut: this.signOut,
@@ -2839,39 +3119,47 @@ class Component extends DCLogic {
       goLogin: ev => { if (ev) ev.preventDefault(); this.setState({ authScreen: 'login', err: null }); },
       sendReset: ev => { if (ev) ev.preventDefault(); this.setState({ authScreen: 'sent' }); },
 
-      sideW: this.state.collapsed ? '76px' : '244px',
-      labelOp: this.state.collapsed ? 0 : 1,
+      /* the sidebar's width and label fade are classes now (the drawer on a phone ignores them) */
+      sideCls: 'ot-shell__side' + (this.state.collapsed ? ' ot-shell__side--collapsed' : '') + (this.state.menuOpen ? ' ot-drawer' : ''),
+      menuOpen: this.state.menuOpen,
+      menuExpanded: this.state.menuOpen ? 'true' : 'false',
+      openMenu: this.openMenu,
+      closeMenu: this.closeMenu,
       sideIcon: this.state.collapsed ? '›' : '‹',
       toggleSide: () => this.setState(s => ({ collapsed: !s.collapsed })),
-      goDashboard: () => this.setState(s => ({ screen: 'dashboard', dashTab: 'today', dashReq: s.dashReq + 1 })),
-      goAllCases: () => this.setState(s => ({ screen: 'dashboard', dashTab: 'all', dashReq: s.dashReq + 1 })),
-      navDashBg: dash ? '#eff6ff' : 'transparent',
-      navDashFg: dash ? '#1d4ed8' : '#64748b',
-      navDashFw: dash ? 700 : 500,
+      goDashboard: () => { this.setState(s => ({ screen: 'dashboard', dashTab: 'today', dashReq: s.dashReq + 1 })); this.closeMenu(); },
+      goAllCases: () => { this.setState(s => ({ screen: 'dashboard', dashTab: 'all', dashReq: s.dashReq + 1 })); this.closeMenu(); },
+      navDashCls: dash ? 'is-current' : '',
+      navDashCur: dash ? 'page' : 'false',
+
+      /* search (T9), in the top bar on every logged-in screen */
+      q: this.state.q,
+      qShown: qShown,
+      searchExpanded: qShown ? 'true' : 'false',
+      setQ: this.setQ,
+      openSearch: this.openSearch,
+      hasResults: shown.length > 0,
+      noResults: qShown && hits.length === 0,
+      hasMore: hits.length > shown.length,
+      moreText: 'Showing ' + shown.length + ' of ' + hits.length + '. Type more to narrow.',
+      results: shown.map(c => {
+        const k = this.stageEntry(c);
+        return {
+          id: c.id,
+          name: (c.patient && c.patient.name) || 'Unnamed case',
+          initial: String((c.patient && c.patient.name) || '?').slice(0, 1),
+          stageCls: this.stageCls[k] || 'ot-stage--exit',
+          stageLabel: this.stageLabel[k] || k || 'No stage',
+          open: () => this.openSearchCase(c.id)
+        };
+      }),
 
       isDashboard: this.state.screen === 'dashboard',
       isOverview: this.state.screen === 'overview',
       isCreate: this.state.screen === 'create',
       isRecords: this.state.screen === 'records',
       isSummary: this.state.screen === 'summary',
-      nav: (screen, caseInfo) => this.setState(s => {
-        /* New case → the 6-step intake (patient history · photos · imaging · measurements · occlusion · function) */
-        if (screen === 'newcase') return { screen: 'newcase', stageKey: 'records', activeCase: null };
-        if (screen === 'create') return { screen: 'create', stageKey: 'create', activeCase: null };
-        /* the case file asks for a tab; the dashboard asks for a drawer */
-        const tab = (caseInfo && caseInfo.tab) || this.caseFileTabs[screen] || null;
-        const target = tab ? 'casefile' : screen;
-        const patch = { screen: target, stageKey: tab ? (screen === 'casefile' ? 'casefile' : screen) : screen };
-        if (tab) patch.caseTab = tab;
-        /* no case in the call: the open case stays open, and the store's current case is set to it again */
-        if (!caseInfo) { if (s.activeCase) window.OT.store.setCurrent(s.activeCase.id); return patch; }
-        /* {openId} is a request to open a drawer, not a case — keep the active case intact */
-        if (caseInfo.openId && !caseInfo.name) { patch.openDrawerId = caseInfo.openId; return patch; }
-        /* a screen that opens a case: the store's current case is set first, so every screen reads that case */
-        patch.activeCase = caseInfo.id && window.OT.store.setCurrent(caseInfo.id) ? { id: caseInfo.id } : null;
-        patch.openDrawerId = '';
-        return patch;
-      }),
+      nav: this.navTo,
       /* the only case prop the screens get: the id. Name, photos and drafts are read from the store */
       overrideId: ac ? ac.id : '',
       /* the Create screen's save: the new case is the current one, and it is returned to the screen */
@@ -2885,7 +3173,6 @@ class Component extends DCLogic {
     };
   }
 }
-
 </script>
 
 
